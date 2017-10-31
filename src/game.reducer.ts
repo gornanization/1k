@@ -1,5 +1,5 @@
 import { Game, Phase } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, BEGIN_BIDDING_PHASE } from './game.actions';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE } from './game.actions';
 
 const defaultState: Game = {
     phase: Phase.REGISTERING_PLAYERS,
@@ -53,11 +53,11 @@ export function game(state: Game = defaultState, action) {
                     [action.id]: []
                 }
             };
-        case BEGIN_BIDDING_PHASE: {
+        case SET_PHASE: {
             return {
                 ...state,
-                phase: Phase.BID
-            } as Game
+                phase: action.phase
+            }
         }
         default:
             return state

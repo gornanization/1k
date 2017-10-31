@@ -7,7 +7,7 @@ import { createCard } from '../src/helpers/cards.helpers';
 xdescribe('can', () => {
     beforeEach(() => {
         const state: Game = {
-            phase: Phase.BID,
+            phase: Phase.BIDDING_IN_PROGRESS,
             players: [{ id: 'adam' }, { id: 'pic' }, { id: 'alan' }],
             deck: [],
             stock: [],

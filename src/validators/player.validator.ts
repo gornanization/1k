@@ -1,14 +1,13 @@
-import { Game, PlayersBid, Player } from '../game.interfaces';
+import { Game, PlayersBid, Player, Phase } from '../game.interfaces';
 import { Bid, RegisterPlayer } from '../game.actions';
 import { getNextTurn, playerExists, getMaxPlayersCount, maxPlayersCountReached } from '../helpers/players.helpers';
 import { hasMarriage } from '../helpers/cards.helpers';
 import * as _ from 'lodash';
 import { isMaxBid, hasTwoPasses } from '../helpers/bid.helpers';
-import { isRegisteringPlayersPhase } from '../helpers/game.helpers';
 
 export function canRegisterPlayer(state: Game, action: RegisterPlayer): boolean {
     return !maxPlayersCountReached(state.players) && 
-           isRegisteringPlayersPhase(state) && 
+            state.phase === Phase.REGISTERING_PLAYERS && 
            !playerExists(state.players, action.id);
 }
 

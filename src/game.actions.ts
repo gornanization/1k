@@ -1,4 +1,4 @@
-import { Card } from './game.interfaces';
+import { Card, Phase } from './game.interfaces';
 
 
 export interface Action {
@@ -55,7 +55,6 @@ export interface Bid extends Action {
     pass: boolean,
     player: string
 }
-
 export function bid(player: string, bid: number): Bid {
     const pass = bid === 0;
     return {
@@ -64,11 +63,13 @@ export function bid(player: string, bid: number): Bid {
     };
 }
 //------------------------------------------------
-export const BEGIN_BIDDING_PHASE = 'BEGIN_BIDDING_PHASE';
-export interface BeginBiddingPhase extends Action {}
-
-export function beginBiddingPhase(): BeginBiddingPhase {
+export const SET_PHASE = 'SET_PHASE';
+export interface SetPhase extends Action {
+    phase: Phase
+}
+export function setPhase(phase: Phase): SetPhase {
     return {
-        type: BEGIN_BIDDING_PHASE
+        type: SET_PHASE,
+        phase
     };
 }

@@ -19,10 +19,13 @@ export function canBid(state: Game, action: Bid): boolean {
 };
 
 export function isBiddingFinished(state: Game): boolean {
+    if (state.bid.length === 0) {
+        return false;
+    }
     const isMax = _.chain(state.bid)
         .head()
         .thru(isMaxBid)
         .value();
 
-    return hasTwoPasses(state.bid) || isMax;
+    return (hasTwoPasses(state.bid) || isMax);
 }

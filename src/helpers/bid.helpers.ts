@@ -1,4 +1,4 @@
-import { PlayersBid } from '../game.interfaces';
+import { PlayersBid, Game } from '../game.interfaces';
 import * as _ from 'lodash';
 
 export function isMaxBid({bid}: PlayersBid): boolean {

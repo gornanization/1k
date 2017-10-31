@@ -6,7 +6,7 @@ import { isBiddingFinished } from '../src/validators/bid.validator';
 describe('bid', () => {
     beforeEach(() => {
         const state: Game = {
-            phase: Phase.BID,
+            phase: Phase.BIDDING_IN_PROGRESS,
             players: [{ id: 'adam' }, { id: 'pic' }, { id: 'alan' }],
             deck: [],
             stock: [],
