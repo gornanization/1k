@@ -7,3 +7,19 @@ export function getNextTurn(players: Player[], playerId: string): string {
     
     return players[nextPlayerIndex].id;
 }
+
+export function getPlayerById(players: Player[], id: string): Player {
+    return _.find(players, (player: Player) => player.id === id) || null;
+}
+
+export function playerExists(players: Player[], id: string) {
+    return !!getPlayerById(players, id);
+}
+
+export function getMaxPlayersCount() {
+    return 3;
+}
+
+export function maxPlayersCountReached(players: Player[]) {
+    return players.length === getMaxPlayersCount();
+}

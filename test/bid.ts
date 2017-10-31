@@ -11,14 +11,7 @@ describe('bid', () => {
             deck: [],
             stock: [],
             bid: [],
-            cards: {
-                alan: [
-                    createCard('9♥'),
-                    createCard('K♥'),
-                    createCard('Q♥'),
-                    createCard('Q♦')
-                ]
-            }
+            cards: {}
         };
 
         this.state = state;
@@ -46,6 +39,7 @@ describe('bid', () => {
                 should(isBiddingFinished(this.state)).be.equal(true);
             });
         });
+        
         describe('equals false for', () => {
             it('one players pass', () => {
                 this.state.bid = [

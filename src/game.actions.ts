@@ -5,13 +5,13 @@ export interface Action {
     type: string;
 }
 //------------------------------------------------
-export const ADD_PLAYER = 'ADD_PLAYER';
-export interface AddPlayer extends Action {
+export const REGISTER_PLAYER = 'REGISTER_PLAYER';
+export interface RegisterPlayer extends Action {
     id: string
 }
-export function addPlayer(id: string): AddPlayer {
+export function registerPlayer(id: string): RegisterPlayer {
     return {
-        type: ADD_PLAYER,
+        type: REGISTER_PLAYER,
         id
     };
 }
@@ -61,5 +61,14 @@ export function bid(player: string, bid: number): Bid {
     return {
         type: BID,
         bid, player, pass
+    };
+}
+//------------------------------------------------
+export const BEGIN_BIDDING_PHASE = 'BEGIN_BIDDING_PHASE';
+export interface BeginBiddingPhase extends Action {}
+
+export function beginBiddingPhase(): BeginBiddingPhase {
+    return {
+        type: BEGIN_BIDDING_PHASE
     };
 }

@@ -1,6 +1,6 @@
 import * as should from 'should';
 import { can } from '../src/validators/game.validators';
-import { bid } from '../src/game.actions';
+import { bid, REGISTER_PLAYER } from '../src/game.actions';
 import { Game, Phase } from '../src/game.interfaces';
 import { createCard } from '../src/helpers/cards.helpers';
 
@@ -31,7 +31,7 @@ xdescribe('can', () => {
     describe('bid', () => {
         describe('is not allowed', () => {
             it('for non bid phase', () => {
-                this.state.phase = Phase.CONFIGURATION;
+                this.state.phase = Phase.REGISTERING_PLAYERS;
                 should(can(this.state, bid('alan', 100))).be.equal(false);
             })
 
@@ -54,6 +54,5 @@ xdescribe('can', () => {
                 should(can(this.state, bid('alan', 0))).be.equal(true);
             });  
         });
-        
     });
 });

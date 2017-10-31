@@ -15,7 +15,10 @@ export enum Rank {
 }
 
 export enum Phase {
-    CONFIGURATION,
+    REGISTERING_PLAYERS,
+    
+    DEALING_CARDS_START,
+    DEALING_CARDS_FINISHED,
     BID,
     BATTLE
 }

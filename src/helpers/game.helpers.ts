@@ -1,7 +1,7 @@
 import { Game, Phase } from '../game.interfaces';
 
-export function isConfigurationPhase(state: Game): boolean {
-    return Phase.CONFIGURATION === state.phase;
+export function isRegisteringPlayersPhase(state: Game): boolean {
+    return Phase.REGISTERING_PLAYERS === state.phase;
 }
 
 export function isBiddingPhase(state: Game): boolean {
