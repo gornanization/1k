@@ -1,18 +1,19 @@
 import * as should from 'should';
-import { canBid } from '../src/validators/game.validators';
+import { can } from '../src/validators/game.validators';
 import { bid } from '../src/game.actions';
-import { Game } from '../src/game.interfaces';
-import { createCard } from '../src/game.helpers';
+import { Game, Phase } from '../src/game.interfaces';
+import { createCard } from '../src/helpers/cards.helpers';
 
-describe('can', () => {
+xdescribe('can', () => {
     beforeEach(() => {
         const state: Game = {
+            phase: Phase.BID,
             players: [{ id: 'adam' }, { id: 'pic' }, { id: 'alan' }],
             deck: [],
             stock: [],
             bid: [
                 { player: 'pic', bid: 110, pass: false },
-                { player: 'adam', bid: 100, pass: true }
+                { player: 'adam', bid: 100, pass: false }
             ],
             cards: {
                 alan: [
@@ -29,18 +30,29 @@ describe('can', () => {
 
     describe('bid', () => {
         describe('is not allowed', () => {
+            it('for non bid phase', () => {
+                this.state.phase = Phase.CONFIGURATION;
+                should(can(this.state, bid('alan', 100))).be.equal(false);
+            })
+
             it('for bid value less than latest', () => {
-                should(canBid(this.state, bid('alan', 100))).be.equal(false);
+                should(can(this.state, bid('alan', 100))).be.equal(false);
             });
 
             it('for invalid bid value', () => {
-                should(canBid(this.state, bid('alan', 121))).be.equal(false);
-                should(canBid(this.state, bid('alan', 121.5))).be.equal(false);
+                should(can(this.state, bid('alan', 121))).be.equal(false);
+                should(can(this.state, bid('alan', 121.5))).be.equal(false);
             });
 
             it('for unachieveable bid value', () => {
-                should(canBid(this.state, bid('alan', 310))).be.equal(false);
+                should(can(this.state, bid('alan', 310))).be.equal(false);
             });            
+        });
+
+        describe('is allowed', () => {
+            it('to pass', () => {
+                should(can(this.state, bid('alan', 0))).be.equal(true);
+            });  
         });
         
     });

@@ -1,15 +1,9 @@
-import { Player, Card, Suit, Rank } from './game.interfaces';
 import * as _ from 'lodash';
-
-export function getNextTurn(players: Player[], playerId: string): string {
-    const playerIndex = _.findIndex(players, ({ id }) => playerId === id);
-    const nextPlayerIndex = playerIndex + 1 === players.length ? 0 : playerIndex + 1;
-    return players[nextPlayerIndex].id;
-}
-
-const CARD_PATTERN_REGEX = /([A|K|Q|J|9]|10)([♥|♦|♣|♠])/;
+import { Suit, Rank, Card } from '../game.interfaces';
 
 export function createCard(pattern: string): Card {
+    const CARD_PATTERN_REGEX = /([A|K|Q|J|9]|10)([♥|♦|♣|♠])/;
+
     const result = CARD_PATTERN_REGEX.exec(pattern);
     const [, rank, suit] = result;
     return result && {
@@ -34,4 +28,19 @@ export function getMarriages(cards: Card[]): Suit[] {
 export function hasMarriage(cards: Card[]): boolean {
     return getMarriages(cards).length > 0;
 }
-    
+
+export function createDeck(): Card[] {
+    function getDeckBySuit(suit: Suit): Card[] {
+        return [
+            { rank: Rank.Ace, suit }, { rank: Rank.King, suit },
+            { rank: Rank.Queen, suit }, { rank: Rank.Jack, suit },
+            { rank: Rank.Ten, suit }, { rank: Rank.Nine, suit }
+        ];
+    }
+    return [
+        ...getDeckBySuit(Suit.Heart),
+        ...getDeckBySuit(Suit.Diamond),
+        ...getDeckBySuit(Suit.Club),
+        ...getDeckBySuit(Suit.Spade)
+    ];
+}

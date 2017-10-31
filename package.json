@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/tsc && node ./dist/main.js",
-    "test": "./node_modules/.bin/tsc && mocha dist/test/**/*.js"
+    "start": "./node_modules/.bin/tsc && node dist/main.js",
+    "test":  "./node_modules/.bin/tsc && mocha dist/test/**/*.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@types/mocha": "2.2.44",
     "@types/node": "8.0.20",

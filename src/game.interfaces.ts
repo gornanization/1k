@@ -14,6 +14,11 @@ export enum Rank {
     Nine = '9'
 }
 
+export enum Phase {
+    CONFIGURATION,
+    BID,
+    BATTLE
+}
 
 export interface Player {
     id: string;
@@ -35,6 +40,7 @@ export interface PlayersBid {
 }
 
 export interface Game {
+    phase: Phase,
     players: Player[],
     deck: Card[],
     stock: Card[],

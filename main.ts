@@ -4,8 +4,7 @@ import * as _ from 'lodash';
 import { Game, Card, Suit, Rank } from './src/game.interfaces';
 import { addPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid } from './src/game.actions';
 import { game as gameReducer } from './src/game.reducer';
-import { createDeck } from './src/deck';
-import { getNextTurn, createCard, getMarriages } from './src/game.helpers';
+import { createDeck, createCard, getMarriages } from './src/helpers/cards.helpers';
 
 const store = createStore(gameReducer);
 

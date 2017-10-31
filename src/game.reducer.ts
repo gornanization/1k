@@ -1,7 +1,8 @@
-import { Game } from './game.interfaces';
+import { Game, Phase } from './game.interfaces';
 import { ADD_PLAYER, SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid } from './game.actions';
 
 const defaultState: Game = {
+    phase: Phase.CONFIGURATION,
     players: [],
     deck: [],
     stock: [],

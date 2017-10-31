@@ -1,7 +1,7 @@
 import { Card } from './game.interfaces';
 
 
-interface Action {
+export interface Action {
     type: string;
 }
 //------------------------------------------------
@@ -56,7 +56,8 @@ export interface Bid extends Action {
     player: string
 }
 
-export function bid(player: string, bid: number, pass: boolean = false): Bid {
+export function bid(player: string, bid: number): Bid {
+    const pass = bid === 0;
     return {
         type: BID,
         bid, player, pass
