@@ -55,3 +55,6 @@ export function getCard(cards: Card[], card: Card): Card {
     return _.find(cards, ({suit, rank}) => card.suit === suit && card.rank === rank);
 }
 
+export function hasEightCards(cards: Card[]): boolean {
+    return cards.length === 8;
+}

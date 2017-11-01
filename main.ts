@@ -11,7 +11,6 @@ import { isBiddingFinished } from './src/validators/bid.validator';
 import { isSharingStockFinished } from './src/validators/stock.validator';
 import { can } from './src/validators/game.validators';
 
-
 const store = createStore(gameReducer);
 
 store.subscribe(() => {
@@ -52,32 +51,26 @@ store.subscribe(() => {
             }
             break;
         case Phase.BIDDING_FINISHED:
-            console.log('bidding finished');
-            store.dispatch(setPhase(Phase.BATTLE_START));
-            break;
-        case Phase.BATTLE_START:
-            console.log('BATTLE_START');
             store.dispatch(setPhase(Phase.FLIP_STOCK));
             break;
         case Phase.FLIP_STOCK:
-            console.log('FLIP_STOCK');
             store.dispatch(setPhase(Phase.ASSIGN_STOCK));
             break;
         case Phase.ASSIGN_STOCK:
-            console.log('ASSIGN_STOCK');
             store.dispatch(setPhase(Phase.SHARE_STOCK));
             store.dispatch(assignStock());
             break;
         case Phase.SHARE_STOCK:
-            console.log('SHARE_STOCK');
             if(isSharingStockFinished(state)) {
-                console.log('isSharingStockFinished')
+                store.dispatch(setPhase(Phase.BATTLE_START));
             } else {
                 console.log('NOT isSharingStockFinished')
             }
             break;
+            case Phase.BATTLE_START:
+            store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS));
+            break;            
         case Phase.BATTLE_IN_PROGRESS:
-            console.log('BATTLE_IN_PROGRESS');
             break;
 
         default:
@@ -90,7 +83,7 @@ function doAction(action: any): boolean {
         store.dispatch(action);
         return true;
     } else {
-        console.log('cant do action:', action);
+        console.log('can\'t do action:', action);
         return false;
     }
 }
@@ -106,19 +99,4 @@ doAction(bid('pic', 0));
 doAction(shareStock(store.getState().cards['adam'][0], 'alan'));
 doAction(shareStock(store.getState().cards['adam'][0], 'pic'));
 
-console.log('xd');
-
-// store.dispatch(bid('adam', 110));
-// store.dispatch(bid('alan', 110));
-
-// // console.log(getNextTurn(state.players, 'adam'));
-
-// const cards = [
-//     createCard('9♥'),
-//     createCard('K♥'),
-//     createCard('Q♥'),
-//     createCard('K♣'),
-//     createCard('Q♣'),
-// ]
-
-// console.log(getMarriages(cards));
+console.log('yeep');
