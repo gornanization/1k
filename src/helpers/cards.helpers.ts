@@ -44,3 +44,14 @@ export function createDeck(): Card[] {
         ...getDeckBySuit(Suit.Spade)
     ];
 }
+
+export function createShuffledDeck(): Card[] {
+    return _.chain(createDeck())
+        .shuffle()
+        .value();
+}
+
+export function getCard(cards: Card[], card: Card): Card {
+    return _.find(cards, ({suit, rank}) => card.suit === suit && card.rank === rank);
+}
+

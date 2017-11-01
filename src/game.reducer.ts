@@ -1,5 +1,8 @@
 import { Game, Phase } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE } from './game.actions';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK } from './game.actions';
+import * as _ from 'lodash';
+import { getBidWinner } from './helpers/bid.helpers';
+import { getCard } from './helpers/cards.helpers';
 
 const defaultState: Game = {
     phase: Phase.REGISTERING_PLAYERS,
@@ -59,6 +62,39 @@ export function game(state: Game = defaultState, action) {
                 phase: action.phase
             }
         }
+        case ASSIGN_STOCK: {
+            const winnerPlayerId = getBidWinner(state.bid).player;
+            return {
+                ...state,
+                stock: [],
+                cards: {
+                    ...state.cards,
+                    [winnerPlayerId]: [
+                        ...state.cards[winnerPlayerId],
+                        ...state.stock
+                    ]
+                }
+            }
+        }
+        case SHARE_STOCK: {
+            const winnerPlayerId = getBidWinner(state.bid).player;
+            const targetPlayerId = action.player;
+
+            const winnerPlayerCards = state.cards[winnerPlayerId];
+            const targetPlayerCards = state.cards[targetPlayerId]
+
+            const cardToShare = getCard(winnerPlayerCards, action.card);
+            
+            return {
+                ...state,
+                stock: [],
+                cards: {
+                    ...state.cards,
+                    [winnerPlayerId]: _.without(winnerPlayerCards, cardToShare),
+                    [targetPlayerId]: [cardToShare, ...targetPlayerCards]
+                }
+            }
+        }        
         default:
             return state
     }

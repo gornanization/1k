@@ -73,3 +73,23 @@ export function setPhase(phase: Phase): SetPhase {
         phase
     };
 }
+//------------------------------------------------
+export const SHARE_STOCK = 'SHARE_STOCK';
+export interface ShareStock extends Action {
+    card: Card,
+    player: string
+}
+export function shareStock(card: Card, player: string): ShareStock {
+    return {
+        type: SHARE_STOCK,
+        card, player
+    };
+}
+//------------------------------------------------
+export const ASSIGN_STOCK = 'ASSIGN_STOCK';
+export interface AssignStock extends Action {}
+export function assignStock(): AssignStock {
+    return {
+        type: ASSIGN_STOCK
+    };
+}
