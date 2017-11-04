@@ -14,7 +14,6 @@ export function canBid(state: Game, action: Bid): boolean {
 
     const hasPlayerMarriage = hasMarriage(playerCards);
 
-    console.log(nextAllowedPlayerToBid, playerCards, hasPlayerMarriage);
     return true;
 };
 

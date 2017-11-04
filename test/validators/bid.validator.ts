@@ -1,20 +1,57 @@
 import * as should from 'should';
-import { Game, Phase } from '../src/game.interfaces';
-import { createCard } from '../src/helpers/cards.helpers';
-import { isBiddingFinished } from '../src/validators/bid.validator';
+import { Game, Phase } from '../../src/game.interfaces';
+import { createCard } from '../../src/helpers/cards.helpers';
+import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
+import { bid } from '../../src/game.actions';
 
-describe('bid', () => {
+describe('bid validator', () => {
     beforeEach(() => {
-        const state: Game = {
+        this.state = {
             phase: Phase.BIDDING_IN_PROGRESS,
             players: [{ id: 'adam' }, { id: 'pic' }, { id: 'alan' }],
             deck: [],
             stock: [],
-            bid: [],
-            cards: {}
-        };
+            bid: [
+                { player: 'pic', bid: 110, pass: false },
+                { player: 'adam', bid: 100, pass: false }
+            ],
+            cards: {
+                alan: [
+                    createCard('9♥'),
+                    createCard('K♥'),
+                    createCard('Q♥'),
+                    createCard('Q♦')
+                ]
+            }
+        } as Game;
+    });
 
-        this.state = state;
+    xdescribe('canBid', () => {
+        describe('is not allowed', () => {
+            it('for non bid phase', () => {
+                this.state.phase = Phase.REGISTERING_PLAYERS;
+                should(canBid(this.state, bid('alan', 100))).be.equal(false);
+            })
+
+            it('for bid value less than latest', () => {
+                should(canBid(this.state, bid('alan', 100))).be.equal(false);
+            });
+
+            it('for invalid bid value', () => {
+                should(canBid(this.state, bid('alan', 121))).be.equal(false);
+                should(canBid(this.state, bid('alan', 121.5))).be.equal(false);
+            });
+
+            it('for unachieveable bid value', () => {
+                should(canBid(this.state, bid('alan', 310))).be.equal(false);
+            });
+        });
+
+        describe('is allowed', () => {
+            it('to pass', () => {
+                should(canBid(this.state, bid('alan', 0))).be.equal(true);
+            });
+        });
     });
 
     describe('isBiddingFinished', () => {
@@ -39,7 +76,7 @@ describe('bid', () => {
                 should(isBiddingFinished(this.state)).be.equal(true);
             });
         });
-        
+
         describe('equals false for', () => {
             it('one players pass', () => {
                 this.state.bid = [
@@ -60,6 +97,6 @@ describe('bid', () => {
 
                 should(isBiddingFinished(this.state)).be.equal(false);
             });
-        });        
+        });
     });
 });

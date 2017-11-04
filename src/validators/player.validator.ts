@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { isMaxBid, hasTwoPasses } from '../helpers/bid.helpers';
 
 export function canRegisterPlayer(state: Game, action: RegisterPlayer): boolean {
-    return !maxPlayersCountReached(state.players) && 
+    return !isRegisteringPlayersPhaseFinished(state) && 
             state.phase === Phase.REGISTERING_PLAYERS && 
            !playerExists(state.players, action.id);
 }

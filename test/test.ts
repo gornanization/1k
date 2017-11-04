@@ -4,7 +4,7 @@ import { bid, REGISTER_PLAYER } from '../src/game.actions';
 import { Game, Phase } from '../src/game.interfaces';
 import { createCard } from '../src/helpers/cards.helpers';
 
-describe('can', () => {
+xdescribe('can', () => {
     beforeEach(() => {
         const state: Game = {
             phase: Phase.BIDDING_IN_PROGRESS,

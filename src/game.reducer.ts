@@ -91,7 +91,7 @@ export function game(state: Game = defaultState, action) {
                 cards: {
                     ...state.cards,
                     [winnerPlayerId]: _.without(winnerPlayerCards, cardToShare),
-                    [targetPlayerId]: [cardToShare, ...targetPlayerCards]
+                    [targetPlayerId]: [{...cardToShare}, ...targetPlayerCards]
                 }
             }
         }        
