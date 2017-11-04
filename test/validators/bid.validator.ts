@@ -19,7 +19,6 @@ describe('bid validator', () => {
                 alan: [
                     createCard('9♥'),
                     createCard('K♥'),
-                    createCard('Q♥'),
                     createCard('Q♦')
                 ]
             }
@@ -44,6 +43,10 @@ describe('bid validator', () => {
 
             it('for unachieveable bid value', () => {
                 should(canBid(this.state, bid('alan', 310))).be.equal(false);
+            });
+
+            it('for non-mariage card set, and value greater than 120', () => {
+                should(canBid(this.state, bid('alan', 130))).be.equal(false);
             });
         });
 
