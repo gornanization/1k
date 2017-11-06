@@ -6,19 +6,19 @@ import * as _ from 'lodash';
 import { isMaxBid, hasTwoPasses, getHighestBid, isAchievableBid, isValidBidValue } from '../helpers/bid.helpers';
 
 export function canBid(state: Game, action: Bid): boolean {
-    if (state.phase != Phase.BIDDING_IN_PROGRESS) {
+    if (state.phase !== Phase.BIDDING_IN_PROGRESS) {
         return false;
     }
-    if (isAchievableBid(action) == false) {
+    if (isAchievableBid(action) === false) {
         return false;
     }
-    if (isValidBidValue(action) == false) {
+    if (isValidBidValue(action) === false) {
         return false;
     }
 
     const lastBiddingPlayerId = state.bid[0].player;
     const nextAllowedPlayerToBid = getNextTurn(state.players, lastBiddingPlayerId);
-    if (action.player != nextAllowedPlayerToBid) {
+    if (action.player !== nextAllowedPlayerToBid) {
         return false;
     }
 

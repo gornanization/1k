@@ -10,7 +10,7 @@ export function isAchievableBid({ bid }: PlayersBid): boolean {
 }
 
 export function isValidBidValue({ bid }: PlayersBid): boolean {
-    return parseInt(bid + "") === parseFloat(bid + "") && bid % 10 == 0;
+    return parseInt(bid + "") === parseFloat(bid + "") && bid % 10 === 0;
 }
 
 export function hasTwoPasses(bids: PlayersBid[]): boolean {
