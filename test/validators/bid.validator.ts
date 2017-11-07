@@ -25,7 +25,7 @@ describe('bid validator', () => {
         } as Game;
     });
 
-    xdescribe('canBid', () => {
+    describe('canBid', () => {
         describe('is not allowed', () => {
             it('for non bid phase', () => {
                 this.state.phase = Phase.REGISTERING_PLAYERS;
@@ -47,6 +47,10 @@ describe('bid validator', () => {
 
             it('for non-mariage card set, and value greater than 120', () => {
                 should(canBid(this.state, bid('alan', 130))).be.equal(false);
+            });
+
+            it('for player not in next turn', () => {
+                should(canBid(this.state, bid('adam', 120))).be.equal(false);
             });
         });
 
