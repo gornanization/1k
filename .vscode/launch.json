@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [{
+        "name": "Run Mocha",
+        "type": "node",
+        "request": "launch",
+        "preLaunchTask": "tsc",
+        "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+        "sourceMaps": true,
+        "args": [
+            "dist/test/**/*.js"
+        ],
+        "cwd": "${workspaceRoot}",
+        "outFiles": []
+    }]
+}
