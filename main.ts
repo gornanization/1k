@@ -71,6 +71,7 @@ store.subscribe(() => {
             store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS));
             break;            
         case Phase.BATTLE_IN_PROGRESS:
+            console.log('battle in progress');
             break;
 
         default:
