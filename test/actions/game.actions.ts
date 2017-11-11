@@ -136,10 +136,8 @@ describe('actions', () => {
             // act
             const nextState = gameReducer(currentState, shareStock(currentState.cards.pic[0], 'adam'));
             //assert
-            should(nextState.cards['pic'].length).be.equal(1);
-            should(nextState.cards['pic'][0]).be.deepEqual({ rank: '10', suit: '♦' });
-            should(nextState.cards['adam'].length).be.equal(1);
-            should(nextState.cards['adam'][0]).be.deepEqual({ rank: '10', suit: '♥' });
+            should(nextState.cards['pic']).be.deepEqual([{ rank: '10', suit: '♦' }]);
+            should(nextState.cards['adam']).be.deepEqual([{ rank: '10', suit: '♥' }]);
 
         });
     });
@@ -157,8 +155,8 @@ describe('actions', () => {
             // act
             const nextState = gameReducer(currentState, assignStock());
             //assert
-            should(nextState.cards['pic'].length).be.equal(3);
             should(nextState.cards['pic']).be.deepEqual(currentState.stock);
+            should(nextState.stock.length).be.equal(0);
         });
     });
 });
