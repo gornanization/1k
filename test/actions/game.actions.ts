@@ -98,4 +98,28 @@ describe('actions', () => {
             });
         });
     });
+
+    xdescribe('registerPlayer', () => {
+        it('', () => {
+            // @TODO write test to registerPlayer action
+        });
+    });
+
+    xdescribe('setDeck', () => {
+        it('', () => {
+            // @TODO write test to setDeck action
+        });
+    }); 
+
+    xdescribe('shareStock', () => {
+        it('', () => {
+            // @TODO write test to shareStock action
+        });
+    });    
+    
+    xdescribe('assignStock', () => {
+        it('', () => {
+            // @TODO write test to assignStock action
+        });
+    });
 });
