@@ -30,10 +30,14 @@ describe('bid validator', () => {
             it('for non bid phase', () => {
                 this.state.phase = Phase.REGISTERING_PLAYERS;
                 should(canBid(this.state, bid('alan', 100))).be.equal(false);
-            })
+            });
 
             it('for bid value less than latest', () => {
                 should(canBid(this.state, bid('alan', 100))).be.equal(false);
+            });
+
+            it('for bid value equal than latest', () => {
+                should(canBid(this.state, bid('alan', 110))).be.equal(false);
             });
 
             it('for invalid bid value', () => {
@@ -52,12 +56,27 @@ describe('bid validator', () => {
             it('for player not in next turn', () => {
                 should(canBid(this.state, bid('adam', 120))).be.equal(false);
             });
+
+            it('to pass, again', () => {
+                this.state.bid = [
+                    { player: 'pic', bid: 130, pass: false },
+                    { player: 'adam', bid: 120, pass: false },
+                    { player: 'alan', bid: 0, pass: true }, // alan has passed already
+                    { player: 'pic', bid: 110, pass: false },
+                    { player: 'adam', bid: 100, pass: false }
+                ],
+
+                should(canBid(this.state, bid('alan', 0))).be.equal(false);
+            });            
         });
 
         describe('is allowed', () => {
             it('to pass', () => {
                 should(canBid(this.state, bid('alan', 0))).be.equal(true);
             });
+            it('to bid more than latest', () => {
+                should(canBid(this.state, bid('alan', 120))).be.equal(true);
+            });            
         });
     });
 

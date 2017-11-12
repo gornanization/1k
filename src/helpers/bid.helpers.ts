@@ -31,5 +31,9 @@ export function getUniqueBidders(bids: PlayersBid[]): string[] {
 }
 
 export function getHighestBid(bids: PlayersBid[]): PlayersBid {
-    return _.max(bids, function (pb) { return pb.bid; });
+    return _.max(bids, (pb: PlayersBid) => pb.bid);
+}
+
+export function hasPlayerAlreadyPassed(bids: PlayersBid[], playerId: string): boolean {
+    return _.some(bids,  {player: playerId, pass: true});
 }

@@ -3,16 +3,22 @@ import { Bid } from '../game.actions';
 import { getNextTurn } from '../helpers/players.helpers';
 import { hasMarriage } from '../helpers/cards.helpers';
 import * as _ from 'lodash';
-import { isMaxBid, hasTwoPasses, getHighestBid, isAchievableBid, isValidBidValue } from '../helpers/bid.helpers';
+import { hasPlayerAlreadyPassed, isMaxBid, hasTwoPasses, getHighestBid, isAchievableBid, isValidBidValue } from '../helpers/bid.helpers';
 
 export function canBid(state: Game, action: Bid): boolean {
     if (state.phase !== Phase.BIDDING_IN_PROGRESS) {
         return false;
     }
-    if (isAchievableBid(action) === false) {
+
+    if(isBiddingFinished(state)) {
+        return false
+    }
+
+    if (!isAchievableBid(action)) {
         return false;
     }
-    if (isValidBidValue(action) === false) {
+
+    if (!isValidBidValue(action)) {
         return false;
     }
 
@@ -23,11 +29,15 @@ export function canBid(state: Game, action: Bid): boolean {
     }
 
     if (action.pass) {
-        return true;
+        if(hasPlayerAlreadyPassed(state.bid, action.player)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     const lastBidValue = getHighestBid(state.bid);
-    if (action.bid < lastBidValue.bid) {
+    if (action.bid <= lastBidValue.bid) {
         return false;
     }
 
