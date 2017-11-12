@@ -29,7 +29,6 @@ export function canBid(state: Game, action: Bid): boolean {
     }
 
     if (action.pass) {
-        console.log(hasPlayerAlreadyPassed(state.bid, action.player))
         if(hasPlayerAlreadyPassed(state.bid, action.player)) {
             return false;
         } else {
