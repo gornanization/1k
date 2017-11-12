@@ -33,23 +33,40 @@ describe('player validator', () => {
 
     describe('canShareStock', () => {
         it('non winner cannot share stock', () => {
+            // assign
             const currentState = this.state;
+            // act
             const action = createShareStockAction(currentState.cards.pic[0], "adam")
+            //assert
             should(canShareStock(currentState, action)).be.equal(false);
         });
 
         it('winner can share stock', () => {
+            // assign
             const currentState = this.state;
+            // act
             const action = createShareStockAction(currentState.cards.alan[0], "adam")
+            //assert
             should(canShareStock(currentState, action)).be.equal(true);
         });
 
         it('cannot share for non "SHARE_STOCK" phase', () => {
+            // assign
             const currentState = this.state;
             currentState.phase = Phase.BATTLE_FINISHED
+            // act
             const action = createShareStockAction(currentState.cards.alan[0], "adam")
+            //assert
             should(canShareStock(currentState, action)).be.equal(false);
+        });
+
+        it('can share for "SHARE_STOCK" phase only', () => {
+            // assign
+            const currentState = this.state;
             currentState.phase = Phase.SHARE_STOCK
+            // act
+            const action = createShareStockAction(currentState.cards.alan[0], "adam")
+            //assert
             should(canShareStock(currentState, action)).be.equal(true);
         });
     });
