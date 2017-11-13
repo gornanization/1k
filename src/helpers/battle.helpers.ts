@@ -1,4 +1,4 @@
-import { Battle, Game, Suit } from '../game.interfaces';
+import { Battle, Game, Suit, Card } from '../game.interfaces';
 import { getNextTurn } from './players.helpers';
 import * as _ from 'lodash';
 
@@ -15,4 +15,12 @@ export function getTrumpSuit(battle: Battle): Suit | null {
 
 export function isTrumpAnnounced(battle: Battle): boolean {
     return !!getTrumpSuit(battle);
+}
+
+export function isTableEmpty(battle: Battle): boolean {
+    return battle.trickCards.length === 0;
+}
+
+export function getLeadCard(battle: Battle): Card {
+    return battle.trickCards[0];
 }

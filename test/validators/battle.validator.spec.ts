@@ -68,6 +68,10 @@ describe('battle validator', () => {
                 //assert
                 should(canThrowCard(currentState, action)).be.equal(false);
             });
+
+            it('', () => {
+                
+            })
         });
     });
 });
