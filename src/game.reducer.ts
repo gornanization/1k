@@ -1,5 +1,5 @@
-import { Game, Phase, Battle, Player } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE } from './game.actions';
+import { Game, Phase, Battle, Player, PlayersCards } from './game.interfaces';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD } from './game.actions';
 import * as _ from 'lodash';
 import { getBidWinner } from './helpers/bid.helpers';
 import { getCard } from './helpers/cards.helpers';
@@ -103,10 +103,25 @@ export function game(state: Game = defaultState, action) {
                     trumpAnnouncements: [],
                     leadPlayer: getBidWinner(state.bid).player,
                     trickCards: [],
-                    wonCards: _.reduce(state.players, (wonCards, player: Player) => {
+                    wonCards: _.reduce(state.players, (wonCards: PlayersCards, player: Player) => {
                         wonCards[player.id] = [];
                         return wonCards;
                     }, {})
+                } as Battle
+            }
+        }
+        case THROW_CARD: {
+            const battle = state.battle;
+            const playerCard = getCard(state.cards[action.player], action.card)
+            return {
+                ...state,
+                cards: {
+                    ...state.cards,
+                    [action.player]: _.without(state.cards[action.player], playerCard)
+                },
+                battle: {
+                    ...battle,
+                    trickCards: [...battle.trickCards, { ...playerCard }],
                 } as Battle
             }
         }

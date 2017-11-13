@@ -2,7 +2,7 @@ import * as should from 'should';
 import { Game, Phase } from '../../src/game.interfaces';
 import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle } from '../../src/game.actions';
+import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
 
 describe('actions', () => {
@@ -179,5 +179,35 @@ describe('actions', () => {
                 }
             });
         });
-    });    
+    });
+    describe('battle actions: ', () => {
+        beforeEach(() => {
+            this.state.battle = {
+                trumpAnnouncements: [],
+                leadPlayer: 'pic',
+                trickCards: [],
+                wonCards: {
+                    adam: [],
+                    alan: [],
+                    pic: []
+                }
+            }
+        });
+        describe('throwCard', () => {
+            it('transfers card from player to battle trick (table)', () => {
+                // assign
+                const currentState = this.state;
+                // act
+                const nextState = gameReducer(currentState, throwCard(createCard('9♥'), 'alan'));
+                //assert
+                should(nextState.battle.trickCards).be.deepEqual([ 
+                    createCard('9♥') 
+                ]);
+                should(nextState.cards['alan']).be.deepEqual([
+                    createCard('K♥'),
+                    createCard('Q♦')
+                ]);
+            });
+        });
+    })
 });
