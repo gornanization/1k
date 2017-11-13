@@ -1,5 +1,5 @@
-import { Game, Phase } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK } from './game.actions';
+import { Game, Phase, Battle, Player } from './game.interfaces';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE } from './game.actions';
 import * as _ from 'lodash';
 import { getBidWinner } from './helpers/bid.helpers';
 import { getCard } from './helpers/cards.helpers';
@@ -10,7 +10,8 @@ const defaultState: Game = {
     deck: [],
     stock: [],
     bid: [],
-    cards: {}
+    cards: {},
+    battle: null
 }
 
 export function game(state: Game = defaultState, action) {
@@ -94,7 +95,21 @@ export function game(state: Game = defaultState, action) {
                     [targetPlayerId]: [{...cardToShare}, ...targetPlayerCards]
                 }
             }
-        }        
+        }
+        case INITIALIZE_BATTLE: {
+            return {
+                ...state,
+                battle: {
+                    trumpAnnouncements: [],
+                    leadPlayer: getBidWinner(state.bid).player,
+                    trickCards: [],
+                    wonCards: _.reduce(state.players, (wonCards, player: Player) => {
+                        wonCards[player.id] = [];
+                        return wonCards;
+                    }, {})
+                } as Battle
+            }
+        }
         default:
             return state
     }

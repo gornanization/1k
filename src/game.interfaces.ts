@@ -54,11 +54,24 @@ export interface PlayersBid {
     pass: boolean
 }
 
+export interface TrumpAnnouncement {
+    player: string,
+    suit: Suit
+}
+
+export interface Battle {
+    trumpAnnouncements: TrumpAnnouncement[],
+    leadPlayer: string,
+    trickCards: Card[],
+    wonCards: PlayersCards
+}
+
 export interface Game {
     phase: Phase,
     players: Player[],
     deck: Card[],
     stock: Card[],
     bid: PlayersBid[],
+    battle: Battle | null,
     cards: PlayersCards
 }

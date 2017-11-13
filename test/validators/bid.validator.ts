@@ -21,7 +21,8 @@ describe('bid validator', () => {
                     createCard('K♥'),
                     createCard('Q♦')
                 ]
-            }
+            },
+            battle: null
         } as Game;
     });
 

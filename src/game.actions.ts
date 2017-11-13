@@ -93,3 +93,10 @@ export function assignStock(): AssignStock {
         type: ASSIGN_STOCK
     };
 }
+//------------------------------------------------
+export const INITIALIZE_BATTLE = 'INITIALIZE_BATTLE';
+export function initializeBattle(): Action {
+    return {
+        type: INITIALIZE_BATTLE
+    };
+}

@@ -2,7 +2,7 @@ import * as should from 'should';
 import { Game, Phase } from '../../src/game.interfaces';
 import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock } from '../../src/game.actions';
+import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
 
 describe('actions', () => {
@@ -26,7 +26,8 @@ describe('actions', () => {
                     createCard('K♥'),
                     createCard('Q♦')
                 ]
-            }
+            },
+            battle: null
         } as Game;
     });
 
@@ -159,4 +160,24 @@ describe('actions', () => {
             should(nextState.stock.length).be.equal(0);
         });
     });
+
+    describe('initializeBattle', () => {
+        it('initializes battle object', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const nextState = gameReducer(currentState, initializeBattle());
+            //assert
+            should(nextState.battle).be.deepEqual({
+                trumpAnnouncements: [],
+                leadPlayer: 'pic',
+                trickCards: [],
+                wonCards: {
+                    adam: [],
+                    alan: [],
+                    pic: []
+                }
+            });
+        });
+    });    
 });
