@@ -93,3 +93,22 @@ export function assignStock(): AssignStock {
         type: ASSIGN_STOCK
     };
 }
+//------------------------------------------------
+export const INITIALIZE_BATTLE = 'INITIALIZE_BATTLE';
+export function initializeBattle(): Action {
+    return {
+        type: INITIALIZE_BATTLE
+    };
+}
+//------------------------------------------------
+export const THROW_CARD = 'THROW_CARD';
+export interface ThrowCard extends Action {
+    card: Card,
+    player: string
+}
+export function throwCard(card: Card, player: string): ThrowCard {
+    return {
+        type: THROW_CARD,
+        card, player
+    };
+}

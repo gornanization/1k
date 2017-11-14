@@ -27,7 +27,8 @@ describe('player validator', () => {
             cards: {
                 alan: [createCard('9♥')],
                 pic: [createCard('K♥')]
-            }
+            },
+            battle: null
         } as Game;
     });
 

@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 import * as _ from 'lodash';
 
 import { Game, Card, Suit, Rank, Player, Phase } from './src/game.interfaces';
-import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock } from './src/game.actions';
+import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle } from './src/game.actions';
 import { game as gameReducer } from './src/game.reducer';
 import { createDeck, createCard, getMarriages, createShuffledDeck } from './src/helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './src/validators/player.validator';
@@ -69,6 +69,7 @@ store.subscribe(() => {
             break;
         case Phase.BATTLE_START:
             store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS));
+            store.dispatch(initializeBattle());
             break;            
         case Phase.BATTLE_IN_PROGRESS:
             console.log('battle in progress');

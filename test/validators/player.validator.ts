@@ -20,7 +20,8 @@ describe('player validator', () => {
             deck: [],
             stock: [],
             bid: [],
-            cards: {}
+            cards: {},
+            battle: null
         } as Game;
     });
 
