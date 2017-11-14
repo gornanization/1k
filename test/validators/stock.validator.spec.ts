@@ -1,7 +1,7 @@
 import * as should from 'should';
 import { Game, Phase, Card } from '../../src/game.interfaces';
-import { createCard } from '../../src/helpers/cards.helpers';
-import { canShareStock } from '../../src/validators/stock.validator';
+import { createCard, createCards } from '../../src/helpers/cards.helpers';
+import { canShareStock, isSharingStockFinished } from '../../src/validators/stock.validator';
 import { ShareStock, } from '../../src/game.actions';
 
 function createShareStockAction(card: Card, player: string): ShareStock {
@@ -12,7 +12,7 @@ function createShareStockAction(card: Card, player: string): ShareStock {
     } as ShareStock;
 }
 
-describe('player validator', () => {
+describe('stock validator', () => {
     beforeEach(() => {
         this.state = {
             phase: Phase.SHARE_STOCK,
@@ -26,7 +26,8 @@ describe('player validator', () => {
             ],
             cards: {
                 alan: [createCard('9♥')],
-                pic: [createCard('K♥')]
+                pic: [createCard('K♥')],
+                adam: []
             },
             battle: null
         } as Game;
@@ -71,4 +72,32 @@ describe('player validator', () => {
             should(canShareStock(currentState, action)).be.equal(true);
         });
     });
+
+    describe('isSharingStockFinished', () => {
+        it('returns false, when players do not have 8 cards', () => {
+            // assign
+            const currentState = this.state;
+            currentState.cards['adam'] = createCards(7);
+            currentState.cards['pic'] = createCards(7);
+            currentState.cards['alan'] = createCards(10);
+            // act
+            const isFinished = isSharingStockFinished(currentState)
+            //assert
+            should(isFinished).be.equal(false);
+        });
+
+        it('returns true, when players do have 8 cards', () => {
+            // assign
+            const currentState = this.state;
+            currentState.cards['adam'] = createCards(8);
+            currentState.cards['pic'] = createCards(8);
+            currentState.cards['alan'] = createCards(8);
+            // act
+            const isFinished = isSharingStockFinished(currentState)
+            //assert
+            should(isFinished).be.equal(true);
+        });
+    });
 });
+
+

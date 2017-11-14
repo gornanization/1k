@@ -12,6 +12,13 @@ export function createCard(pattern: string): Card {
     };
 }
 
+export function createCards(count: number): Card[] {
+    return _.chain(createDeck())
+        .shuffle()
+        .sampleSize(count)
+        .value();
+}
+
 export function hasKingAndQueen(cards: Card[]): boolean {
     return _.some(cards, {rank: Rank.King}) && _.some(cards, {rank: Rank.Queen});
 }
