@@ -32,12 +32,19 @@ describe('player validator', () => {
         });
 
         it('returns false, for two players', () => {
-            this.state.players = [{ id: 'adam' }, { id: 'pic' }];
+            this.state.players = [
+                { id: 'adam', battlePoints: [] }, 
+                { id: 'pic', battlePoints: [] }
+            ];
             should(isRegisteringPlayersPhaseFinished(this.state)).be.equal(false);
         });
 
         it('returns true, for three players', () => {
-            this.state.players = [{ id: 'adam' }, { id: 'pic' }, { id: 'alan' }];
+            this.state.players = [
+                { id: 'adam', battlePoints: [] }, 
+                { id: 'pic', battlePoints: [] }, 
+                { id: 'alan', battlePoints: [] }
+            ];
             should(isRegisteringPlayersPhaseFinished(this.state)).be.equal(true);
         });
     });
@@ -45,22 +52,26 @@ describe('player validator', () => {
     describe('canRegisterPlayer', () => {
         describe('returns false', () => {
             it('for one player, proper phase and not unique name', () => {
-                this.state.players = [{ id: 'adam' }];
+                this.state.players = [{ id: 'adam', battlePoints: [] }];
                 should(canRegisterPlayer(this.state, createRegisterPlayerAction('adam'))).be.equal(false);
             });
             it('for one player, not proper phase and unique name', () => {
-                this.state.players = [{ id: 'adam' }];
+                this.state.players = [{ id: 'adam', battlePoints: [] }];
                 this.state.phase = Phase.BIDDING_START;
                 should(canRegisterPlayer(this.state, createRegisterPlayerAction('alan'))).be.equal(false);
             });
             it('for three player, proper phase and unique name', () => {
-                this.state.players = [{ id: 'adam' }, { id: 'alan' }, { id: 'pic' }];
+                this.state.players = [
+                    { id: 'adam', battlePoints: [] }, 
+                    { id: 'alan', battlePoints: [] }, 
+                    { id: 'pic', battlePoints: [] }
+                ];
                 should(canRegisterPlayer(this.state, createRegisterPlayerAction('new user'))).be.equal(false);
             });
         });
         describe('returns true', () => {
             it('for one player, proper phase and unique name', () => {
-                this.state.players = [{ id: 'adam' }];
+                this.state.players = [{ id: 'adam', battlePoints: [] }];
                 should(canRegisterPlayer(this.state, createRegisterPlayerAction('pic'))).be.equal(true);
             });
         });

@@ -1,6 +1,8 @@
-import { Battle, Game, Suit, Card } from '../game.interfaces';
+import { Battle, Game, Suit, Card, PlayersBid, Player, TrumpAnnouncement } from '../game.interfaces';
 import { getNextTurn } from './players.helpers';
 import * as _ from 'lodash';
+import { getHighestBid } from './bid.helpers';
+import { getPointsByCard, getTrumpPointsBySuit } from './cards.helpers';
 
 export function getNextTrickTurn(state: Game): string {
     const gamePlayers = state.players;
@@ -23,4 +25,35 @@ export function isTableEmpty(battle: Battle): boolean {
 
 export function getLeadCard(battle: Battle): Card {
     return battle.trickCards[0];
+}
+
+export function roundPoints(points: number): number {
+    const minor = (points % 10);
+    const major = points - minor;
+
+    return minor >= 5 ? major + 10 : major;
+}
+
+export function calculatePointsByPlayer(state: Game, player: string): number {
+    const {player: leadPlayer, bid: leadBidValue}: PlayersBid = getHighestBid(state.bid);
+
+    const trumpPoints = _.chain(state.battle.trumpAnnouncements)
+        .filter((trumpAnnouncement: TrumpAnnouncement) => trumpAnnouncement.player === player)
+        .map('suit')
+        .map(getTrumpPointsBySuit)
+        .sum()
+        .value();
+
+    const cardPoints = _.chain(state.battle.wonCards[player])
+        .map(getPointsByCard)
+        .sum()
+        .value();
+
+    const totalPoints = trumpPoints + cardPoints;
+
+    if (leadPlayer === player) {
+        return (totalPoints >= leadBidValue) ? leadBidValue : -leadBidValue
+    } else {
+        return roundPoints(totalPoints);
+    }
 }

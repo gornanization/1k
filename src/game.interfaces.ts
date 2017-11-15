@@ -37,6 +37,7 @@ export enum Phase {
 
 export interface Player {
     id: string;
+    battlePoints: (number|null)[]
 }
 
 export interface Card {

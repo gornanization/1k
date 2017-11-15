@@ -8,7 +8,7 @@ describe('bid validator', () => {
     beforeEach(() => {
         this.state = {
             phase: Phase.BIDDING_IN_PROGRESS,
-            players: [{ id: 'adam' }, { id: 'pic' }, { id: 'alan' }],
+            players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
             deck: [],
             stock: [],
             bid: [
