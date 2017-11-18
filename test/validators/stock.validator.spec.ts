@@ -15,6 +15,9 @@ function createShareStockAction(card: Card, player: string): ShareStock {
 describe('stock validator', () => {
     beforeEach(() => {
         this.state = {
+            settings: {
+                barrelPointsLimit: 880
+            },
             phase: Phase.SHARE_STOCK,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
             deck: [],

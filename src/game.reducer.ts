@@ -6,6 +6,9 @@ import { getCard } from './helpers/cards.helpers';
 import { calculatePointsByPlayer } from './helpers/battle.helpers';
 
 const defaultState: Game = {
+    settings: {
+        barrelPointsLimit: 880
+    },
     phase: Phase.REGISTERING_PLAYERS,
     players: [],
     deck: [],
@@ -130,6 +133,7 @@ export function game(state: Game = defaultState, action) {
         case CALCULATE_BATTLE_RESULT: {
             return {
                 ...state,
+                phase: Phase.BATTLE_RESULTS_ANNOUNCEMENT,
                 players: _.chain(state.players)
                     .map(({id, battlePoints}: Player) => {
                         return {
@@ -139,7 +143,7 @@ export function game(state: Game = defaultState, action) {
                     })
                     .value()
             }
-        }        
+        }
         default:
             return state
     }

@@ -7,10 +7,10 @@ import { game as gameReducer } from './src/game.reducer';
 import { createDeck, createCard, getMarriages, createShuffledDeck } from './src/helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './src/validators/player.validator';
 import { isBattleFinished } from './src/validators/battle.validator';
-import { getNextTurn } from './src/helpers/players.helpers';
+import { getNextTurn, getWinner } from './src/helpers/players.helpers';
 import { isBiddingFinished } from './src/validators/bid.validator';
 import { isSharingStockFinished } from './src/validators/stock.validator';
-import { can } from './src/validators/game.validators';
+import { can, isGameFinished } from './src/validators/game.validators';
 
 const store = createStore(gameReducer);
 
@@ -70,18 +70,30 @@ store.subscribe(() => {
             break;
         case Phase.BATTLE_START:
             store.dispatch(initializeBattle());
-            break;            
+            break;
         case Phase.BATTLE_IN_PROGRESS:
             console.log('battle in progress');
             if(isBattleFinished(state)) {
                 store.dispatch(setPhase(Phase.BATTLE_FINISHED));
             } else {
-                console.log('NOT isBattleFinished')
+                console.log('NOT isBattleFinished');
             }
             break;
          case Phase.BATTLE_FINISHED:
             store.dispatch(calculateBattleResult());
-            break;            
+            break;
+        case Phase.BATTLE_RESULTS_ANNOUNCEMENT:
+            console.log(state.players);
+            if (isGameFinished(state)) {
+                store.dispatch(setPhase(Phase.GAME_FINISHED));
+            } else {
+                store.dispatch(setPhase(Phase.DEALING_CARDS_START));
+            }
+            break;
+        case Phase.GAME_FINISHED:
+            const winner = getWinner(state.players);
+            console.log('winner: ', winner.id);
+            break;
         default:
             break;
     }
@@ -107,5 +119,6 @@ doAction(bid('pic', 0));
 
 doAction(shareStock(store.getState().cards['adam'][0], 'alan'));
 doAction(shareStock(store.getState().cards['adam'][0], 'pic'));
+
 
 console.log('yeep');

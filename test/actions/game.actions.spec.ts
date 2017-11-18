@@ -8,6 +8,9 @@ import { game as gameReducer } from '../../src/game.reducer';
 describe('actions', () => {
     beforeEach(() => {
         this.state = {
+            settings: {
+                barrelPointsLimit: 880
+            },
             phase: Phase.BIDDING_IN_PROGRESS,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
             deck: [

@@ -7,6 +7,9 @@ import { throwCard } from '../../src/game.actions';
 describe('battle validator', () => {
     beforeEach(() => {
         this.state = {
+            settings: {
+                barrelPointsLimit: 880
+            },
             phase: Phase.BATTLE_IN_PROGRESS,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
             deck: [],

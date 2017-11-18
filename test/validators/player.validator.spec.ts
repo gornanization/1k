@@ -15,6 +15,9 @@ function createRegisterPlayerAction(name: string): RegisterPlayer {
 describe('player validator', () => {
     beforeEach(() => {
         this.state = {
+            settings: {
+                barrelPointsLimit: 880
+            },
             phase: Phase.REGISTERING_PLAYERS,
             players: [],
             deck: [],

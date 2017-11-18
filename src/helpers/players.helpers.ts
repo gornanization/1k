@@ -23,3 +23,16 @@ export function getMaxPlayersCount() {
 export function maxPlayersCountReached(players: Player[]) {
     return players.length === getMaxPlayersCount();
 }
+
+export function getPlayerTotalPoints(player: Player): number {
+    return _.chain(player.battlePoints)
+        .compact() // remove bombs (null) and 0 points 
+        .sum()
+        .value();       
+}
+
+export function getWinner(players: Player[]): Player|null {
+    return _.chain(players)
+        .find(player => getPlayerTotalPoints(player) >= 1000)
+        .value();
+}
