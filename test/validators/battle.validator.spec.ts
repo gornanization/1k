@@ -1,7 +1,7 @@
 import * as should from 'should';
 import { createCard } from '../../src/helpers/cards.helpers';
 import { Game, Phase, Battle } from '../../src/game.interfaces';
-import { canThrowCard } from '../../src/validators/battle.validator';
+import { canThrowCard, isTrickFinished } from '../../src/validators/battle.validator';
 import { throwCard } from '../../src/game.actions';
 
 describe('battle validator', () => {
@@ -40,6 +40,34 @@ describe('battle validator', () => {
                 }
             } as Battle
         } as Game;
+    });
+
+    describe('isTrickFinished', () => {
+        it('returns true, for 3 cards on table', () => {
+            // assign
+            const currentState = this.state;
+            this.state.battle.trickCards = [
+                createCard('9♣'),
+                createCard('9♣'),
+                createCard('9♣')
+            ];
+            // act
+            const isTrickFinishedd = isTrickFinished(currentState);
+            // assert
+            should(isTrickFinishedd).be.equal(true);
+        });
+        it('returns false, for less than 3 cards on table', () => {
+            // assign
+            const currentState = this.state;
+            this.state.battle.trickCards = [
+                createCard('9♣'),
+                createCard('9♣')
+            ];
+            // act
+            const isTrickFinishedd = isTrickFinished(currentState);
+            // assert
+            should(isTrickFinishedd).be.equal(false);
+        });        
     });
 
     xdescribe('canThrowCard', () => {

@@ -34,21 +34,28 @@ export function roundPoints(points: number): number {
     return minor >= 5 ? major + 10 : major;
 }
 
-export function calculatePointsByPlayer(state: Game, player: string): number {
-    const {player: leadPlayer, bid: leadBidValue}: PlayersBid = getHighestBid(state.bid);
-    const playerPoints = getPlayerTotalPoints(getPlayerById(state.players, player));
-
-    const trumpPoints = _.chain(state.battle.trumpAnnouncements)
+export function calculateTrumpPointsForPlayer(state: Game, player: string): number {
+    return _.chain(state.battle.trumpAnnouncements)
         .filter((trumpAnnouncement: TrumpAnnouncement) => trumpAnnouncement.player === player)
         .map('suit')
         .map(getTrumpPointsBySuit)
         .sum()
-        .value();
+        .value();  
+}
 
-    const cardPoints = _.chain(state.battle.wonCards[player])
+export function calculateCardPointsForPlayer(state: Game, player: string): number {
+    return _.chain(state.battle.wonCards[player])
         .map(getPointsByCard)
         .sum()
         .value();
+}
+
+export function calculatePointsByPlayer(state: Game, player: string): number {
+    const {player: leadPlayer, bid: leadBidValue}: PlayersBid = getHighestBid(state.bid);
+    
+    const playerPoints = getPlayerTotalPoints(getPlayerById(state.players, player));
+    const trumpPoints = calculateTrumpPointsForPlayer(state, player);
+    const cardPoints = calculateCardPointsForPlayer(state, player);
 
     const totalPoints = trumpPoints + cardPoints;
 

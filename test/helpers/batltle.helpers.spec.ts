@@ -1,9 +1,9 @@
 import * as should from 'should';
-import { Game, Phase, Battle } from '../../src/game.interfaces';
+import { Game, Phase, Battle, Card, TrumpAnnouncement, Suit } from '../../src/game.interfaces';
 import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid } from '../../src/game.actions';
-import { getNextTrickTurn } from '../../src/helpers/battle.helpers';
+import { bid, Bid } from '../../src/game.actions';
+import { getNextTrickTurn, calculatePointsByPlayer } from '../../src/helpers/battle.helpers';
 
 describe('battle helpers', () => {
     beforeEach(() => {
@@ -16,8 +16,7 @@ describe('battle helpers', () => {
             deck: [],
             stock: [],
             bid: [],
-            cards: {
-            },
+            cards: {},
             battle: {
                 trumpAnnouncements: [],
                 trickCards: [],
@@ -38,7 +37,7 @@ describe('battle helpers', () => {
         });
 
         it('returns player next to lead player, when one card on table', () => {
-            this.state.battle.trickCards = [ createCard('A♥') ];
+            this.state.battle.trickCards = [createCard('A♥')];
             // assign
             const currentState = this.state;
             // act
@@ -48,7 +47,7 @@ describe('battle helpers', () => {
         });
 
         it('returns third player, when two cards on table', () => {
-            this.state.battle.trickCards = [ createCard('A♥'), createCard('10♥') ];
+            this.state.battle.trickCards = [createCard('A♥'), createCard('10♥')];
             // assign
             const currentState = this.state;
             // act
@@ -59,8 +58,75 @@ describe('battle helpers', () => {
     });
 
     describe('calculatePointsByPlayer', () => {
-        it('', () => {
-            
+        beforeEach(() => {
+            this.state.bid = [
+                { player: 'alan', bid: 100, pass: false }
+            ] as Bid[];
+            this.state.battle = {
+                trumpAnnouncements: [
+                    { player: 'alan', suit: Suit.Heart },
+                    { player: 'pic', suit: Suit.Spade },
+                    { player: 'pic', suit: Suit.Club }
+                ] as TrumpAnnouncement[],
+                trickCards: [],
+                leadPlayer: 'alan',
+                wonCards: {
+                    adam: [
+                        createCard('A♥'),
+                        createCard('K♥')
+                    ],
+                    alan: [
+                        createCard('A♥')
+                    ],
+                    pic: [
+                        createCard('A♥'),
+                        createCard('9♥')
+                    ]
+                }
+            } as Battle;
+        })
+        it('only card points', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const totalPoints = calculatePointsByPlayer(currentState, 'adam');
+            //assert
+            should(totalPoints).be.equal(20);
         });
+        it('battle lead win with trump', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const totalPoints = calculatePointsByPlayer(currentState, 'alan');
+            //assert
+            should(totalPoints).be.equal(100);
+        });
+        it('battle lead failure with trump', () => {
+            // assign
+            const currentState: Game = this.state;
+            currentState.battle.trumpAnnouncements[0].suit = Suit.Diamond;
+            // act
+            const totalPoints = calculatePointsByPlayer(currentState, 'alan');
+            //assert
+            should(totalPoints).be.equal(-100);
+        });        
+        it('cards & two trumps', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const totalPoints = calculatePointsByPlayer(currentState, 'pic');
+            //assert
+            should(totalPoints).be.equal(110);
+        });    
+
+        it('cards & two trumps, for barrel mode enabled', () => {
+            // assign
+            const currentState: Game = this.state;
+            currentState.players[1].battlePoints = [880, 0, 0, null]; //pic os on barrel
+            // act
+            const totalPoints = calculatePointsByPlayer(currentState, 'pic');
+            //assert
+            should(totalPoints).be.equal(0);
+        });                
     });
 });

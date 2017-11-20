@@ -6,7 +6,7 @@ import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPha
 import { game as gameReducer } from './src/game.reducer';
 import { createDeck, createCard, getMarriages, createShuffledDeck } from './src/helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './src/validators/player.validator';
-import { isBattleFinished } from './src/validators/battle.validator';
+import { isBattleFinished, isTrickFinished } from './src/validators/battle.validator';
 import { getNextTurn, getWinner } from './src/helpers/players.helpers';
 import { isBiddingFinished } from './src/validators/bid.validator';
 import { isSharingStockFinished } from './src/validators/stock.validator';
@@ -73,11 +73,16 @@ store.subscribe(() => {
             break;
         case Phase.BATTLE_IN_PROGRESS:
             console.log('battle in progress');
-            if(isBattleFinished(state)) {
-                store.dispatch(setPhase(Phase.BATTLE_FINISHED));
+            if(isTrickFinished(state)) {
+                if(isBattleFinished(state)) {
+                    store.dispatch(setPhase(Phase.BATTLE_FINISHED));
+                } else {
+                    
+                }
             } else {
-                console.log('NOT isBattleFinished');
+                //trick in progress
             }
+
             break;
          case Phase.BATTLE_FINISHED:
             store.dispatch(calculateBattleResult());
