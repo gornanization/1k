@@ -65,3 +65,23 @@ export function getCard(cards: Card[], card: Card): Card {
 export function hasEightCards(cards: Card[]): boolean {
     return cards.length === 8;
 }
+
+export function getPointsByCard(card: Card): number {
+    return {
+        [Rank.Ace]: 11,
+        [Rank.King]: 4,
+        [Rank.Queen]: 3,
+        [Rank.Jack]: 2,
+        [Rank.Ten]: 10,
+        [Rank.Nine]: 0,
+    }[card.rank];
+}
+
+export function getTrumpPointsBySuit(suit: Suit): number {
+    return {
+        [Suit.Heart]: 100,
+        [Suit.Diamond]: 80,
+        [Suit.Club]: 60,
+        [Suit.Spade]: 40
+    }[suit];
+}

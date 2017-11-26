@@ -30,6 +30,13 @@ export function getUniqueBidders(bids: PlayersBid[]): string[] {
     }, []);
 }
 
+export function isBidder(bids: PlayersBid[], player: string): boolean {
+    return _.chain(getUniqueBidders(bids))
+        .map('player')
+        .includes(player)
+        .value();
+}
+
 export function getHighestBid(bids: PlayersBid[]): PlayersBid {
     return _.max(bids, (pb: PlayersBid) => pb.bid);
 }

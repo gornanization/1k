@@ -112,3 +112,12 @@ export function throwCard(card: Card, player: string): ThrowCard {
         card, player
     };
 }
+//------------------------------------------------
+export const CALCULATE_BATTLE_RESULT = 'CALCULATE_BATTLE_RESULT';
+export interface CalculateBattleResult extends Action {
+}
+export function calculateBattleResult(): CalculateBattleResult {
+    return {
+        type: CALCULATE_BATTLE_RESULT
+    };
+}

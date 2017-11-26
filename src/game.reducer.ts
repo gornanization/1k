@@ -1,10 +1,14 @@
 import { Game, Phase, Battle, Player, PlayersCards } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD } from './game.actions';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT } from './game.actions';
 import * as _ from 'lodash';
-import { getBidWinner } from './helpers/bid.helpers';
+import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
 import { getCard } from './helpers/cards.helpers';
+import { calculatePointsByPlayer } from './helpers/battle.helpers';
 
 const defaultState: Game = {
+    settings: {
+        barrelPointsLimit: 880
+    },
     phase: Phase.REGISTERING_PLAYERS,
     players: [],
     deck: [],
@@ -51,7 +55,7 @@ export function game(state: Game = defaultState, action) {
         case REGISTER_PLAYER:
             return {
                 ...state,
-                players: [...state.players, { id: action.id }],
+                players: [...state.players, { id: action.id, battlePoints: [] } as Player],
                 cards: {
                     ...state.cards,
                     [action.id]: []
@@ -99,6 +103,7 @@ export function game(state: Game = defaultState, action) {
         case INITIALIZE_BATTLE: {
             return {
                 ...state,
+                phase: Phase.BATTLE_IN_PROGRESS,
                 battle: {
                     trumpAnnouncements: [],
                     leadPlayer: getBidWinner(state.bid).player,
@@ -123,6 +128,20 @@ export function game(state: Game = defaultState, action) {
                     ...battle,
                     trickCards: [...battle.trickCards, { ...playerCard }],
                 } as Battle
+            }
+        }
+        case CALCULATE_BATTLE_RESULT: {
+            return {
+                ...state,
+                phase: Phase.BATTLE_RESULTS_ANNOUNCEMENT,
+                players: _.chain(state.players)
+                    .map(({id, battlePoints}: Player) => {
+                        return {
+                            id, 
+                            battlePoints: [...battlePoints, calculatePointsByPlayer(state, id)]
+                        } as Player;
+                    })
+                    .value()
             }
         }
         default:

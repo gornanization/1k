@@ -31,12 +31,14 @@ export enum Phase {
     SHARE_STOCK = 'SHARE_STOCK',
     BATTLE_IN_PROGRESS = 'BATTLE_IN_PROGRESS',
     BATTLE_FINISHED = 'BATTLE_FINISHED',
+    BATTLE_RESULTS_ANNOUNCEMENT = 'BATTLE_RESULTS_ANNOUNCEMENT',
 
-    BATTLE = 'BATTLE'
+    GAME_FINISHED = 'GAME_FINISHED'
 }
 
 export interface Player {
     id: string;
+    battlePoints: (number|null)[]
 }
 
 export interface Card {
@@ -66,7 +68,12 @@ export interface Battle {
     wonCards: PlayersCards
 }
 
+export interface Settings {
+    barrelPointsLimit: number
+}
+
 export interface Game {
+    settings: Settings,
     phase: Phase,
     players: Player[],
     deck: Card[],
