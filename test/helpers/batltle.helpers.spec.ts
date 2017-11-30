@@ -3,7 +3,7 @@ import { Game, Phase, Battle, Card, TrumpAnnouncement, Suit } from '../../src/ga
 import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, Bid } from '../../src/game.actions';
-import { getNextTrickTurn, calculatePointsByPlayer } from '../../src/helpers/battle.helpers';
+import { getNextTrickTurn, calculatePointsByPlayer, getTrickWinner } from '../../src/helpers/battle.helpers';
 
 describe('battle helpers', () => {
     beforeEach(() => {
@@ -128,5 +128,121 @@ describe('battle helpers', () => {
             //assert
             should(totalPoints).be.equal(0);
         });                
+    });
+
+    describe('getTrickWinner', () => {
+        describe('for non trump announced case', () => {
+            it('leader win, when opponents throws card with non-lead suit', () => {
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [],
+                    trickCards: [
+                        createCard('9♥'),
+                        createCard('9♦'),
+                        createCard('J♦'),
+                        
+                    ],
+                    leadPlayer: 'alan',
+                    wonCards: {}
+                } as Battle;
+                // act
+                const winnerPlayer = getTrickWinner(currentState);
+                //assert
+                should(winnerPlayer).be.equal('alan');
+            });
+            it('third player win, with higher-ranked suit card', () => {
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [],
+                    trickCards: [
+                        createCard('9♥'),
+                        createCard('A♦'),
+                        createCard('J♥'),
+                    ],
+                    leadPlayer: 'alan',
+                    wonCards: {}
+                } as Battle;
+                // act
+                const winnerPlayer = getTrickWinner(currentState);
+                //assert
+                should(winnerPlayer).be.equal('pic');
+            });
+            it('second player win, with higher-ranked suit card', () => {
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [],
+                    trickCards: [
+                        createCard('9♥'),                
+                        createCard('A♥'),
+                        createCard('K♥')
+                    ],
+                    leadPlayer: 'adam',
+                    wonCards: {}
+                } as Battle;
+                // act
+                const winnerPlayer = getTrickWinner(currentState);
+                //assert
+                should(winnerPlayer).be.equal('pic');
+            });                        
+        });
+        describe('for trump announced case', () => {
+            it('match by lead suit, when no trump suit taking part in the trick', () => {
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [
+                        { player: 'adam', suit: Suit.Diamond }
+                    ],
+                    trickCards: [
+                        createCard('9♥'),                
+                        createCard('K♥'),
+                        createCard('A♥'),
+                    ],
+                    leadPlayer: 'adam',
+                    wonCards: {}
+                } as Battle;
+                // act
+                const winnerPlayer = getTrickWinner(currentState);
+                //assert
+                should(winnerPlayer).be.equal('alan');
+            });
+            it('match by trump suit, when one trump card thrown', () => {
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [
+                        { player: 'adam', suit: Suit.Diamond }
+                    ],
+                    trickCards: [
+                        createCard('9♥'),                
+                        createCard('K♥'),
+                        createCard('9♦'),
+                    ],
+                    leadPlayer: 'adam',
+                    wonCards: {}
+                } as Battle;
+                // act
+                const winnerPlayer = getTrickWinner(currentState);
+                //assert
+                should(winnerPlayer).be.equal('pic');
+            });   
+            it('match by trump suit, when two trump cards thrown', () => {
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [
+                        { player: 'adam', suit: Suit.Diamond }
+                    ],
+                    trickCards: [
+                        createCard('9♦'),
+                        createCard('A♥'),
+                        createCard('10♦'),
+                    ],
+                    leadPlayer: 'adam',
+                    wonCards: {}
+                } as Battle;
+                // act
+                const winnerPlayer = getTrickWinner(currentState);
+                //assert
+                should(winnerPlayer).be.equal('alan');
+            });                        
+        });
     });
 });

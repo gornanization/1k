@@ -2,13 +2,13 @@ import { Battle, Game, Suit, Card, PlayersBid, Player, TrumpAnnouncement } from 
 import { getNextTurn, getPlayerById, getPlayerTotalPoints } from './players.helpers';
 import * as _ from 'lodash';
 import { getHighestBid } from './bid.helpers';
-import { getPointsByCard, getTrumpPointsBySuit } from './cards.helpers';
+import { getPointsByCard, getTrumpPointsBySuit, areCardsEqual, getCardsByColor, getCardWithHighestRank, cardsWithSpecificColorExists } from './cards.helpers';
 
-export function getNextTrickTurn(state: Game): string {
+export function getNextTrickTurn(state: Game, player: string = state.battle.leadPlayer): string {
     const gamePlayers = state.players;
     const { battle } = state;
 
-    return _.reduce(battle.trickCards, (nextPlayer) => getNextTurn(gamePlayers, nextPlayer), battle.leadPlayer);
+    return _.reduce(battle.trickCards, (nextPlayer) => getNextTurn(gamePlayers, nextPlayer), player);
 }
 
 export function getTrumpSuit(battle: Battle): Suit | null {
@@ -63,5 +63,41 @@ export function calculatePointsByPlayer(state: Game, player: string): number {
         return (totalPoints >= leadBidValue) ? leadBidValue : -leadBidValue
     } else {
         return playerPoints >= state.settings.barrelPointsLimit ? 0 : roundPoints(totalPoints);
+    }
+}
+
+export function getPlayerByTrickCard(trickCard: Card, state: Game): string {
+    const { battle: { leadPlayer, trickCards }, players } = state;
+
+    return _.chain(trickCards)
+        .dropRightWhile(card => !areCardsEqual(card, trickCard))
+        .reduce((player: string) => player ? getNextTurn(players, player) : leadPlayer, null)
+        .value();
+}
+
+export function getTrickWinner(state: Game): string {
+    const { battle } = state;
+    const { trickCards } = battle;
+    const leadCard = getLeadCard(battle);
+    let winnerPlayerId = null;
+    
+    if(isTrumpAnnounced(battle)) {
+        const trumpSuit: Suit = getTrumpSuit(battle);
+        if (cardsWithSpecificColorExists(trickCards, trumpSuit)) {
+            matchBySuit(trumpSuit);
+        } else {
+            //no trump cards taking part in the trick, so ordinary color matching flow:
+            matchBySuit(leadCard.suit);
+        }
+    } else {
+        matchBySuit(leadCard.suit);
+    }
+
+    return winnerPlayerId;
+
+    function matchBySuit(suit: Suit) {
+        const cardsMatchedByColor = getCardsByColor(trickCards, leadCard.suit);
+        const highestRankedCard = getCardWithHighestRank(cardsMatchedByColor);
+        winnerPlayerId = getPlayerByTrickCard(highestRankedCard, state);
     }
 }
