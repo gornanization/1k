@@ -1,7 +1,8 @@
 import { Action } from '../game.actions';
 import { Game, Battle, Suit, Card } from '../game.interfaces';
-import { getNextTrickTurn, isTrumpAnnounced, getTrumpSuit, isTableEmpty, getLeadCard } from '../helpers/battle.helpers';
+import { getNextTrickTurn, isTrumpAnnounced, getTrumpSuit, isTableEmpty, getLeadCard, getPlayerByTrickCard } from '../helpers/battle.helpers';
 import * as _ from 'lodash';
+import { getCardsByColor, getCardWithHighestRank } from '../helpers/cards.helpers';
 
 export function canThrowCard(state: Game, throwCard: Action) {
     const battle: Battle = state.battle;
@@ -35,16 +36,3 @@ export function isBattleFinished(state: Game): boolean {
         .value()
 }
 
-export function getTrickWinner(battle: Battle): string {
-    const { trickCards } = battle;
-    const leadCard = getLeadCard(battle);
-    
-    if(isTrumpAnnounced(battle)) {
-        const trumpSuit: Suit = getTrumpSuit(battle);
-        
-    } else {
-       
-    }
-    //TODO fill logic
-    return 'I';
-}

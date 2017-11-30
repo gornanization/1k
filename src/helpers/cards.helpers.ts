@@ -85,3 +85,30 @@ export function getTrumpPointsBySuit(suit: Suit): number {
         [Suit.Spade]: 40
     }[suit];
 }
+
+export function haveCardsEqualColor(...cards: Card[]): boolean {
+    return !!_.chain(cards)
+        .map('suit')
+        .reduce((suit1: Suit, suit2: Suit) => (suit1 === suit2) ? suit1 : NaN)
+        .value();
+}
+
+export function getCardsByColor(cards: Card[], color: Suit): Card[] {
+    return _.chain(cards)
+        .filter((card: Card) => card.suit === color)
+        .value();
+}
+
+export function cardsWithSpecificColorExists(cards: Card[], color: Suit): boolean {
+    return getCardsByColor(cards, color).length > 0;
+}
+
+export function getCardWithHighestRank(cards: Card[]): Card {
+    return _.chain(cards)
+        .maxBy(getPointsByCard)
+        .value();
+}
+
+export function areCardsEqual(card1: Card, card2: Card): boolean {
+    return _.eq(card1, card2);
+}
