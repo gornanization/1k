@@ -67,11 +67,11 @@ export function calculatePointsByPlayer(state: Game, player: string): number {
 }
 
 export function getPlayerByTrickCard(trickCard: Card, state: Game): string {
-    return _.chain(state.battle.trickCards)
+    const { battle: { leadPlayer, trickCards }, players } = state;
+
+    return _.chain(trickCards)
         .dropRightWhile(card => !areCardsEqual(card, trickCard))
-        .reduce((player: string, card: Card) => {
-            return player ? getNextTurn(state.players, player) : state.battle.leadPlayer;
-        }, null)
+        .reduce((player: string) => player ? getNextTurn(players, player) : leadPlayer, null)
         .value();
 }
 
