@@ -130,7 +130,7 @@ describe('battle helpers', () => {
         });                
     });
 
-    describe('getTrickWinner ♥ ♦ ♣ ♠', () => {
+    describe('getTrickWinner', () => {
         describe('for non trump announced case', () => {
             it('leader win, when opponents throws card with non-lead suit', () => {
                 const currentState: Game = this.state;
