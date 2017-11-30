@@ -70,10 +70,7 @@ export function getPlayerByTrickCard(trickCard: Card, state: Game): string {
     return _.chain(state.battle.trickCards)
         .dropRightWhile(card => !areCardsEqual(card, trickCard))
         .reduce((player: string, card: Card) => {
-            if(!player) {
-                return state.battle.leadPlayer;
-            }
-            return getNextTurn(state.players, player)
+            return player ? getNextTurn(state.players, player) : state.battle.leadPlayer;
         }, null)
         .value();
 }

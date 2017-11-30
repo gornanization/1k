@@ -185,7 +185,7 @@ describe('battle helpers', () => {
                 should(winnerPlayer).be.equal('pic');
             });                        
         });
-        describe.only('for trump announced case', () => {
+        describe('for trump announced case', () => {
             it('match by lead suit, when no trump suit taking part in the trick', () => {
                 const currentState: Game = this.state;
                 currentState.battle = {
