@@ -121,3 +121,15 @@ export function calculateBattleResult(): CalculateBattleResult {
         type: CALCULATE_BATTLE_RESULT
     };
 }
+
+//------------------------------------------------
+export const FINALIZE_TRICK = 'FINALIZE_TRICK';
+export interface FinalizeTrick extends Action {
+    trickWinner: string
+}
+export function finalizeTrick(trickWinner: string): FinalizeTrick {
+    return {
+        type: FINALIZE_TRICK,
+        trickWinner
+    };
+}

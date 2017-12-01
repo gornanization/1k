@@ -1,8 +1,8 @@
 import * as should from 'should';
-import { Game, Phase } from '../../src/game.interfaces';
+import { Game, Phase, Battle } from '../../src/game.interfaces';
 import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard } from '../../src/game.actions';
+import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
 
 describe('actions', () => {
@@ -212,5 +212,36 @@ describe('actions', () => {
                 ]);
             });
         });
+        describe('finalizeTrick', () => {
+            it('sets new leadPlayer, moves trickCards to leader wonCards', () => {
+                // assign
+                const currentState = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [],
+                    leadPlayer: 'pic',
+                    trickCards: [
+                        createCard('K♥'),
+                        createCard('Q♥'),
+                        createCard('9♥')
+                    ],
+                    wonCards: {
+                        adam: [],
+                        alan: [createCard('Q♦')],
+                        pic: [],
+                    }
+                } as Battle;
+                // act
+                const nextState = gameReducer(currentState, finalizeTrick('alan'));
+                //assert
+                should(nextState.battle.trickCards).be.deepEqual([]);
+                should(nextState.battle.leadPlayer).be.equal('alan');
+                should(nextState.battle.wonCards['alan']).be.deepEqual([
+                    createCard('K♥'),
+                    createCard('Q♥'),
+                    createCard('9♥'),
+                    createCard('Q♦')
+                ]);
+            });
+        });        
     })
 });
