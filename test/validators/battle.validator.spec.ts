@@ -119,8 +119,20 @@ describe('battle validator', () => {
             //assert
             should(battleFinished).be.equal(true);
        });
-
-        it('returns false, when all players do not have 8 cards', () => {
+       it('returns true, when one player have 2 cards', () => {
+        // assign
+        const currentState: Game = this.state;
+        currentState.battle.wonCards = {
+           'alan': [ ...createCards(24) ],
+           'adam': [ ],
+           'pic': [ ]
+        };
+        // act
+        const battleFinished = isBattleFinished(currentState);
+        //assert
+        should(battleFinished).be.equal(true);
+   });
+        it('returns false, when total number of wonCards is less than 24', () => {
             // assign
             const currentState: Game = this.state;
             currentState.battle.wonCards = {
