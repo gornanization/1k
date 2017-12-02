@@ -1,7 +1,7 @@
 import * as should from 'should';
-import { createCard } from '../../src/helpers/cards.helpers';
+import { createCard, createCards } from '../../src/helpers/cards.helpers';
 import { Game, Phase, Battle } from '../../src/game.interfaces';
-import { canThrowCard, isTrickFinished } from '../../src/validators/battle.validator';
+import { canThrowCard, isTrickFinished, isBattleFinished } from '../../src/validators/battle.validator';
 import { throwCard } from '../../src/game.actions';
 
 describe('battle validator', () => {
@@ -103,6 +103,47 @@ describe('battle validator', () => {
             it('', () => {
                 
             })
+        });
+    });
+    describe('isBattleFinished', () => {
+        it('returns true, when all players have 8 cards', () => {
+            // assign
+            const currentState: Game = this.state;
+            currentState.battle.wonCards = {
+               'alan': [ ...createCards(8) ],
+               'adam': [ ...createCards(8) ],
+               'pic': [ ...createCards(8) ]
+            };
+            // act
+            const battleFinished = isBattleFinished(currentState);
+            //assert
+            should(battleFinished).be.equal(true);
+       });
+       it('returns true, when one player have 24 cards', () => {
+        // assign
+        const currentState: Game = this.state;
+        currentState.battle.wonCards = {
+           'alan': [ ...createCards(24) ],
+           'adam': [ ],
+           'pic': [ ]
+        };
+        // act
+        const battleFinished = isBattleFinished(currentState);
+        //assert
+        should(battleFinished).be.equal(true);
+   });
+        it('returns false, when total number of wonCards is less than 24', () => {
+            // assign
+            const currentState: Game = this.state;
+            currentState.battle.wonCards = {
+            'alan': [ ...createCards(8) ],
+            'adam': [ ...createCards(5) ],
+            'pic': [ ]
+            };
+            // act
+            const battleFinished = isBattleFinished(currentState);
+            //assert
+            should(battleFinished).be.equal(false);
         });
     });
 });
