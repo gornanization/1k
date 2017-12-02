@@ -119,7 +119,7 @@ describe('battle validator', () => {
             //assert
             should(battleFinished).be.equal(true);
        });
-       it('returns true, when one player have 2 cards', () => {
+       it('returns true, when one player have 24 cards', () => {
         // assign
         const currentState: Game = this.state;
         currentState.battle.wonCards = {
