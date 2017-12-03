@@ -82,3 +82,9 @@ export interface Game {
     battle: Battle | null,
     cards: PlayersCards
 }
+
+export interface Thousand {
+    events: any,
+    getState: () => Game,
+    registerPlayer: (player: string) => boolean
+}

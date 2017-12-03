@@ -44,3 +44,7 @@ export function getHighestBid(bids: PlayersBid[]): PlayersBid {
 export function hasPlayerAlreadyPassed(bids: PlayersBid[], playerId: string): boolean {
     return _.some(bids,  {player: playerId, pass: true});
 }
+
+export function noOneParticipatedInBidding(bids: PlayersBid[]): boolean {
+    return getBidWinner(bids).bid === 100;
+}
