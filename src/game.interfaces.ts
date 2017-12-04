@@ -93,5 +93,6 @@ export interface Thousand {
     registerPlayer: (player: string) => boolean
     bid: (player: string, value: number) => boolean
     pass: (player: string) => boolean,
-    shareStock: (card: Card, player: string) => boolean
+    shareStock: (card: Card, player: string) => boolean,
+    throwCard: (card: Card, player: string) => boolean
 }

@@ -103,7 +103,7 @@ export function game(state: Game = defaultState, action) {
         case INITIALIZE_BATTLE: {
             return {
                 ...state,
-                phase: Phase.BATTLE_IN_PROGRESS,
+                phase: Phase.BATTLE_START,
                 battle: {
                     trumpAnnouncements: [],
                     leadPlayer: getBidWinner(state.bid).player,

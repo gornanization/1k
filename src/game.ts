@@ -12,6 +12,7 @@ import { isBiddingFinished } from './../src/validators/bid.validator';
 import { isSharingStockFinished } from './../src/validators/stock.validator';
 import { can, isGameFinished } from './../src/validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
+import { throwCard } from './game.actions';
 var EventEmitter = require('wolfy87-eventemitter');
 
 
@@ -36,6 +37,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         bid: (player: string, value: number) => doAction(bid(player, value), store),
         pass: (player: string) => doAction(bid(player, 0), store),
         shareStock: (card: Card, player: string) => doAction(shareStock(card, player), store),
+        throwCard: (card: Card, player: string) => doAction(throwCard(card, player), store),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
@@ -132,19 +134,18 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 break;
             case Phase.SHARE_STOCK:
                 thousand.events.emit('phaseChanged');
-                if(isSharingStockFinished(state)) {
-                    store.dispatch(setPhase(Phase.BATTLE_START));
+                if (isSharingStockFinished(state)) {
+                    store.dispatch(initializeBattle());
                 }
                 break;
             case Phase.BATTLE_START:
                 thousand.events.emit(
                     'phaseChanged',
-                    () => {
-                        store.dispatch(initializeBattle());
-                    }
+                    () => store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS))
                 );
                 break;
             case Phase.BATTLE_IN_PROGRESS:
+                thousand.events.emit('phaseChanged');
                 if(isTrickFinished(state)) {
                     if(isBattleFinished(state)) {
                         store.dispatch(setPhase(Phase.BATTLE_FINISHED));
@@ -154,7 +155,6 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 } else {
                     //trick in progress
                 }
-    
                 break;
              case Phase.BATTLE_FINISHED:
                 store.dispatch(calculateBattleResult());

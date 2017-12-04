@@ -1,7 +1,7 @@
 import { initializeGame } from './src/game';
 import { Thousand, Phase, Game } from './src/game.interfaces';
 import * as _ from 'lodash';
-import { shareStock } from './src/game.actions';
+import { shareStock, throwCard } from './src/game.actions';
 
 const thousand: Thousand = initializeGame();
 
@@ -51,10 +51,11 @@ thousand.events.addListener('phaseChanged', (next) => {
             next();
         break;       
         case Phase.SHARE_STOCK:
-            console.log('SHARE_STOCK', state.cards);
+            console.log('SHARE_STOCK');
         break;
         case Phase.BATTLE_START: 
             console.log('BATTLE_START');
+            console.log(state.battle);
             next();
         break;
         case Phase.BATTLE_IN_PROGRESS: 
@@ -74,9 +75,15 @@ const actions = [
     () => thousand.pass('pic'),
     () => thousand.pass('adam'),
     //alan is winner
-    () => thousand.shareStock(thousand.getState().cards['alan'][0], 'adam'),
-    () => thousand.shareStock(thousand.getState().cards['alan'][0], 'pic'),
+    () => thousand.shareStock(getCardsByPlayer('alan')[0], 'adam'),
+    () => thousand.shareStock(getCardsByPlayer('alan')[0], 'pic'),
+    //battle:
+    () => thousand.throwCard(getCardsByPlayer('alan')[0], 'alan'),
 ];
+
+function getCardsByPlayer(player) {
+    return thousand.getState().cards[player];
+}
 
 _.chain(actions)
     .map(action => action())
