@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "./node_modules/.bin/tsc && node dist/main.js",
-    "test":  "./node_modules/.bin/tsc && mocha dist/test/**/*.js"
+    "test": "./node_modules/.bin/tsc && mocha dist/test/**/*.js"
   },
   "author": "",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "mocha": "2.3.4",
     "redux": "3.7.2",
     "should": "8.0.2",
-    "typescript": "2.4.2"
+    "typescript": "2.4.2",
+    "wolfy87-eventemitter": "5.2.4"
   }
 }
