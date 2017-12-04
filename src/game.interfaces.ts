@@ -91,4 +91,6 @@ export interface Thousand {
     init: () => void,
     getState: () => Game,
     registerPlayer: (player: string) => boolean
+    bid: (player: string, value: number) => boolean
+    pass: (player: string) => boolean
 }

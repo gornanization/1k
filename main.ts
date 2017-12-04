@@ -37,6 +37,9 @@ thousand.events.addListener('phaseChanged', (next) => {
         case Phase.BIDDING_IN_PROGRESS:
             console.log('BIDDING_IN_PROGRESS', state.bid);
         break;
+        case Phase.FLIP_STOCK: 
+            console.log('FLIP_STOCK', state.stock);
+        break;
     }
 });
 

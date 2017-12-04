@@ -11,7 +11,7 @@ import { getNextTurn, getWinner } from './../src/helpers/players.helpers';
 import { isBiddingFinished } from './../src/validators/bid.validator';
 import { isSharingStockFinished } from './../src/validators/stock.validator';
 import { can, isGameFinished } from './../src/validators/game.validators';
-import { getBidWinner } from './helpers/bid.helpers';
+import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
 var EventEmitter = require('wolfy87-eventemitter');
 
 
@@ -28,12 +28,14 @@ function doAction(action: any, store): boolean {
 export function initializeGame(defaultState: Game = undefined): Thousand {
     const store = createStore(gameReducer, defaultState);
 
-    const ee = new EventEmitter();
-
     const thousand: Thousand = {
         store,
-        events: ee,
-        registerPlayer: (player) => doAction(registerPlayer(player), store),
+        events: new EventEmitter(),
+        //actions:
+        registerPlayer: (player: string) => doAction(registerPlayer(player), store),
+        bid: (player: string, value: number) => doAction(bid(player, value), store),
+        pass: (player: string) => doAction(bid(player, 0), store),
+        //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
     };
@@ -103,11 +105,20 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
             case Phase.BIDDING_FINISHED:
                 thousand.events.emit(
                     'phaseChanged', 
-                    () => store.dispatch(setPhase(Phase.FLIP_STOCK))
+                    () => {
+                        if(noOneParticipatedInBidding(state.bid)) {
+                            store.dispatch(setPhase(Phase.ASSIGN_STOCK));
+                        } else {
+                            store.dispatch(setPhase(Phase.FLIP_STOCK));
+                        }
+                    }
                 );
-                break;
+                break;               
             case Phase.FLIP_STOCK:
-                store.dispatch(setPhase(Phase.ASSIGN_STOCK));
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => store.dispatch(setPhase(Phase.ASSIGN_STOCK))
+                );
                 break;
             case Phase.ASSIGN_STOCK:
                 store.dispatch(setPhase(Phase.SHARE_STOCK));
