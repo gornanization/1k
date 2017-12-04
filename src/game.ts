@@ -147,25 +147,29 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
             case Phase.BATTLE_IN_PROGRESS:
                 thousand.events.emit('phaseChanged');
                 if(isTrickFinished(state)) {
-                    if(isBattleFinished(state)) {
-                        store.dispatch(setPhase(Phase.BATTLE_FINISHED));
-                    } else {
-                        
-                    }
-                } else {
-                    //trick in progress
+                    
+                }
+                if(isBattleFinished(state)) {
+                    store.dispatch(setPhase(Phase.BATTLE_FINISHED));
                 }
                 break;
              case Phase.BATTLE_FINISHED:
-                store.dispatch(calculateBattleResult());
+                thousand.events.emit(
+                    'phaseChanged',
+                    () => store.dispatch(calculateBattleResult())
+                );
                 break;
             case Phase.BATTLE_RESULTS_ANNOUNCEMENT:
-                console.log(state.players);
-                if (isGameFinished(state)) {
-                    store.dispatch(setPhase(Phase.GAME_FINISHED));
-                } else {
-                    store.dispatch(setPhase(Phase.DEALING_CARDS_START));
-                }
+                thousand.events.emit(
+                    'phaseChanged',
+                    () => {
+                        if (isGameFinished(state)) {
+                            store.dispatch(setPhase(Phase.GAME_FINISHED));
+                        } else {
+                            store.dispatch(setPhase(Phase.DEALING_CARDS_START));
+                        }
+                    }
+                );
                 break;
             case Phase.GAME_FINISHED:
                 const winner = getWinner(state.players);
