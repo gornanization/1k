@@ -32,7 +32,7 @@ describe('bid validator', () => {
     describe('canBid', () => {
         describe('is not allowed', () => {
             it('for non bid phase', () => {
-                this.state.phase = Phase.REGISTERING_PLAYERS;
+                this.state.phase = Phase.REGISTERING_PLAYERS_IN_PROGRESS;
                 should(canBid(this.state, bid('alan', 100))).be.equal(false);
             });
 

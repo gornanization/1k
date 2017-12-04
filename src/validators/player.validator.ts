@@ -7,7 +7,7 @@ import { isMaxBid, hasTwoPasses } from '../helpers/bid.helpers';
 
 export function canRegisterPlayer(state: Game, action: RegisterPlayer): boolean {
     return !isRegisteringPlayersPhaseFinished(state) && 
-            state.phase === Phase.REGISTERING_PLAYERS && 
+            state.phase === Phase.REGISTERING_PLAYERS_IN_PROGRESS && 
            !playerExists(state.players, action.id);
 }
 

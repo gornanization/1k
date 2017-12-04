@@ -18,7 +18,7 @@ describe('player validator', () => {
             settings: {
                 barrelPointsLimit: 880
             },
-            phase: Phase.REGISTERING_PLAYERS,
+            phase: Phase.REGISTERING_PLAYERS_IN_PROGRESS,
             players: [],
             deck: [],
             stock: [],
