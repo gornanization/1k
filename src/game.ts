@@ -35,6 +35,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         registerPlayer: (player: string) => doAction(registerPlayer(player), store),
         bid: (player: string, value: number) => doAction(bid(player, value), store),
         pass: (player: string) => doAction(bid(player, 0), store),
+        shareStock: (card: Card, player: string) => doAction(shareStock(card, player), store),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
@@ -116,13 +117,18 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 break;               
             case Phase.FLIP_STOCK:
                 thousand.events.emit(
-                    'phaseChanged', 
+                    'phaseChanged',
                     () => store.dispatch(setPhase(Phase.ASSIGN_STOCK))
                 );
                 break;
             case Phase.ASSIGN_STOCK:
-                store.dispatch(setPhase(Phase.SHARE_STOCK));
-                store.dispatch(assignStock());
+                thousand.events.emit(
+                    'phaseChanged',
+                    () => {
+                        store.dispatch(setPhase(Phase.SHARE_STOCK));
+                        store.dispatch(assignStock());
+                    }
+                );
                 break;
             case Phase.SHARE_STOCK:
                 if(isSharingStockFinished(state)) {
@@ -132,10 +138,15 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 }
                 break;
             case Phase.BATTLE_START:
-                store.dispatch(initializeBattle());
+                thousand.events.emit(
+                    'phaseChanged',
+                    () => {
+                        store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS));
+                        store.dispatch(initializeBattle());
+                    }
+                );
                 break;
             case Phase.BATTLE_IN_PROGRESS:
-                console.log('battle in progress');
                 if(isTrickFinished(state)) {
                     if(isBattleFinished(state)) {
                         store.dispatch(setPhase(Phase.BATTLE_FINISHED));

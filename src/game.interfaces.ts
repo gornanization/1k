@@ -92,5 +92,6 @@ export interface Thousand {
     getState: () => Game,
     registerPlayer: (player: string) => boolean
     bid: (player: string, value: number) => boolean
-    pass: (player: string) => boolean
+    pass: (player: string) => boolean,
+    shareStock: (card: Card, player: string) => boolean
 }
