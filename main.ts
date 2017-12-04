@@ -48,13 +48,18 @@ thousand.events.addListener('phaseChanged', (next) => {
         break;    
         case Phase.ASSIGN_STOCK: 
             console.log('ASSIGN_STOCK', state.stock);
-        break;    
+            next();
+        break;       
+        case Phase.SHARE_STOCK:
+            console.log('SHARE_STOCK', state.cards);
+        break;
         case Phase.BATTLE_START: 
             console.log('BATTLE_START');
             next();
-        break;    
+        break;
         case Phase.BATTLE_IN_PROGRESS: 
             console.log('BATTLE_IN_PROGRESS');
+            console.log(state.battle);
         break;
     }
 });

@@ -131,17 +131,15 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 );
                 break;
             case Phase.SHARE_STOCK:
+                thousand.events.emit('phaseChanged');
                 if(isSharingStockFinished(state)) {
                     store.dispatch(setPhase(Phase.BATTLE_START));
-                } else {
-                    console.log('NOT isSharingStockFinished')
                 }
                 break;
             case Phase.BATTLE_START:
                 thousand.events.emit(
                     'phaseChanged',
                     () => {
-                        store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS));
                         store.dispatch(initializeBattle());
                     }
                 );
