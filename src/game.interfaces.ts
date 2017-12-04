@@ -15,7 +15,9 @@ export enum Rank {
 }
 
 export enum Phase {
-    REGISTERING_PLAYERS = 'REGISTERING_PLAYERS',
+    REGISTERING_PLAYERS_START = 'REGISTERING_PLAYERS_START',
+    REGISTERING_PLAYERS_IN_PROGRESS = 'REGISTERING_PLAYERS_IN_PROGRESS',
+    REGISTERING_PLAYERS_FINISHED = 'REGISTERING_PLAYERS_FINISHED',
     
     DEALING_CARDS_START = 'DEALING_CARDS_START',
     DEALING_CARDS_IN_PROGRESS = 'DEALING_CARDS_IN_PROGRESS',
@@ -84,7 +86,9 @@ export interface Game {
 }
 
 export interface Thousand {
+    store: any,
     events: any,
+    init: () => void,
     getState: () => Game,
     registerPlayer: (player: string) => boolean
 }

@@ -11,6 +11,7 @@ import { getNextTurn, getWinner } from './../src/helpers/players.helpers';
 import { isBiddingFinished } from './../src/validators/bid.validator';
 import { isSharingStockFinished } from './../src/validators/stock.validator';
 import { can, isGameFinished } from './../src/validators/game.validators';
+import { getBidWinner } from './helpers/bid.helpers';
 var EventEmitter = require('wolfy87-eventemitter');
 
 
@@ -30,50 +31,80 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     const ee = new EventEmitter();
 
     const thousand: Thousand = {
+        store,
         events: ee,
         registerPlayer: (player) => doAction(registerPlayer(player), store),
-        getState: () => store.getState()
+        getState: () => store.getState(),
+        init: () => store.dispatch(setPhase(store.getState().phase))
     };
 
     store.subscribe(() => {
         const state: Game = store.getState();
     
         switch (state.phase) {
-            case Phase.REGISTERING_PLAYERS:
+            case Phase.REGISTERING_PLAYERS_START: 
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => store.dispatch(setPhase(Phase.REGISTERING_PLAYERS_IN_PROGRESS))
+                );
+            break;
+            case Phase.REGISTERING_PLAYERS_IN_PROGRESS:
+                thousand.events.emit('phaseChanged');
                 if (isRegisteringPlayersPhaseFinished(state)) {
-                    store.dispatch(setPhase(Phase.DEALING_CARDS_START))
+                    store.dispatch(setPhase(Phase.REGISTERING_PLAYERS_FINISHED));
                 }
                 break;
+            case Phase.REGISTERING_PLAYERS_FINISHED:
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => store.dispatch(setPhase(Phase.DEALING_CARDS_START))
+                );
+            break;
             case Phase.DEALING_CARDS_START:
-                store.dispatch(setPhase(Phase.DEALING_CARDS_IN_PROGRESS))
-    
-                store.dispatch(setDeck(createShuffledDeck()));
-                for (let i = 0; i < 7; i++) {
-                    _.each(state.players, (player: Player) => store.dispatch(dealCardToPlayer(player.id)))
-                }
-                for (let i = 0; i < 3; i++) {
-                    store.dispatch(dealCardToStock());
-                }
-                store.dispatch(setPhase(Phase.DEALING_CARDS_FINISHED));
-    
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => {
+                        store.dispatch(setPhase(Phase.DEALING_CARDS_IN_PROGRESS));
+                        
+                        store.dispatch(setDeck(createShuffledDeck()));
+                        for (let i = 0; i < 7; i++) {
+                            _.each(state.players, (player: Player) => store.dispatch(dealCardToPlayer(player.id)))
+                        }
+                        for (let i = 0; i < 3; i++) {
+                            store.dispatch(dealCardToStock());
+                        }
+                        store.dispatch(setPhase(Phase.DEALING_CARDS_FINISHED));
+                    }
+                );
                 break;
             case Phase.DEALING_CARDS_FINISHED:
-                thousand.events.emit('phaseChanged', Phase.BIDDING_START);
-                store.dispatch(setPhase(Phase.BIDDING_START));
-                break;
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => store.dispatch(setPhase(Phase.BIDDING_START))
+                );
+            break;
             case Phase.BIDDING_START:
-                store.dispatch(setPhase(Phase.BIDDING_IN_PROGRESS));
-                store.dispatch(bid(_.head(state.players).id, 100));
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => store.dispatch(setPhase(Phase.BIDDING_IN_PROGRESS))
+                );
                 break;
             case Phase.BIDDING_IN_PROGRESS:
-                if (isBiddingFinished(state)) {
-                    store.dispatch(setPhase(Phase.BIDDING_FINISHED));
+                if(!getBidWinner(state.bid)) {
+                    store.dispatch(bid(_.head(state.players).id, 100));
                 } else {
-                    thousand.events.emit('phaseChanged', Phase.BIDDING_IN_PROGRESS);
+                    if (isBiddingFinished(state)) {
+                        store.dispatch(setPhase(Phase.BIDDING_FINISHED));
+                    } else {
+                        thousand.events.emit('phaseChanged');
+                    }
                 }
                 break;
             case Phase.BIDDING_FINISHED:
-                store.dispatch(setPhase(Phase.FLIP_STOCK));
+                thousand.events.emit(
+                    'phaseChanged', 
+                    () => store.dispatch(setPhase(Phase.FLIP_STOCK))
+                );
                 break;
             case Phase.FLIP_STOCK:
                 store.dispatch(setPhase(Phase.ASSIGN_STOCK));
@@ -124,7 +155,6 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 break;
         }
     });
-
 
     return thousand;
 }

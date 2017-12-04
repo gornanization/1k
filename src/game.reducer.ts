@@ -9,7 +9,7 @@ const defaultState: Game = {
     settings: {
         barrelPointsLimit: 880
     },
-    phase: Phase.REGISTERING_PLAYERS,
+    phase: Phase.REGISTERING_PLAYERS_START,
     players: [],
     deck: [],
     stock: [],
