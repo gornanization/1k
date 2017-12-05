@@ -86,7 +86,6 @@ export interface Game {
 }
 
 export interface Thousand {
-    store: any,
     events: any,
     init: () => void,
     getState: () => Game,
