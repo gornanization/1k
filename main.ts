@@ -1,10 +1,11 @@
 import { initializeGame } from './src/game';
-import { Thousand, Phase, Game, Battle, PlayersBid } from './src/game.interfaces';
+import { Thousand, Phase, Game, Battle, PlayersBid, TrumpAnnouncement, Suit } from './src/game.interfaces';
 import * as _ from 'lodash';
 import { shareStock, throwCard, Bid, Action, THROW_CARD, ThrowCard, REGISTER_PLAYER, RegisterPlayer, BID } from './src/game.actions';
 import { createCards, toString } from './src/helpers/cards.helpers';
+import { getWinner } from './src/helpers/players.helpers';
 
-const defaultState: Game = {
+const battleFinishedState: Game = {
     settings: {
         barrelPointsLimit: 880
     },
@@ -22,9 +23,15 @@ const defaultState: Game = {
         { player: 'alan', bid: 110, pass: false },
         { player: 'adam', bid: 100, pass: false }
     ] as PlayersBid[],
-    cards: {},
+    cards: {
+        'adam': [],
+        'alan': [],
+        'pic': [],
+    },
     battle: {
-        trumpAnnouncements: [],
+        trumpAnnouncements: [
+            { player: 'pic', suit: Suit.Club }
+        ],
         leadPlayer: 'alan',
         trickCards: [],
         wonCards: {
@@ -38,90 +45,93 @@ const defaultState: Game = {
 const thousand: Thousand = initializeGame();
 
 thousand.events.addListener('action', (action: Action) => {
-    switch(action.type) {
-        case THROW_CARD:
+    const actionHandlers = {
+        [THROW_CARD]: () => {
             const throwAction = action as ThrowCard;
-            console.log(`${throwAction.player} has thrown ${toString(throwAction.card)}`);
-        break;
-        case BID:
+            console.log(`ACTION: ${throwAction.player} has thrown ${toString(throwAction.card)}`);
+        },
+        [BID]: () => {
             const bidAction = action as Bid;
             if (bidAction.pass) {
-                console.log(`${bidAction.player} has passed`);
+                console.log(`ACTION: ${bidAction.player} has passed`);
             } else {
-                console.log(`${bidAction.player} has bidded ${bidAction.bid}`);
+                console.log(`ACTION: ${bidAction.player} has bidded ${bidAction.bid}`);
             }
-        break;
-        case REGISTER_PLAYER:
+        },
+        [REGISTER_PLAYER]: () => {
             const registerAction = action as RegisterPlayer;
-            console.log(`${registerAction.id} joined the table`);
-        break;
-    }
+            console.log(`ACTION: ${registerAction.id} joined the table`);
+        }
+    };
+
+    const handleAction = actionHandlers[action.type];
+    handleAction && handleAction();
 });
 
-thousand.events.addListener('phaseChanged', (next) => {
+thousand.events.addListener('phaseChanged', (next, isFirst) => {
     const state: Game = thousand.getState();
+    
+    const phaseHandlers = {
+        [Phase.REGISTERING_PLAYERS_START]: () => { 
+            console.log('show registering player view');        
+        },
+        [Phase.REGISTERING_PLAYERS_IN_PROGRESS]: () => {
+            if(isFirst) {
+                console.log('registering progress');
+            }
+        },
+        [Phase.REGISTERING_PLAYERS_FINISHED]: () => {
+            const playerList = state.players.map(player => player.id).join(', ');
+            console.log('all registered players:', playerList);        
+        },
+        [Phase.DEALING_CARDS_START]: () => {
+            console.log('preparing UI for dealing cards...');        
+        },
+        [Phase.DEALING_CARDS_FINISHED]: () => {
+            const stockCards = _.chain(state.stock)
+                .map(toString)
+                .join(', ')
+                .value();
+            console.log('stock cards: ', stockCards);                        
+        },
+        [Phase.BIDDING_START]: () => {
+            console.log('showing bidding table...');        
+        },
+        [Phase.BIDDING_IN_PROGRESS]: () => {
+            if(isFirst) {
+                console.log('bidding progress:', state.bid);
+            }
+        },
+        [Phase.BIDDING_FINISHED]: () => {        
+        },    
+        [Phase.FLIP_STOCK]: () => {         
+        },    
+        [Phase.ASSIGN_STOCK]: () => {         
+        },       
+        [Phase.SHARE_STOCK]: () => {
+        },
+        [Phase.BATTLE_START]: () => {         
+        },
+        [Phase.BATTLE_IN_PROGRESS]: () => {
 
-    switch(state.phase) {
-        case Phase.REGISTERING_PLAYERS_START: 
-            console.log('REGISTERING_PLAYERS_START');
-            next();
-        break;
-        case Phase.REGISTERING_PLAYERS_IN_PROGRESS: 
-            console.log('REGISTERING_PLAYERS_IN_PROGRESS');
+        },
+        [Phase.BATTLE_FINISHED]: () => {
+            console.log('', state.battle);        
+        },
+        [Phase.GAME_FINISHED]: () => {
+            console.log('winner: ', getWinner(state.players).id);
+        },
+        [Phase.BATTLE_RESULTS_ANNOUNCEMENT]: () => {
+            console.log('battle statistics');
             console.log(state.players);
-        break;
-        case Phase.REGISTERING_PLAYERS_FINISHED: 
-            console.log('REGISTERING_PLAYERS_FINISHED');
-            console.log(state.players);
-            next();
-        break;
-        case Phase.DEALING_CARDS_START:
-            console.log('DEALING_CARDS_START');
-            next();
-        break;
-        case Phase.DEALING_CARDS_FINISHED:
-            console.log('DEALING_CARDS_FINISHED');
-            console.log(state.cards, state.stock);
-            next();
-        break;
-        case Phase.BIDDING_START:
-            console.log('BIDDING_START');
-            next();
-        break;
-        case Phase.BIDDING_IN_PROGRESS:
-            console.log('BIDDING_IN_PROGRESS', state.bid);
-        break;
-        case Phase.BIDDING_FINISHED:
-            console.log('BIDDING_FINISHED', state.bid);
-            next();
-        break;    
-        case Phase.FLIP_STOCK: 
-            console.log('FLIP_STOCK', state.stock);
-            next();
-        break;    
-        case Phase.ASSIGN_STOCK: 
-            console.log('ASSIGN_STOCK', state.stock);
-            next();
-        break;       
-        case Phase.SHARE_STOCK:
-            console.log('SHARE_STOCK');
-        break;
-        case Phase.BATTLE_START: 
-            console.log('BATTLE_START');
-            next();
-        break;
-        case Phase.BATTLE_IN_PROGRESS: 
-            console.log('BATTLE_IN_PROGRESS');
-        break;
-        case Phase.BATTLE_FINISHED:
-            console.log('BATTLE_FINISHED');
-            console.log(state.battle);
-            next();
-        break;
-        case Phase.BATTLE_RESULTS_ANNOUNCEMENT:
-            console.log('BATTLE_RESULTS_ANNOUNCEMENT');
-            console.log(state.players);
-        break;
+        }
+    };
+
+    if(phaseHandlers[state.phase]) {
+        phaseHandlers[state.phase]();
+        next();
+    } else {
+        console.log('no action for... ', state.phase);
     }
 });
 
@@ -130,17 +140,17 @@ thousand.init();
 _.chain([
     () => thousand.registerPlayer('adam'),
     () => thousand.registerPlayer('alan'),
-    () => thousand.registerPlayer('pic'),
+   () => thousand.registerPlayer('pic'),
     () => thousand.bid('alan', 110),
-    () => thousand.pass('pic'),
-    () => thousand.pass('adam'),
-    //alan is winner
-    () => thousand.shareStock(getCardsByPlayer('alan')[0], 'adam'),
-    () => thousand.shareStock(getCardsByPlayer('alan')[0], 'pic'),
-    //battle:
-    () => thousand.throwCard(getCardsByPlayer('alan')[0], 'alan'),
+    // () => thousand.pass('pic'),
+    // () => thousand.pass('adam'),
+    // //alan is winner
+    // () => thousand.shareStock(getCardsByPlayer('alan'), 'adam'),
+    // () => thousand.shareStock(getCardsByPlayer('alan'), 'pic'),
+    // //battle:
+    // () => thousand.throwCard(getCardsByPlayer('alan'), 'alan'),
 ]).map(action => action()).value();
 
 function getCardsByPlayer(player) {
-    return thousand.getState().cards[player];
+    return thousand.getState().cards[player][0];
 }
