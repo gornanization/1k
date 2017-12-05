@@ -9,7 +9,7 @@ export function getNextTurn(players: Player[], playerId: string): string {
 }
 
 export function getPlayerById(players: Player[], id: string): Player {
-    return _.find(players, (player: Player) => player.id === id) || null;
+    return _.find(players, (player: Player) => player.id === id);
 }
 
 export function playerExists(players: Player[], id: string) {
