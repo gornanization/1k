@@ -7,12 +7,12 @@ import { game as gameReducer } from './../src/game.reducer';
 import { createDeck, createCard, getMarriages, createShuffledDeck } from './../src/helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './../src/validators/player.validator';
 import { isBattleFinished, isTrickFinished } from './../src/validators/battle.validator';
-import { getNextTurn, getWinner } from './../src/helpers/players.helpers';
+import { getNextTurn, getWinner, getNextBiddingTurn } from './../src/helpers/players.helpers';
 import { isBiddingFinished } from './../src/validators/bid.validator';
 import { isSharingStockFinished } from './../src/validators/stock.validator';
 import { can, isGameFinished } from './../src/validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
-import { throwCard } from './game.actions';
+import { throwCard, initializeBidding } from './game.actions';
 var EventEmitter = require('wolfy87-eventemitter');
 
 
@@ -94,7 +94,6 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 );
             },
             [Phase.DEALING_CARDS_START]: (isFirst) => {
-               
                 events.emit(
                     'phaseChanged', 
                     () => {
@@ -122,20 +121,16 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
             [Phase.BIDDING_START]: (isFirst) => {
                 events.emit(
                     'phaseChanged', 
-                    () => store.dispatch(setPhase(Phase.BIDDING_IN_PROGRESS)),
+                    () => {                        
+                        store.dispatch(initializeBidding());
+                    },
                     isFirst
                 );
             },
             [Phase.BIDDING_IN_PROGRESS]: (isFirst) => {
                 events.emit('phaseChanged', () => {}, isFirst);
-                if(!getBidWinner(state.bid)) {
-                    store.dispatch(bid(_.head(state.players).id, 100));
-                } else {
-                    if (isBiddingFinished(state)) {
-                        store.dispatch(setPhase(Phase.BIDDING_FINISHED));
-                    } else {
-                        
-                    }
+                if (isBiddingFinished(state)) {
+                    store.dispatch(setPhase(Phase.BIDDING_FINISHED));
                 }
             },
             [Phase.BIDDING_FINISHED]: (isFirst) => {
@@ -162,7 +157,6 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 events.emit(
                     'phaseChanged',
                     () => {
-                        store.dispatch(setPhase(Phase.SHARE_STOCK));
                         store.dispatch(assignStock());
                     },
                     isFirst

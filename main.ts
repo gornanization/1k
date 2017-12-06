@@ -1,9 +1,9 @@
 import { initializeGame } from './src/game';
 import { Thousand, Phase, Game, Battle, PlayersBid, TrumpAnnouncement, Suit } from './src/game.interfaces';
 import * as _ from 'lodash';
-import { shareStock, throwCard, Bid, Action, THROW_CARD, ThrowCard, REGISTER_PLAYER, RegisterPlayer, BID } from './src/game.actions';
+import { shareStock, throwCard, Bid, Action, THROW_CARD, ThrowCard, REGISTER_PLAYER, RegisterPlayer, BID, SHARE_STOCK, ShareStock } from './src/game.actions';
 import { createCards, toString } from './src/helpers/cards.helpers';
-import { getWinner } from './src/helpers/players.helpers';
+import { getWinner, getNextTurn } from './src/helpers/players.helpers';
 
 const battleFinishedState: Game = {
     settings: {
@@ -46,6 +46,7 @@ const battleFinishedState: Game = {
 
 const thousand: Thousand = initializeGame();
 
+//action listeners:
 thousand.events.addListener('action', (action: Action) => {
     const actionHandlers = {
         [THROW_CARD]: () => {
@@ -63,6 +64,11 @@ thousand.events.addListener('action', (action: Action) => {
         [REGISTER_PLAYER]: () => {
             const registerAction = action as RegisterPlayer;
             console.log(`ACTION: ${registerAction.id} joined the table`);
+        },
+        [SHARE_STOCK]: () => {
+            const shareStock = action as ShareStock;
+            
+            console.log(`ACTION: sharing ${toString(shareStock.card)} with opponent: ${shareStock.player}`);
         }
     };
 
@@ -70,6 +76,7 @@ thousand.events.addListener('action', (action: Action) => {
     handleAction && handleAction();
 });
 
+//phase listeners
 thousand.events.addListener('phaseChanged', (next, isFirst) => {
     const state: Game = thousand.getState();
     
@@ -104,21 +111,30 @@ thousand.events.addListener('phaseChanged', (next, isFirst) => {
                 console.log('bidding progress:', state.bid);
             }
         },
-        [Phase.BIDDING_FINISHED]: () => {        
-        },    
-        [Phase.FLIP_STOCK]: () => {         
-        },    
-        [Phase.ASSIGN_STOCK]: () => {         
-        },       
-        [Phase.SHARE_STOCK]: () => {
+        [Phase.BIDDING_FINISHED]: () => {
+            console.log('bidding finished', state.bid);
         },
-        [Phase.BATTLE_START]: () => {         
+        [Phase.FLIP_STOCK]: () => {
+            console.log('flipping stock');
+        },
+        [Phase.ASSIGN_STOCK]: () => {  
+            console.log('assigning stock'); 
+        },
+        [Phase.SHARE_STOCK]: () => {
+            if(isFirst) {
+                console.log('sharing stock:', state.bid);
+            }
+        },
+        [Phase.BATTLE_START]: () => {
+            console.log('battle start');
         },
         [Phase.BATTLE_IN_PROGRESS]: () => {
-
+            if(isFirst) {
+                console.log('battle in progress:', state.battle);
+            }
         },
         [Phase.BATTLE_FINISHED]: () => {
-            console.log('', state.battle);        
+            console.log('', state.battle);
         },
         [Phase.GAME_FINISHED]: () => {
             console.log('winner: ', getWinner(state.players).id);
@@ -128,13 +144,10 @@ thousand.events.addListener('phaseChanged', (next, isFirst) => {
             console.log(state.players);
         }
     };
+    
+    phaseHandlers[state.phase] && phaseHandlers[state.phase]();
+    next();
 
-    if(phaseHandlers[state.phase]) {
-        phaseHandlers[state.phase]();
-        next();
-    } else {
-        console.log('no action for... ', state.phase);
-    }
 });
 
 thousand.init();
@@ -144,14 +157,16 @@ _.chain([
     () => thousand.registerPlayer('alan'),
    () => thousand.registerPlayer('pic'),
     () => thousand.bid('alan', 110),
-    // () => thousand.pass('pic'),
-    // () => thousand.pass('adam'),
+    () => thousand.pass('pic'),
+    () => thousand.pass('adam'),
     // //alan is winner
-    // () => thousand.shareStock(getCardsByPlayer('alan'), 'adam'),
-    // () => thousand.shareStock(getCardsByPlayer('alan'), 'pic'),
+    () => thousand.shareStock(getCardsByPlayer('alan'), 'adam'),
+    () => thousand.shareStock(getCardsByPlayer('alan'), 'pic'),
     // //battle:
-    // () => thousand.throwCard(getCardsByPlayer('alan'), 'alan'),
+    () => thousand.throwCard(getCardsByPlayer('alan'), 'alan'),
 ]).map(action => action()).value();
+
+console.log(thousand.getState());
 
 function getCardsByPlayer(player) {
     return thousand.getState().cards[player][0];

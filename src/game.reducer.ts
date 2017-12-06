@@ -1,9 +1,10 @@
-import { Game, Phase, Battle, Player, PlayersCards } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK } from './game.actions';
+import { Game, Phase, Battle, Player, PlayersCards, PlayersBid } from './game.interfaces';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK, INITIALIZE_BIDDING, bid } from './game.actions';
 import * as _ from 'lodash';
 import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
 import { getCard } from './helpers/cards.helpers';
 import { calculatePointsByPlayer } from './helpers/battle.helpers';
+import { getNextBiddingTurn } from './helpers/players.helpers';
 
 const defaultState: Game = {
     settings: {
@@ -73,6 +74,7 @@ export function game(state: Game = defaultState, action) {
             const winnerPlayerId = getBidWinner(state.bid).player;
             return {
                 ...state,
+                phase: Phase.SHARE_STOCK,
                 stock: [],
                 cards: {
                     ...state.cards,
@@ -117,6 +119,15 @@ export function game(state: Game = defaultState, action) {
                 } as Battle
             }
         }
+        case INITIALIZE_BIDDING: {
+            return {
+                ...state,
+                phase: Phase.BIDDING_IN_PROGRESS,
+                bid: [
+                    {bid: 100, player: getNextBiddingTurn(state), pass: false}
+                ] as PlayersBid[]
+            };
+        }        
         case THROW_CARD: {
             const battle = state.battle;
             const playerCard = getCard(state.cards[action.player], action.card)
