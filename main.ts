@@ -70,7 +70,7 @@ _.chain([
     () => thousand.throwCard(getCardsByPlayer('adam'), 'adam')
 ]).map(action => action()).value();
 
-console.log(thousand.getState())
+console.log(thousand.getState());
 
 function getCardsByPlayer(player) {
     return thousand.getState().cards[player][0];
@@ -183,3 +183,15 @@ function onPhaseUpdated(next: Function, phaseInit: boolean) {
     phaseHandlers[state.phase] && phaseHandlers[state.phase]();
     next();
 }
+
+// thousand.registerPlayer('adam');
+// thousand.registerPlayer('alan');
+// thousand.registerPlayer('pic');
+// thousand.bid('alan', 110);
+// thousand.pass('pic');
+// thousand.pass('adam');
+// // //alan is winner
+// thousand.shareStock(getCardsByPlayer('alan'), 'adam');
+// thousand.shareStock(getCardsByPlayer('alan'), 'pic');
+// // //battle:
+// thousand.throwCard(getCardsByPlayer('alan'), 'alan');
