@@ -7,6 +7,8 @@ import { calculatePointsByPlayer } from './helpers/battle.helpers';
 
 const defaultState: Game = {
     settings: {
+        permitBombOnBarrel: true,
+        maxBombs: 2,
         barrelPointsLimit: 880
     },
     phase: Phase.REGISTERING_PLAYERS_START,

@@ -16,6 +16,8 @@ describe('stock validator', () => {
     beforeEach(() => {
         this.state = {
             settings: {
+                permitBombOnBarrel: true,
+                maxBombs: 2,
                 barrelPointsLimit: 880
             },
             phase: Phase.SHARE_STOCK,

@@ -6,6 +6,8 @@ import { createCards } from './src/helpers/cards.helpers';
 
 const defaultState: Game = {
     settings: {
+        permitBombOnBarrel: true,
+        maxBombs: 2,
         barrelPointsLimit: 880
     },
     phase: Phase.BATTLE_IN_PROGRESS,

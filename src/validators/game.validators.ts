@@ -3,7 +3,7 @@ import { Bid, Action, BID, REGISTER_PLAYER, SHARE_STOCK, ShareStock, RegisterPla
 import { canBid } from './bid.validator';
 import { canShareStock } from './stock.validator';
 import { canRegisterPlayer } from './player.validator';
-import { getWinner, getTotalRospisatByPlayer, getPlayerTotalPoints, getPlayerById } from '../helpers/players.helpers';
+import { getWinner, getTotalBombsByPlayer, getPlayerTotalPoints, getPlayerById } from '../helpers/players.helpers';
 import { canThrowCard } from './battle.validator';
 import * as _ from 'lodash';
 import { isTableEmpty, getTotalWonCards } from '../helpers/battle.helpers';
@@ -22,7 +22,7 @@ export function isGameFinished(state: Game): boolean {
     return !!winner;
 }
 
-export function canAnnounceRospisat(state: Game, player: string): boolean {
+export function canDeclareBomb(state: Game, player: string): boolean {
     const { battle } = state;
 
     const isValidPhase = _.includes([
@@ -33,11 +33,12 @@ export function canAnnounceRospisat(state: Game, player: string): boolean {
 
     if( battle.leadPlayer !== player) { return false; }
 
-    if (getTotalRospisatByPlayer(state, player) === state.settings.maxRospisat) { return false; }
+    if (getTotalBombsByPlayer(state, player) === state.settings.maxBombs) { return false; }
 
-    if(state.settings.permintRospisatOnBarrel) {
+    if(state.settings.permitBombOnBarrel) {
         const playerObj = getPlayerById(state.players, player);
         const totalPlayerPoints = getPlayerTotalPoints(playerObj);
+
         if (totalPlayerPoints >= state.settings.barrelPointsLimit) { return false; }
     }
 

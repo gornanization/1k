@@ -38,7 +38,7 @@ export function getWinner(players: Player[]): Player|null {
         .value();
 }
 
-export function getTotalRospisatByPlayer(state: Game, player: string): number {
+export function getTotalBombsByPlayer(state: Game, player: string): number {
     const battlePoints = getPlayerById(state.players, player).battlePoints;
     return _.chain(battlePoints)
         .countBy(isRospisat)
