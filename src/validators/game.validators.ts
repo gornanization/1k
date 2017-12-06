@@ -31,6 +31,8 @@ export function canDeclareBomb(state: Game, player: string): boolean {
         Phase.BATTLE_IN_PROGRESS
     ], state.phase);
 
+    if(!isValidPhase) { return false; }
+
     if( battle.leadPlayer !== player) { return false; }
 
     if (getTotalBombsByPlayer(state, player) === state.settings.maxBombs) { return false; }
