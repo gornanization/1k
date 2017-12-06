@@ -71,7 +71,9 @@ export interface Battle {
 }
 
 export interface Settings {
-    barrelPointsLimit: number
+    barrelPointsLimit: number,
+    permintRospisatOnBarrel: boolean,
+    maxRospisat: number
 }
 
 export interface Game {
