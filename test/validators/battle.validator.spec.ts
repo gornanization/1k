@@ -12,7 +12,7 @@ describe('battle validator', () => {
                 maxBombs: 2,
                 barrelPointsLimit: 880
             },
-            phase: Phase.BATTLE_IN_PROGRESS,
+            phase: Phase.TRICK_IN_PROGRESS,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
             deck: [],
             stock: [],

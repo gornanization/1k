@@ -160,6 +160,7 @@ export function game(state: Game = defaultState, action) {
         case FINALIZE_TRICK: {
             return {
                 ...state,
+                phase: Phase.TRICK_FINISHED,
                 battle: {
                     ...state.battle,
                     leadPlayer: action.trickWinner,

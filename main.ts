@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import { shareStock, throwCard, Bid, Action, THROW_CARD, ThrowCard, REGISTER_PLAYER, RegisterPlayer, BID, SHARE_STOCK, ShareStock } from './src/game.actions';
 import { createCards, toString } from './src/helpers/cards.helpers';
 import { getWinner, getNextTurn } from './src/helpers/players.helpers';
+import { getTrickWinner } from './src/helpers/battle.helpers';
 
 const battleFinishedState: Game = {
     settings: {
@@ -11,7 +12,7 @@ const battleFinishedState: Game = {
         maxBombs: 2,
         barrelPointsLimit: 880
     },
-    phase: Phase.BATTLE_IN_PROGRESS,
+    phase: Phase.TRICK_IN_PROGRESS,
     players: [
         {id: 'adam', battlePoints: []},
         {id: 'alan', battlePoints: []},
@@ -128,10 +129,17 @@ thousand.events.addListener('phaseChanged', (next, isFirst) => {
         [Phase.BATTLE_START]: () => {
             console.log('battle start');
         },
-        [Phase.BATTLE_IN_PROGRESS]: () => {
-            if(isFirst) {
-                console.log('battle in progress:', state.battle);
-            }
+        [Phase.TRICK_START]: () => {
+                console.log('trick starts:');
+        },
+        [Phase.TRICK_IN_PROGRESS]: () => {
+                if(isFirst) {
+                    console.log('trick in progress...');
+                }
+        },
+        [Phase.TRICK_FINISHED]: () => {
+            console.log(state);
+            console.log('trick won by');
         },
         [Phase.BATTLE_FINISHED]: () => {
             console.log('', state.battle);
@@ -164,9 +172,11 @@ _.chain([
     () => thousand.shareStock(getCardsByPlayer('alan'), 'pic'),
     // //battle:
     () => thousand.throwCard(getCardsByPlayer('alan'), 'alan'),
+    () => thousand.throwCard(getCardsByPlayer('pic'), 'pic'),
+    () => thousand.throwCard(getCardsByPlayer('adam'), 'adam'),
 ]).map(action => action()).value();
 
-console.log(thousand.getState());
+console.log(thousand.getState())
 
 function getCardsByPlayer(player) {
     return thousand.getState().cards[player][0];

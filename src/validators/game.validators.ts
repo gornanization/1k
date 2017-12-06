@@ -28,7 +28,8 @@ export function canDeclareBomb(state: Game, player: string): boolean {
     const isValidPhase = _.includes([
         Phase.SHARE_STOCK,
         Phase.BATTLE_START,
-        Phase.BATTLE_IN_PROGRESS
+        Phase.TRICK_START,
+        Phase.TRICK_IN_PROGRESS,
     ], state.phase);
 
     if(!isValidPhase) { return false; }

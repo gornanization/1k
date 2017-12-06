@@ -12,20 +12,9 @@ import { isBiddingFinished } from './../src/validators/bid.validator';
 import { isSharingStockFinished } from './../src/validators/stock.validator';
 import { can, isGameFinished } from './../src/validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
-import { throwCard, initializeBidding } from './game.actions';
+import { throwCard, initializeBidding, finalizeTrick } from './game.actions';
+import { getTrickWinner } from './helpers/battle.helpers';
 var EventEmitter = require('wolfy87-eventemitter');
-
-
-function doAction(action: any, store): boolean {
-    if (can(store.getState(), action)) {
-        store.dispatch(action);
-        return true;
-    } else {
-        console.log('can\'t do action:', action);
-        return false;
-    }
-}
-
 
 export function initializeGame(defaultState: Game = undefined): Thousand {
     const store = createStore(gameReducer, defaultState);
@@ -171,18 +160,36 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
             [Phase.BATTLE_START]: (isFirst) => {
                 events.emit(
                     'phaseChanged',
-                    () => store.dispatch(setPhase(Phase.BATTLE_IN_PROGRESS)),
+                    () => store.dispatch(setPhase(Phase.TRICK_START)),
                     isFirst
                 );
             },
-            [Phase.BATTLE_IN_PROGRESS]: (isFirst) => {
+            [Phase.TRICK_START]: (isFirst) => {
+                events.emit(
+                    'phaseChanged',
+                    () => store.dispatch(setPhase(Phase.TRICK_IN_PROGRESS)),
+                    isFirst
+                );
+            },            
+            [Phase.TRICK_IN_PROGRESS]: (isFirst) => {
                 events.emit('phaseChanged', () => {}, isFirst);
                 if(isTrickFinished(state)) {
-                    
+                    console.log(getTrickWinner(state));
+                    store.dispatch(finalizeTrick(getTrickWinner(state)));
                 }
-                if(isBattleFinished(state)) {
-                    store.dispatch(setPhase(Phase.BATTLE_FINISHED));
-                }
+            },
+            [Phase.TRICK_FINISHED]: (isFirst) => {
+                events.emit(
+                    'phaseChanged',
+                    () => {                        
+                        if(isBattleFinished(state)) {
+                            store.dispatch(setPhase(Phase.BATTLE_FINISHED));
+                        } else {
+                            store.dispatch(setPhase(Phase.TRICK_START))
+                        }
+                    },
+                    isFirst
+                );
             },
              [Phase.BATTLE_FINISHED]: (isFirst) => {
                 events.emit(
