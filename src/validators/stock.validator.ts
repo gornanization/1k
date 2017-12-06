@@ -5,14 +5,12 @@ import { ShareStock } from '../game.actions';
 import { hasEightCards, getCard } from '../helpers/cards.helpers';
 
 export function canShareStock(state: Game, action: ShareStock): boolean {
-    if (state.phase == Phase.SHARE_STOCK) {
-        const winnerPlayerId = getBidWinner(state.bid).player;
-        const winnerPlayerCards = state.cards[winnerPlayerId];
-        if (getCard(winnerPlayerCards, action.card)) {
-            return true
-        }
-    }
-    return false;
+    if(state.phase !== Phase.SHARE_STOCK) { return false; }
+
+    const winnerPlayerId = getBidWinner(state.bid).player;
+    const winnerPlayerCards = state.cards[winnerPlayerId];
+    
+    return !!getCard(winnerPlayerCards, action.card);
 }
 
 export function isSharingStockFinished(state: Game): boolean {

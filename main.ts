@@ -7,6 +7,8 @@ import { getWinner } from './src/helpers/players.helpers';
 
 const battleFinishedState: Game = {
     settings: {
+        permitBombOnBarrel: true,
+        maxBombs: 2,
         barrelPointsLimit: 880
     },
     phase: Phase.BATTLE_IN_PROGRESS,

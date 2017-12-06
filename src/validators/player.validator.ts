@@ -1,6 +1,6 @@
 import { Game, PlayersBid, Player, Phase } from '../game.interfaces';
 import { Bid, RegisterPlayer } from '../game.actions';
-import { getNextTurn, playerExists, getMaxPlayersCount, maxPlayersCountReached } from '../helpers/players.helpers';
+import { getNextTurn, playerExists, getMaxPlayersCount, maxPlayersCountReached, getPlayerById } from '../helpers/players.helpers';
 import { hasMarriage } from '../helpers/cards.helpers';
 import * as _ from 'lodash';
 import { isMaxBid, hasTwoPasses } from '../helpers/bid.helpers';
