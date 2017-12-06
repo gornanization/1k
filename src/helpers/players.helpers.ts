@@ -1,5 +1,6 @@
-import { Player, Card, Suit, Rank } from '../game.interfaces';
+import { Player, Card, Suit, Rank, Game } from '../game.interfaces';
 import * as _ from 'lodash';
+import { isRospisat } from './game.helpers';
 
 export function getNextTurn(players: Player[], playerId: string): string {
     const playerIndex = _.findIndex(players, ({ id }) => playerId === id);
@@ -34,5 +35,12 @@ export function getPlayerTotalPoints(player: Player): number {
 export function getWinner(players: Player[]): Player|null {
     return _.chain(players)
         .find(player => getPlayerTotalPoints(player) >= 1000)
+        .value();
+}
+
+export function getTotalBombsByPlayer(state: Game, player: string): number {
+    const battlePoints = getPlayerById(state.players, player).battlePoints;
+    return _.chain(battlePoints)
+        .countBy(isRospisat)
         .value();
 }

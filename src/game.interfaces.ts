@@ -71,7 +71,9 @@ export interface Battle {
 }
 
 export interface Settings {
-    barrelPointsLimit: number
+    barrelPointsLimit: number,
+    permitBombOnBarrel: boolean,
+    maxBombs: number
 }
 
 export interface Game {

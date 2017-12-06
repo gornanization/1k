@@ -50,6 +50,12 @@ export function calculateCardPointsForPlayer(state: Game, player: string): numbe
         .value();
 }
 
+export function getTotalWonCards(state: Game): number {
+    return _.reduce(state.battle.wonCards, (totalCards, cards) => {
+        return totalCards + cards.length;
+    }, 0);
+}
+
 export function calculatePointsByPlayer(state: Game, player: string): number {
     const {player: leadPlayer, bid: leadBidValue}: PlayersBid = getHighestBid(state.bid);
     
