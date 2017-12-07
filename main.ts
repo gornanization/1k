@@ -1,7 +1,7 @@
 import { initializeGame } from './src/game';
 import { Thousand, Phase, Game, Battle, PlayersBid, TrumpAnnouncement, Suit } from './src/game.interfaces';
 import * as _ from 'lodash';
-import { shareStock, throwCard, Bid, Action, THROW_CARD, ThrowCard, REGISTER_PLAYER, RegisterPlayer, BID, SHARE_STOCK, ShareStock } from './src/game.actions';
+import { shareStock, throwCard, Bid, Action, THROW_CARD, ThrowCard, REGISTER_PLAYER, RegisterPlayer, BID, SHARE_STOCK, ShareStock, DECLARE_BOMB, DeclareBomb } from './src/game.actions';
 import { createCards, toString } from './src/helpers/cards.helpers';
 import { getWinner, getNextTurn } from './src/helpers/players.helpers';
 import { getTrickWinner } from './src/helpers/battle.helpers';
@@ -64,6 +64,7 @@ _.chain([
     () => thousand.shareStock(getCardsByPlayer('alan'), 'adam'),
     () => thousand.shareStock(getCardsByPlayer('alan'), 'pic'),
     // //battle:
+    () => thousand.declareBomb('alan'),
     () => thousand.throwCard(getCardsByPlayer('alan'), 'alan'),
     () => thousand.throwCard(getCardsByPlayer('pic'), 'pic'),
     () => thousand.throwCard(getCardsByPlayer('adam'), 'adam'),
@@ -99,6 +100,10 @@ function onPlayerAction(action: Action) {
         [SHARE_STOCK]: () => {
             const shareStock = action as ShareStock;
             console.log(`ACTION: sharing ${toString(shareStock.card)} with opponent: ${shareStock.player}`);
+        },
+        [DECLARE_BOMB]: () => {
+            const declareBomb = action as DeclareBomb;
+            console.log(`ACTION: ${declareBomb.player} declared bomb`);
         }
     };
     actionHandlers[action.type] && actionHandlers[action.type]();
@@ -151,6 +156,9 @@ function onPhaseUpdated(next: Function, phaseInit: boolean) {
             if (phaseInit) {
                 console.log('sharing stock:', state.bid);
             }
+        },
+        [Phase.BOMB_DECLARED]: () => {
+            console.log('bomb declared', state);
         },
         [Phase.BATTLE_START]: () => {
             console.log('battle start');

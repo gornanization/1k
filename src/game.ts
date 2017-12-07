@@ -157,6 +157,11 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                     store.dispatch(initializeBattle());
                 }
             },
+            [Phase.BOMB_DECLARED]: (isFirst) => {
+                events.emit('phaseUpdated', () => {
+                    store.dispatch(setPhase(Phase.DEALING_CARDS_START));
+                }, isFirst);
+            },
             [Phase.BATTLE_START]: (isFirst) => {
                 events.emit(
                     'phaseUpdated',

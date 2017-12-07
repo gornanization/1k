@@ -68,7 +68,7 @@ describe('game validator', () => {
         });
     });
 
-    describe.only('canDeclareBomb', () => {
+    describe('canDeclareBomb', () => {
         beforeEach(() => {
             const currentState: Game = this.state;
             currentState.phase = Phase.SHARE_STOCK;

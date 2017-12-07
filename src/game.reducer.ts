@@ -1,5 +1,5 @@
 import { Game, Phase, Battle, Player, PlayersCards, PlayersBid } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK, INITIALIZE_BIDDING, bid } from './game.actions';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK, INITIALIZE_BIDDING, bid, DECLARE_BOMB } from './game.actions';
 import * as _ from 'lodash';
 import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
 import { getCard } from './helpers/cards.helpers';
@@ -152,6 +152,27 @@ export function game(state: Game = defaultState, action) {
                         return {
                             id, 
                             battlePoints: [...battlePoints, calculatePointsByPlayer(state, id)]
+                        } as Player;
+                    })
+                    .value()
+            }
+        }
+        case DECLARE_BOMB: {
+            return {
+                ...state,
+                phase: Phase.BOMB_DECLARED,
+                deck: [],
+                bid: [],
+                cards: _.reduce(state.players, (cards, player: Player) => {
+                    cards[player.id] = [];
+                    return cards;
+                }, {}),
+                battle: null,
+                players: _.chain(state.players)
+                    .map(({id, battlePoints}: Player) => {
+                        return {
+                            id, 
+                            battlePoints: [...battlePoints, action.player === id ? null : 60]
                         } as Player;
                     })
                     .value()
