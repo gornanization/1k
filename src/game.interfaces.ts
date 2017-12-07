@@ -28,13 +28,15 @@ export enum Phase {
     BIDDING_FINISHED = 'BIDDING_FINISHED',
 
     BATTLE_START = 'BATTLE_START',
+    TRICK_START = 'TRICK_START',
+    TRICK_IN_PROGRESS = 'TRICK_IN_PROGRESS',
+    TRICK_FINISHED = 'TRICK_FINISHED',
     FLIP_STOCK = 'FLIP_STOCK',
     ASSIGN_STOCK = 'ASSIGN_STOCK',
     SHARE_STOCK = 'SHARE_STOCK',
-    BATTLE_IN_PROGRESS = 'BATTLE_IN_PROGRESS',
     BATTLE_FINISHED = 'BATTLE_FINISHED',
     BATTLE_RESULTS_ANNOUNCEMENT = 'BATTLE_RESULTS_ANNOUNCEMENT',
-
+    ASSIGN_TRICK_CARDS = 'ASSIGN_TRICK_CARDS',
     GAME_FINISHED = 'GAME_FINISHED'
 }
 
@@ -88,7 +90,6 @@ export interface Game {
 }
 
 export interface Thousand {
-    store: any,
     events: any,
     init: () => void,
     getState: () => Game,

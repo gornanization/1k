@@ -44,3 +44,10 @@ export function getTotalBombsByPlayer(state: Game, player: string): number {
         .countBy(isRospisat)
         .value();
 }
+
+export function getNextBiddingTurn(state: Game): string {
+    const gamePlayers = state.players;
+    const firstRegisteredPlayer: Player = gamePlayers[0];
+
+    return _.reduce(firstRegisteredPlayer.battlePoints, (nextPlayer) => getNextTurn(gamePlayers, nextPlayer), firstRegisteredPlayer.id);
+}

@@ -12,6 +12,10 @@ export function createCard(pattern: string): Card {
     };
 }
 
+export function toString(card: Card): string {
+    return card.rank + card.suit;
+}
+
 export function createCards(count: number): Card[] {
     return _.chain(createDeck())
         .shuffle()

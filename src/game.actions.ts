@@ -99,6 +99,12 @@ export function initializeBattle(): Action {
     return {
         type: INITIALIZE_BATTLE
     };
+}//------------------------------------------------
+export const INITIALIZE_BIDDING = 'INITIALIZE_BIDDING';
+export function initializeBidding(): Action {
+    return {
+        type: INITIALIZE_BIDDING
+    };
 }
 //------------------------------------------------
 export const THROW_CARD = 'THROW_CARD';
