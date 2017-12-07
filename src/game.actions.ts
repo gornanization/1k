@@ -127,6 +127,17 @@ export function calculateBattleResult(): CalculateBattleResult {
         type: CALCULATE_BATTLE_RESULT
     };
 }
+//------------------------------------------------
+export const DECLARE_BOMB = 'DECLARE_BOMB';
+export interface DeclareBomb extends Action {
+    player: string
+}
+export function declareBomb(player: string): DeclareBomb {
+    return {
+        type: DECLARE_BOMB,
+        player
+    };
+}
 
 //------------------------------------------------
 export const FINALIZE_TRICK = 'FINALIZE_TRICK';
