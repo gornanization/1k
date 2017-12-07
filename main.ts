@@ -158,7 +158,7 @@ function onPhaseUpdated(next: Function, phaseInit: boolean) {
             }
         },
         [Phase.BOMB_DECLARED]: () => {
-            console.log('bomb declared', state);
+            console.log('bomb declared', state.players);
         },
         [Phase.BATTLE_START]: () => {
             console.log('battle start');

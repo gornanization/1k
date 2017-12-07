@@ -3,7 +3,7 @@ import { Bid, Action, BID, REGISTER_PLAYER, SHARE_STOCK, ShareStock, RegisterPla
 import { canBid } from './bid.validator';
 import { canShareStock } from './stock.validator';
 import { canRegisterPlayer } from './player.validator';
-import { getWinner, getTotalBombsByPlayer, getPlayerTotalPoints, getPlayerById } from '../helpers/players.helpers';
+import { getWinner, getTotalBombsByPlayer, getPlayerTotalPoints, getPlayerById, isOnBarrel } from '../helpers/players.helpers';
 import { canThrowCard } from './battle.validator';
 import * as _ from 'lodash';
 import { isTableEmpty, getTotalWonCards } from '../helpers/battle.helpers';
@@ -42,13 +42,12 @@ export function canDeclareBomb(state: Game, { player }: DeclareBomb): boolean {
     if(bidWinner !== player) { return false; }
 
     //number of declared bomd must not exceed configuration value
+    
     if (getTotalBombsByPlayer(state, player) >= state.settings.maxBombs) { return false; }
 
     //when in barrel, prevent throwing bomb
-    if (state.settings.permitBombOnBarrel) {
-        const playerObj = getPlayerById(state.players, player);
-        const totalPlayerPoints = getPlayerTotalPoints(playerObj);
-        if (totalPlayerPoints >= state.settings.barrelPointsLimit) { return false; }
+    if (state.settings.permitBombOnBarrel && isOnBarrel(state, getPlayerById(state.players, player))) {
+        return false;
     }
     
     //when trick in progress
