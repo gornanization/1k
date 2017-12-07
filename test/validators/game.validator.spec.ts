@@ -49,7 +49,6 @@ describe('game validator', () => {
             // assign
             const currentState = this.state;
             currentState.players[0].battlePoints = [100, 100, 100, 100, 100, 100, 100, 100, 100, null, 100];
-            console.log(currentState.players)
             // act
             const isFinished = isGameFinished(currentState);
             //assert
@@ -60,7 +59,6 @@ describe('game validator', () => {
             // assign
             const currentState = this.state;
             currentState.players[0].battlePoints = [100, 100, 100, 100, 100, 100, 100, 100, 100, null, 110];
-            console.log(currentState.players)
             // act
             const isFinished = isGameFinished(currentState);
             //assert
