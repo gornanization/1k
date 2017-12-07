@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
 import { getCard } from './helpers/cards.helpers';
 import { calculatePointsByPlayer } from './helpers/battle.helpers';
-import { getNextBiddingTurn } from './helpers/players.helpers';
+import { getNextBiddingTurn, getPlayerTotalPoints, isOnBarrel } from './helpers/players.helpers';
 
 const defaultState: Game = {
     settings: {
@@ -168,12 +168,15 @@ export function game(state: Game = defaultState, action) {
                     return cards;
                 }, {}),
                 battle: null,
-                players: _.reduce(state.players, (players, {id, battlePoints}: Player) => {
-                    players.push({
+                players: _.reduce(state.players, (players, player: Player) => {
+                    const { id, battlePoints } = player;
+                    return [...players, {
                         id,
-                        battlePoints: [...battlePoints, action.player === id ? null : 60]
-                    })
-                    return players;
+                        battlePoints: [
+                            ...battlePoints, 
+                            action.player === id ? null : (isOnBarrel(state, player) ? 0 : 60)
+                        ]
+                    }];
                 }, [])
             }
         }

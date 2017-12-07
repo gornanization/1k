@@ -46,6 +46,10 @@ export function getTotalBombsByPlayer(state: Game, player: string): number {
         .value();
 }
 
+export function isOnBarrel(state: Game, player: Player): boolean {
+    return getPlayerTotalPoints(player) >= state.settings.barrelPointsLimit;
+}
+
 export function getNextBiddingTurn(state: Game): string {
     const gamePlayers = state.players;
     const firstRegisteredPlayer: Player = gamePlayers[0];
