@@ -168,14 +168,13 @@ export function game(state: Game = defaultState, action) {
                     return cards;
                 }, {}),
                 battle: null,
-                players: _.chain(state.players)
-                    .map(({id, battlePoints}: Player) => {
-                        return {
-                            id, 
-                            battlePoints: [...battlePoints, action.player === id ? null : 60]
-                        } as Player;
+                players: _.reduce(state.players, (players, {id, battlePoints}: Player) => {
+                    players.push({
+                        id,
+                        battlePoints: [...battlePoints, action.player === id ? null : 60]
                     })
-                    .value()
+                    return players;
+                }, [])
             }
         }
         case FINALIZE_TRICK: {
