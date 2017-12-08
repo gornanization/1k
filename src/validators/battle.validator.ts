@@ -1,12 +1,14 @@
 import { Action } from '../game.actions';
-import { Game, Battle, Suit, Card } from '../game.interfaces';
+import { Game, Battle, Suit, Card, Phase } from '../game.interfaces';
 import { getNextTrickTurn, isTrumpAnnounced, getTrumpSuit, isTableEmpty, getLeadCard, getPlayerByTrickCard } from '../helpers/battle.helpers';
 import * as _ from 'lodash';
 import { getCardsByColor, getCardWithHighestRank } from '../helpers/cards.helpers';
 
 export function canThrowCard(state: Game, throwCard: Action) {
-    const battle: Battle = state.battle;
 
+    if (state.phase !== Phase.TRICK_IN_PROGRESS) { return false; }
+    
+    const battle: Battle = state.battle;
     const nextTrickPlayerTurn = getNextTrickTurn(state);
 
     if (isTableEmpty(battle)) {

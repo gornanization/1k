@@ -12,7 +12,7 @@ import { isBiddingFinished } from './../src/validators/bid.validator';
 import { isSharingStockFinished } from './../src/validators/stock.validator';
 import { can, isGameFinished } from './../src/validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
-import { throwCard, initializeBidding, finalizeTrick } from './game.actions';
+import { throwCard, initializeBidding, finalizeTrick, declareBomb } from './game.actions';
 import { getTrickWinner } from './helpers/battle.helpers';
 var EventEmitter = require('wolfy87-eventemitter');
 
@@ -23,7 +23,6 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     function manageAction(action: any) {
         let result = false;
         if (can(store.getState(), action)) {
-            
             emitActionEvent = () => events.emit('action', action);
             store.dispatch(action);
             result = true;
@@ -41,6 +40,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         pass: (player: string) =>                       manageAction(bid(player, 0)),
         shareStock: (card: Card, player: string) =>     manageAction(shareStock(card, player)),
         throwCard: (card: Card, player: string) =>      manageAction(throwCard(card, player)),
+        declareBomb: (player: string) =>                manageAction(declareBomb(player)),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
@@ -156,6 +156,11 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                 if (isSharingStockFinished(state)) {
                     store.dispatch(initializeBattle());
                 }
+            },
+            [Phase.BOMB_DECLARED]: (isFirst) => {
+                events.emit('phaseUpdated', () => {
+                    store.dispatch(setPhase(Phase.DEALING_CARDS_START));
+                }, isFirst);
             },
             [Phase.BATTLE_START]: (isFirst) => {
                 events.emit(

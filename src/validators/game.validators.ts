@@ -1,12 +1,13 @@
 import { Game, Player, Phase } from '../game.interfaces';
-import { Bid, Action, BID, REGISTER_PLAYER, SHARE_STOCK, ShareStock, RegisterPlayer, THROW_CARD, throwCard, ThrowCard } from '../game.actions';
+import { Bid, Action, BID, REGISTER_PLAYER, SHARE_STOCK, ShareStock, RegisterPlayer, THROW_CARD, throwCard, ThrowCard, DECLARE_BOMB, DeclareBomb } from '../game.actions';
 import { canBid } from './bid.validator';
 import { canShareStock } from './stock.validator';
 import { canRegisterPlayer } from './player.validator';
-import { getWinner, getTotalBombsByPlayer, getPlayerTotalPoints, getPlayerById } from '../helpers/players.helpers';
+import { getWinner, getTotalBombsByPlayer, getPlayerTotalPoints, getPlayerById, isOnBarrel } from '../helpers/players.helpers';
 import { canThrowCard } from './battle.validator';
 import * as _ from 'lodash';
 import { isTableEmpty, getTotalWonCards } from '../helpers/battle.helpers';
+import { getBidWinner } from '../helpers/bid.helpers';
 
 export function can(state: Game, action: Action): boolean {
     return {
@@ -14,6 +15,7 @@ export function can(state: Game, action: Action): boolean {
         [BID]:             (s, a) => canBid(s, a as Bid),
         [SHARE_STOCK]:     (s, a) => canShareStock(state, action as ShareStock),
         [THROW_CARD]:      (s, a) => canThrowCard(state, action as ThrowCard),
+        [DECLARE_BOMB]:    (s, a) => canDeclareBomb(state, action as DeclareBomb),
     }[action.type](state, action);
 }
 
@@ -22,31 +24,38 @@ export function isGameFinished(state: Game): boolean {
     return !!winner;
 }
 
-export function canDeclareBomb(state: Game, player: string): boolean {
+export function canDeclareBomb(state: Game, { player }: DeclareBomb): boolean {
     const { battle } = state;
 
-    const isValidPhase = _.includes([
+    const inAllowedPhase = _.includes([
         Phase.SHARE_STOCK,
         Phase.BATTLE_START,
         Phase.TRICK_START,
-        Phase.TRICK_IN_PROGRESS,
+        Phase.TRICK_IN_PROGRESS
     ], state.phase);
 
-    if(!isValidPhase) { return false; }
+    if(!inAllowedPhase) { return false; }
 
-    if( battle.leadPlayer !== player) { return false; }
+    const bidWinner = getBidWinner(state.bid).player;
 
-    if (getTotalBombsByPlayer(state, player) === state.settings.maxBombs) { return false; }
+    //only player who won bidding is allowed
+    if(bidWinner !== player) { return false; }
 
-    if(state.settings.permitBombOnBarrel) {
-        const playerObj = getPlayerById(state.players, player);
-        const totalPlayerPoints = getPlayerTotalPoints(playerObj);
+    //number of declared bomd must not exceed configuration value
+    
+    if (getTotalBombsByPlayer(state, player) >= state.settings.maxBombs) { return false; }
 
-        if (totalPlayerPoints >= state.settings.barrelPointsLimit) { return false; }
+    //when in barrel, prevent throwing bomb
+    if (state.settings.permitBombOnBarrel && isOnBarrel(state, getPlayerById(state.players, player))) {
+        return false;
+    }
+    
+    //when trick in progress
+    if(state.phase === Phase.TRICK_IN_PROGRESS) {
+        if (state.battle.leadPlayer !== player)  { return false; } //player should be trick leader
+        if (!isTableEmpty(battle)) { return false; } //some cards throw on the table
+        if (getTotalWonCards(state) > 0) { return false; } //some tricks already finished
     }
 
-    if (!isTableEmpty(battle)) { return false; } //some cards throw on the table
-    if (getTotalWonCards(state) > 0) { return false; } //some tricks already finished,
-    
     return true;
 }

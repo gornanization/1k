@@ -29,18 +29,16 @@ describe('players helpers', () => {
             // act
             const nextBiddingTurnPlayerId = getNextBiddingTurn(currentState);
             //assert
-            console.log(nextBiddingTurnPlayerId)
             should(nextBiddingTurnPlayerId).be.equal('adam');
-       });
-       it('returns pic, for fifth bidding round', () => {
-        // assign
-        const currentState = this.state;
-        currentState.players[0].battlePoints = [1, 2, 3, 4];
-        // act
-        const nextBiddingTurnPlayerId = getNextBiddingTurn(currentState);
-        //assert
-        console.log(nextBiddingTurnPlayerId)
-        should(nextBiddingTurnPlayerId).be.equal('pic');
-   });
+        });
+        it('returns pic, for fifth bidding round', () => {
+            // assign
+            const currentState = this.state;
+            currentState.players[0].battlePoints = [1, 2, 3, 4];
+            // act
+            const nextBiddingTurnPlayerId = getNextBiddingTurn(currentState);
+            //assert
+            should(nextBiddingTurnPlayerId).be.equal('pic');
+        });
     });
 });

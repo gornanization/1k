@@ -1,6 +1,6 @@
 import { Player, Card, Suit, Rank, Game } from '../game.interfaces';
 import * as _ from 'lodash';
-import { isRospisat } from './game.helpers';
+import { isBomb } from './game.helpers';
 
 export function getNextTurn(players: Player[], playerId: string): string {
     const playerIndex = _.findIndex(players, ({ id }) => playerId === id);
@@ -41,8 +41,13 @@ export function getWinner(players: Player[]): Player|null {
 export function getTotalBombsByPlayer(state: Game, player: string): number {
     const battlePoints = getPlayerById(state.players, player).battlePoints;
     return _.chain(battlePoints)
-        .countBy(isRospisat)
+        .filter(isBomb)
+        .size()
         .value();
+}
+
+export function isOnBarrel(state: Game, player: Player): boolean {
+    return getPlayerTotalPoints(player) >= state.settings.barrelPointsLimit;
 }
 
 export function getNextBiddingTurn(state: Game): string {

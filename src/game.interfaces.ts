@@ -37,6 +37,7 @@ export enum Phase {
     BATTLE_FINISHED = 'BATTLE_FINISHED',
     BATTLE_RESULTS_ANNOUNCEMENT = 'BATTLE_RESULTS_ANNOUNCEMENT',
     ASSIGN_TRICK_CARDS = 'ASSIGN_TRICK_CARDS',
+    BOMB_DECLARED = 'BOMB_DECLARED',
     GAME_FINISHED = 'GAME_FINISHED'
 }
 
@@ -97,5 +98,6 @@ export interface Thousand {
     bid: (player: string, value: number) => boolean
     pass: (player: string) => boolean,
     shareStock: (card: Card, player: string) => boolean,
-    throwCard: (card: Card, player: string) => boolean
+    throwCard: (card: Card, player: string) => boolean,
+    declareBomb: (player: string) => boolean
 }

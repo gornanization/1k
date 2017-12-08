@@ -7,7 +7,6 @@ import { getPointsByCard, getTrumpPointsBySuit, areCardsEqual, getCardsByColor, 
 export function getNextTrickTurn(state: Game, player: string = state.battle.leadPlayer): string {
     const gamePlayers = state.players;
     const { battle } = state;
-
     return _.reduce(battle.trickCards, (nextPlayer) => getNextTurn(gamePlayers, nextPlayer), player);
 }
 
