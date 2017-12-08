@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "./node_modules/.bin/tsc && node dist/main.js",
-    "test": "./node_modules/.bin/tsc && mocha dist/test/**/*.js"
+    "test": "./node_modules/.bin/tsc && mocha dist/test/**/*.js",
+    "test2": "karma start"
   },
   "author": "",
   "license": "MIT",
@@ -18,5 +19,11 @@
     "should": "8.0.2",
     "typescript": "2.4.2",
     "wolfy87-eventemitter": "5.2.4"
+  },
+  "devDependencies": {
+    "karma": "^1.5.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-mocha": "1.3.0",
+    "karma-typescript": "3.0.8"
   }
 }
