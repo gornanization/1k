@@ -11,6 +11,11 @@ module.exports = function(config) {
                 exclude: [/\.(d|spec|test)\.ts$/i],
             },
             reports: {
+                "lcovonly": {
+                    "directory": "coverage",
+                    "subdirectory": '.',
+                    "filename": "lcov.info"
+                },
                 "html": "coverage",
                 "text-summary": ""
             },

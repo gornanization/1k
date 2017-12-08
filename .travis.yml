@@ -7,3 +7,6 @@ notifications:
       - adasq3@gmail.com
     on_success: never
     on_failure: always
+after_success:
+  # Send coverage data to Coveralls
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
