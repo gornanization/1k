@@ -18,9 +18,6 @@ module.exports = function(config) {
                 },
                 'html': 'coverage'
             },
-            transformPath: function(filepath) {
-                return filepath.replace(/\.(ts|tsx)$/, '.js');
-            },
             tsconfig: './tsconfig.json'
         },
         preprocessors: {
