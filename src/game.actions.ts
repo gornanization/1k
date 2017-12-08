@@ -138,7 +138,6 @@ export function declareBomb(player: string): DeclareBomb {
         player
     };
 }
-
 //------------------------------------------------
 export const FINALIZE_TRICK = 'FINALIZE_TRICK';
 export interface FinalizeTrick extends Action {

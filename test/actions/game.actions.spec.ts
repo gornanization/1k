@@ -2,7 +2,7 @@ import * as should from 'should';
 import { Game, Phase, Battle } from '../../src/game.interfaces';
 import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick } from '../../src/game.actions';
+import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
 
 describe('actions', () => {
@@ -185,6 +185,37 @@ describe('actions', () => {
             });
         });
     });
+    xdescribe('initializeBidding', () => {
+        it('TODO', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const nextState = gameReducer(currentState, initializeBidding());
+            //assert
+            should(nextState).be.deepEqual(nextState)
+        });
+    });
+    xdescribe('calculateBattleResult', () => {
+        it('TODO', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const nextState = gameReducer(currentState, calculateBattleResult());
+            //assert
+            should(nextState).be.deepEqual(nextState)
+        });
+    });
+    xdescribe('declareBomb', () => {
+        it('TODO', () => {
+            // assign
+            const currentState = this.state;
+            // act
+            const nextState = gameReducer(currentState, declareBomb('alan'));
+            //assert
+            should(nextState).be.deepEqual(nextState)
+        });
+    });    
+    
     describe('battle actions: ', () => {
         beforeEach(() => {
             this.state.battle = {
