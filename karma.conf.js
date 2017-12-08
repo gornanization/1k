@@ -1,9 +1,9 @@
 module.exports = function(config) {
     config.set({
-        frameworks: ["mocha", "karma-typescript"],
+        frameworks: ['mocha', 'karma-typescript'],
         files: [
-            "src/**/*.ts", // *.tsx for React Jsx
-            "test/**/*.ts" // *.tsx for React Jsx
+            'src/**/*.ts',
+            'test/**/*.ts'
         ],
         karmaTypescriptConfig: {
             coverageOptions: {
@@ -11,24 +11,23 @@ module.exports = function(config) {
                 exclude: [/\.(d|spec|test)\.ts$/i],
             },
             reports: {
-                "lcovonly": {
-                    "directory": "coverage",
-                    "subdirectory": '.',
-                    "filename": "lcov.info"
+                'lcovonly': {
+                    'directory': 'coverage',
+                    'subdirectory': '.',
+                    'filename': 'lcov.info'
                 },
-                "html": "coverage",
-                "text-summary": ""
+                'html': 'coverage'
             },
             transformPath: function(filepath) {
-                return filepath.replace(/\.(ts|tsx)$/, ".js");
+                return filepath.replace(/\.(ts|tsx)$/, '.js');
             },
-            tsconfig: "./tsconfig.json"
+            tsconfig: './tsconfig.json'
         },
         preprocessors: {
-            "**/*.ts": "karma-typescript" // *.tsx for React Jsx
+            '**/*.ts': 'karma-typescript'
         },
         singleRun: true,
-        reporters: ["progress", "karma-typescript"],
-        browsers: ["Chrome"]
+        reporters: ['progress', 'karma-typescript'],
+        browsers: ['Chrome']
     });
 };
