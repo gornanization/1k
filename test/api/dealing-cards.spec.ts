@@ -2,7 +2,7 @@ import { Thousand, Game, Phase, Player, PlayersBid } from '../../src/game.interf
 import { initializeGame } from '../../src/game';
 import * as should from 'should';
 
-describe.only('dealing cards', () => {
+describe('dealing cards', () => {
     it('sets cards and initializes bidding process', () => {
 
         const history = [];
@@ -52,14 +52,10 @@ describe.only('dealing cards', () => {
                 should(state.bid).be.deepEqual([
                     { player: 'adam', bid: 100, pass: false} as PlayersBid
                 ]);
-                
             }
-
             next();
         });
 
         thousand.init();
-       
     });
-
 });
