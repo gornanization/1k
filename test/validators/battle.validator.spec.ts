@@ -1,6 +1,6 @@
 import * as should from 'should';
 import { createCard, createCards } from '../../src/helpers/cards.helpers';
-import { Game, Phase, Battle } from '../../src/game.interfaces';
+import { Game, Phase, Battle, TrumpAnnouncement, Suit } from '../../src/game.interfaces';
 import { canThrowCard, isTrickFinished, isBattleFinished } from '../../src/validators/battle.validator';
 import { throwCard } from '../../src/game.actions';
 
@@ -21,6 +21,9 @@ describe('battle validator', () => {
                 { player: 'adam', bid: 100, pass: false }
             ],
             cards: {
+                adam: [
+
+                ],
                 alan: [
                     createCard('9♥'),
                     createCard('K♥'),
@@ -72,7 +75,7 @@ describe('battle validator', () => {
         });        
     });
 
-    xdescribe('canThrowCard', () => {
+    describe('canThrowCard', () => {
         describe('permits user to throw card', () => {
             it('while in uncorrect game phase', () => {
                 // assign
@@ -102,9 +105,111 @@ describe('battle validator', () => {
                 should(canThrowCard(currentState, action)).be.equal(false);
             });
 
-            it('', () => {
-                
-            })
+            
+        });
+        describe('when first card on table', () => {
+            //♥ ♦ ♣ ♠
+            beforeEach(() => {
+                this.state.battle.trickCards = [
+                    createCard('A♠')
+                ];
+            });
+            describe('and no trump suit specified', () => {
+                it('player can only select card witch matching color', () => {
+                    // assign
+                    const currentState: Game = this.state;
+                    currentState.cards['alan'] = [
+                        createCard('A♥'),
+                        createCard('J♦'),
+                        createCard('9♦'),
+                        createCard('K♣'),
+                        createCard('J♠')
+                    ];
+                    // act
+                    const action = throwCard(createCard('K♣'), 'alan');
+                    //assert
+                    should(canThrowCard(currentState, action)).be.equal(false);
+                });
+                it('player can choose whatever, when does not have matching color card', () => {
+                    // assign
+                    const currentState: Game = this.state;
+                    currentState.cards['alan'] = [
+                        createCard('A♥'),
+                        createCard('J♦'),
+                        createCard('9♦'),
+                        createCard('K♣'),
+                    ];
+                    // act
+                    const action = throwCard(createCard('K♣'), 'alan');
+                    //assert
+                    should(canThrowCard(currentState, action)).be.equal(true);
+                });
+            });
+            describe('and trump suit specified', () => {
+                beforeEach(() => {
+                    const currentState: Game = this.state;
+                    currentState.battle.trumpAnnouncements = [
+                        { player: 'adam', suit: Suit.Heart }
+                    ] as TrumpAnnouncement[];
+                });
+                it('can throw card with suit matching lead card', () => {
+                    // assign
+                    const currentState: Game = this.state;
+                    currentState.cards['alan'] = [
+                        createCard('A♥'),
+                        createCard('J♦'),
+                        createCard('9♦'),
+                        createCard('K♣'),
+                        createCard('J♠')
+                    ];
+                    // act
+                    const action = throwCard(createCard('J♠'), 'alan');
+                    //assert
+                    should(canThrowCard(currentState, action)).be.equal(true);
+                });
+                it('can throw card with suit matching trump card', () => {
+                    // assign
+                    const currentState: Game = this.state;
+                    currentState.cards['alan'] = [
+                        createCard('A♥'),
+                        createCard('J♦'),
+                        createCard('9♦'),
+                        createCard('K♣'),
+                        createCard('J♠')
+                    ];
+                    // act
+                    const action = throwCard(createCard('A♥'), 'alan');
+                    //assert
+                    should(canThrowCard(currentState, action)).be.equal(true);
+                });
+                it('can throw anything, when no lead card and trump suit card avaialble', () => {
+                    // assign
+                    const currentState: Game = this.state;
+                    currentState.cards['alan'] = [
+                        createCard('J♦'),
+                        createCard('9♦'),
+                        createCard('K♣'),
+                    ];
+                    // act
+                    const action = throwCard(createCard('9♦'), 'alan');
+                    //assert
+                    should(canThrowCard(currentState, action)).be.equal(true);
+                });
+                it('is not forced to throw trump suit, when no lead card suit card available', () => {
+                    // assign
+                    const currentState: Game = this.state;
+                    currentState.cards['alan'] = [
+                        createCard('J♦'),
+                        createCard('9♦'),
+                        createCard('K♣'),
+                        createCard('A♥'),
+                    ];
+                    // act
+                    const action = throwCard(createCard('9♦'), 'alan');
+                    //assert
+                    should(canThrowCard(currentState, action)).be.equal(true);
+                });                
+            });
         });
     });
     describe('isBattleFinished', () => {
