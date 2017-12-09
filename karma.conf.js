@@ -24,7 +24,7 @@ module.exports = function(config) {
             '**/*.ts': 'karma-typescript'
         },
         singleRun: true,
-        reporters: ['progress', 'karma-typescript'],
+        reporters: ['progress', 'mocha', 'karma-typescript'],
         browsers: ['Chrome']
     });
 };
