@@ -66,6 +66,10 @@ export function getCard(cards: Card[], card: Card): Card {
     return _.find(cards, ({suit, rank}) => card.suit === suit && card.rank === rank);
 }
 
+export function cardExistsIn(cards: Card[], card: Card): boolean {
+    return !!getCard(cards, card);
+}
+
 export function hasEightCards(cards: Card[]): boolean {
     return cards.length === 8;
 }

@@ -1,30 +1,42 @@
-import { Action } from '../game.actions';
-import { Game, Battle, Suit, Card, Phase } from '../game.interfaces';
+import { Action, ThrowCard } from '../game.actions';
+import { Game, Battle, Suit, Card, Phase, PlayersCards } from '../game.interfaces';
 import { getNextTrickTurn, isTrumpAnnounced, getTrumpSuit, isTableEmpty, getLeadCard, getPlayerByTrickCard } from '../helpers/battle.helpers';
 import * as _ from 'lodash';
-import { getCardsByColor, getCardWithHighestRank } from '../helpers/cards.helpers';
+import { getCardsByColor, getCardWithHighestRank, cardExistsIn } from '../helpers/cards.helpers';
 
-export function canThrowCard(state: Game, throwCard: Action) {
-
+export function canThrowCard(state: Game, { player, card }: ThrowCard) {
+    // should be in specific phase
     if (state.phase !== Phase.TRICK_IN_PROGRESS) { return false; }
     
+    // should be in player turn
+    if (getNextTrickTurn(state) !== player) { return false; }
+    
+    // should have the card
+    if(!cardExistsIn(state.cards[player], card)) { return false; }
+
     const battle: Battle = state.battle;
-    const nextTrickPlayerTurn = getNextTrickTurn(state);
+    const playerCards: Card[] = state.cards[player];
+    let cardsAllowedToThrow: Card[] = [];
 
     if (isTableEmpty(battle)) {
-        //it will be first card on table
-        if(isTrumpAnnounced(battle)) {
-            const trumpSuit: Suit = getTrumpSuit(battle);
-            //Q&K announced here
-        } else {
-            //ordinary card throw
-        }
+        //it will be first card on table, allow, no matter what it is
+        cardsAllowedToThrow = playerCards;
     } else {
-        const leadCard = getLeadCard(battle);
         //upcomming cards should be related to lead card
+        cardsAllowedToThrow = getCardsByColor(playerCards, getLeadCard(battle).suit);
+        if(cardsAllowedToThrow.length === 0) {
+            cardsAllowedToThrow = playerCards;
+        } else {
+            if (isTrumpAnnounced(battle)) {
+                cardsAllowedToThrow = [
+                    ...cardsAllowedToThrow, 
+                    ...getCardsByColor(playerCards, getTrumpSuit(battle))
+                ];
+            }
+        }
+
     }
-    //TODO fill logic
-    return true;
+    return cardExistsIn(cardsAllowedToThrow, card);
 }
 
 export function isTrickFinished(state: Game): boolean {
