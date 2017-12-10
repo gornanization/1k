@@ -4,7 +4,7 @@ import * as should from 'should';
 import { createCards } from '../../src/helpers/cards.helpers';
 import { SHARE_STOCK } from '../../src/game.actions';
 
-describe.only('bidding', () => {
+describe('bidding', () => {
     it('sets cards and initializes bidding process', () => {
 
         const history = [];
