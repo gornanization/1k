@@ -86,8 +86,8 @@ export function game(state: Game = defaultState, action) {
             }
         }
         case SHARE_STOCK: {
-            const winnerPlayerId = getBidWinner(state.bid).player;
-            const targetPlayerId = action.player;
+            const winnerPlayerId = action.player;
+            const targetPlayerId = action.targetPlayer;
 
             const winnerPlayerCards = state.cards[winnerPlayerId];
             const targetPlayerCards = state.cards[targetPlayerId]

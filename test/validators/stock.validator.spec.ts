@@ -4,11 +4,12 @@ import { createCard, createCards } from '../../src/helpers/cards.helpers';
 import { canShareStock, isSharingStockFinished } from '../../src/validators/stock.validator';
 import { ShareStock, } from '../../src/game.actions';
 
-function createShareStockAction(card: Card, player: string): ShareStock {
+function createShareStockAction(player: string, card: Card, targetPlayer: string): ShareStock {
     return {
         type: "SHARE_STOCK",
         card,
-        player
+        player,
+        targetPlayer
     } as ShareStock;
 }
 
@@ -43,7 +44,7 @@ describe('stock validator', () => {
             // assign
             const currentState = this.state;
             // act
-            const action = createShareStockAction(currentState.cards.pic[0], "adam")
+            const action = createShareStockAction('pic', currentState.cards.pic[0], 'adam')
             //assert
             should(canShareStock(currentState, action)).be.equal(false);
         });
@@ -52,7 +53,7 @@ describe('stock validator', () => {
             // assign
             const currentState = this.state;
             // act
-            const action = createShareStockAction(currentState.cards.alan[0], "adam")
+            const action = createShareStockAction('alan', currentState.cards.alan[0], "adam")
             //assert
             should(canShareStock(currentState, action)).be.equal(true);
         });
@@ -62,7 +63,7 @@ describe('stock validator', () => {
             const currentState = this.state;
             currentState.phase = Phase.BATTLE_FINISHED
             // act
-            const action = createShareStockAction(currentState.cards.alan[0], "adam")
+            const action = createShareStockAction('alan', currentState.cards.alan[0], "adam")
             //assert
             should(canShareStock(currentState, action)).be.equal(false);
         });
@@ -72,7 +73,7 @@ describe('stock validator', () => {
             const currentState = this.state;
             currentState.phase = Phase.SHARE_STOCK
             // act
-            const action = createShareStockAction(currentState.cards.alan[0], "adam")
+            const action = createShareStockAction('alan', currentState.cards.alan[0], "adam")
             //assert
             should(canShareStock(currentState, action)).be.equal(true);
         });
@@ -104,5 +105,3 @@ describe('stock validator', () => {
         });
     });
 });
-
-

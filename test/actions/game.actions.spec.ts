@@ -140,7 +140,7 @@ describe('actions', () => {
             currentState.cards['pic'] = [createCard('10♥'), createCard('10♦')];
             currentState.cards['adam'] = [];
             // act
-            const nextState = gameReducer(currentState, shareStock(currentState.cards.pic[0], 'adam'));
+            const nextState = gameReducer(currentState, shareStock('pic', currentState.cards.pic[0], 'adam'));
             //assert
             should(nextState.cards['pic']).be.deepEqual([{ rank: '10', suit: '♦' }]);
             should(nextState.cards['adam']).be.deepEqual([{ rank: '10', suit: '♥' }]);

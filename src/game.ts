@@ -35,12 +35,12 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     const thousand: Thousand = {
         events,
         //actions:
-        registerPlayer: player =>                       manageAction(registerPlayer(player)),
-        bid: (player: string, value: number) =>         manageAction(bid(player, value)),
-        pass: (player: string) =>                       manageAction(bid(player, 0)),
-        shareStock: (card: Card, player: string) =>     manageAction(shareStock(card, player)),
-        throwCard: (card: Card, player: string) =>      manageAction(throwCard(card, player)),
-        declareBomb: (player: string) =>                manageAction(declareBomb(player)),
+        registerPlayer: player =>                                         manageAction(registerPlayer(player)),
+        bid: (player: string, value: number) =>                           manageAction(bid(player, value)),
+        pass: (player: string) =>                                         manageAction(bid(player, 0)),
+        shareStock: (player: string, card: Card, targetPlayer: string) => manageAction(shareStock(player, card, targetPlayer)),
+        throwCard: (card: Card, player: string) =>                        manageAction(throwCard(card, player)),
+        declareBomb: (player: string) =>                                  manageAction(declareBomb(player)),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))

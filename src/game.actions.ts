@@ -77,12 +77,13 @@ export function setPhase(phase: Phase): SetPhase {
 export const SHARE_STOCK = 'SHARE_STOCK';
 export interface ShareStock extends Action {
     card: Card,
-    player: string
+    player: string,
+    targetPlayer: string
 }
-export function shareStock(card: Card, player: string): ShareStock {
+export function shareStock(player: string, card: Card, targetPlayer: string): ShareStock {
     return {
         type: SHARE_STOCK,
-        card, player
+        card, player, targetPlayer
     };
 }
 //------------------------------------------------
