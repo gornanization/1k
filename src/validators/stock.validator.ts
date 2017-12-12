@@ -8,9 +8,16 @@ export function canShareStock(state: Game, action: ShareStock): boolean {
     if(state.phase !== Phase.SHARE_STOCK) { return false; }
 
     const winnerPlayerId = getBidWinner(state.bid).player;
-    const winnerPlayerCards = state.cards[winnerPlayerId];
-    
-    return !!getCard(winnerPlayerCards, action.card);
+    const targetPlayerId = action.targetPlayer;
+    const playerId = action.player;
+
+    if(playerId !== winnerPlayerId) { return false; }
+
+    const targetPlayerCards = state.cards[targetPlayerId];
+
+    if(!targetPlayerCards || targetPlayerCards.length === 8) { return false; }
+
+    return !!getCard(state.cards[playerId], action.card);
 }
 
 export function isSharingStockFinished(state: Game): boolean {

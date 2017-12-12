@@ -61,8 +61,8 @@ _.chain([
     () => thousand.pass('pic'),
     () => thousand.pass('adam'),
     // //alan is winner
-    () => thousand.shareStock(getCardsByPlayer('alan'), 'adam'),
-    () => thousand.shareStock(getCardsByPlayer('alan'), 'pic'),
+    () => thousand.shareStock('alan', getCardsByPlayer('alan'), 'adam'),
+    () => thousand.shareStock('alan', getCardsByPlayer('alan'), 'pic'),
     // //battle:
     () => thousand.declareBomb('alan'),
     () => thousand.throwCard(getCardsByPlayer('alan'), 'alan'),
