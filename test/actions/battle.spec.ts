@@ -5,7 +5,7 @@ import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
 
-describe('actions', () => {
+describe('initializeBattle', () => {
     beforeEach(() => {
         this.state = {
             settings: {
@@ -15,8 +15,8 @@ describe('actions', () => {
             },
             phase: Phase.BIDDING_IN_PROGRESS,
             players: [
-                { id: 'adam', battlePoints: [] }, 
-                { id: 'pic', battlePoints: [] }, 
+                { id: 'adam', battlePoints: [] },
+                { id: 'pic', battlePoints: [] },
                 { id: 'alan', battlePoints: [] }
             ],
             deck: [],
@@ -35,25 +35,23 @@ describe('actions', () => {
         } as Game;
     });
 
-    describe('initializeBattle', () => {
-        it('initializes battle object', () => {
-            // assign
-            const currentState: Game = this.state;
-            // act
-            const nextState = gameReducer(currentState, initializeBattle());
-            //assert
-            should(nextState.phase).be.equal(Phase.BATTLE_START);                
-            should(nextState.battle).be.deepEqual({
-                trumpAnnouncements: [],
-                leadPlayer: 'adam',
-                trickCards: [],
-                wonCards: {
-                    adam: [],
-                    pic: [],
-                    alan: []
-                }
+    it('initializes battle object', () => {
+        // assign
+        const currentState: Game = this.state;
+        // act
+        const nextState = gameReducer(currentState, initializeBattle());
+        //assert
+        should(nextState.phase).be.equal(Phase.BATTLE_START);
+        should(nextState.battle).be.deepEqual({
+            trumpAnnouncements: [],
+            leadPlayer: 'adam',
+            trickCards: [],
+            wonCards: {
+                adam: [],
+                pic: [],
+                alan: []
+            }
 
-            } as Battle);
-        });
+        } as Battle);
     });
 });

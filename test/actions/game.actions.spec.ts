@@ -15,8 +15,8 @@ describe('actions', () => {
             },
             phase: Phase.BIDDING_IN_PROGRESS,
             players: [
-                { id: 'adam', battlePoints: [] }, 
-                { id: 'pic', battlePoints: [] }, 
+                { id: 'adam', battlePoints: [] },
+                { id: 'pic', battlePoints: [] },
                 { id: 'alan', battlePoints: [] }],
             deck: [
                 createCard('10♥'),
@@ -82,8 +82,6 @@ describe('actions', () => {
             should(nextState.deck).be.deepEqual([createCard('9♥'), createCard('J♦')]);
         });
     });
-
-
 
     describe('bid', () => {
         it('add bid', () => {
@@ -187,8 +185,8 @@ describe('actions', () => {
             //assert
             should(nextState).be.deepEqual(nextState)
         });
-    });    
-    
+    });
+
     describe('battle actions: ', () => {
         beforeEach(() => {
             this.state.battle = {
@@ -209,8 +207,8 @@ describe('actions', () => {
                 // act
                 const nextState = gameReducer(currentState, throwCard(createCard('9♥'), 'alan'));
                 //assert
-                should(nextState.battle.trickCards).be.deepEqual([ 
-                    createCard('9♥') 
+                should(nextState.battle.trickCards).be.deepEqual([
+                    createCard('9♥')
                 ]);
                 should(nextState.cards['alan']).be.deepEqual([
                     createCard('K♥'),
@@ -248,6 +246,6 @@ describe('actions', () => {
                     createCard('Q♦')
                 ]);
             });
-        });        
+        });
     })
 });
