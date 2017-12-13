@@ -1,6 +1,6 @@
 import * as should from 'should';
 import { Game, Phase, Battle } from '../../src/game.interfaces';
-import { createCard } from '../../src/helpers/cards.helpers';
+import { createCard, createCards } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
@@ -14,7 +14,10 @@ describe('actions', () => {
                 barrelPointsLimit: 880
             },
             phase: Phase.BIDDING_IN_PROGRESS,
-            players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
+            players: [
+                { id: 'adam', battlePoints: [] }, 
+                { id: 'pic', battlePoints: [] }, 
+                { id: 'alan', battlePoints: [] }],
             deck: [
                 createCard('10♥'),
                 createCard('10♥'),
@@ -163,36 +166,6 @@ describe('actions', () => {
             //assert
             should(nextState.cards['pic']).be.deepEqual(currentState.stock);
             should(nextState.stock.length).be.equal(0);
-        });
-    });
-
-    describe('initializeBattle', () => {
-        it('initializes battle object', () => {
-            // assign
-            const currentState = this.state;
-            // act
-            const nextState = gameReducer(currentState, initializeBattle());
-            //assert
-            should(nextState.battle).be.deepEqual({
-                trumpAnnouncements: [],
-                leadPlayer: 'pic',
-                trickCards: [],
-                wonCards: {
-                    adam: [],
-                    alan: [],
-                    pic: []
-                }
-            });
-        });
-    });
-    xdescribe('initializeBidding', () => {
-        it('TODO', () => {
-            // assign
-            const currentState = this.state;
-            // act
-            const nextState = gameReducer(currentState, initializeBidding());
-            //assert
-            should(nextState).be.deepEqual(nextState)
         });
     });
     xdescribe('calculateBattleResult', () => {
