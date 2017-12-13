@@ -1,10 +1,9 @@
 import * as should from 'should';
-import { Game, Phase, Battle } from '../../src/game.interfaces';
 import { createCard, createCards } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
-import { PlayersBid } from '../../dist/src/game.interfaces';
+import { PlayersBid, Phase, Game } from '../../src/game.interfaces';
 
 describe('initializeBidding', () => {
     beforeEach(() => {
