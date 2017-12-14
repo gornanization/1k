@@ -19,7 +19,7 @@ const defaultState: Game = {
     bid: [],
     cards: {},
     battle: null
-}
+};
 
 export function game(state: Game = defaultState, action) {
     switch (action.type) {

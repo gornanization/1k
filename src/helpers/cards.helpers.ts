@@ -16,11 +16,17 @@ export function toString(card: Card): string {
     return card.rank + card.suit;
 }
 
-export function createCards(count: number): Card[] {
-    return _.chain(createDeck())
+export function createCards(input: number|string[] = null): Card[] {
+    if (typeof input === 'number') {
+        return _.chain(createDeck())
         .shuffle()
-        .sampleSize(count)
+        .sampleSize(input)
         .value();
+    } else {
+        return _.chain(input)
+        .map(createCard)
+        .value();
+    }
 }
 
 export function hasKingAndQueen(cards: Card[]): boolean {
