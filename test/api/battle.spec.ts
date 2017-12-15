@@ -4,8 +4,7 @@ import * as should from 'should';
 import { createCards, createCard } from '../../src/helpers/cards.helpers';
 import { SHARE_STOCK } from '../../src/game.actions';
 
-
-describe.only('battle API', () => {
+describe('battle API', () => {
     it('manages first trick in battle', () => {
         const history = [];
         const initState: Game = {
@@ -94,7 +93,7 @@ describe.only('battle API', () => {
         } as Battle);
     });
     
-    it('qqqq', () => {
+    it('manages case in the middle of a trick', () => {
         const history = [];
         const initState: Game = {
             settings: {
@@ -128,8 +127,8 @@ describe.only('battle API', () => {
                 ],
                 wonCards: {
                     adam: [],
-                    pic: [], // 3 cards
-                    alan: createCards(['K♠','Q♠', '10♠'])
+                    pic: [], 
+                    alan: createCards(['K♠','Q♠', '10♠']) // 3 cards
                 }
             } as Battle
         };
@@ -155,7 +154,7 @@ describe.only('battle API', () => {
 
         should(history).be.deepEqual([
             Phase.TRICK_IN_PROGRESS, // initialization of phase
-            Phase.TRICK_IN_PROGRESS, // alan throws card
+            Phase.TRICK_IN_PROGRESS // alan throws card
         ]);
     });    
 });
