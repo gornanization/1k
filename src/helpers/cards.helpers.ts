@@ -33,12 +33,22 @@ export function hasKingAndQueen(cards: Card[]): boolean {
     return _.some(cards, {rank: Rank.King}) && _.some(cards, {rank: Rank.Queen});
 }
 
+export function isKingOrQueen(card: Card): boolean {
+    return card.rank === Rank.King || card.rank === Rank.Queen;
+}
+
 export function getMarriages(cards: Card[]): Suit[] {
     return _.chain(cards)
         .groupBy(card => card.suit)
         .reduce((marriages, suitCards, suit) => {
             return hasKingAndQueen(suitCards) ? [suit, ...marriages] : marriages  
         }, [])
+        .value();
+}
+
+export function hasMarriageOfSuit(cards: Card[], suit: Suit): boolean {
+    return _.chain(getMarriages(cards))
+        .includes(suit)
         .value();
 }
 
