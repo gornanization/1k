@@ -227,7 +227,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
             [Phase.GAME_FINISHED]: (isFirst) => {
                 events.emit(
                     'phaseUpdated',
-                    () => store.dispatch(calculateBattleResult()),
+                    () => {},
                     isFirst
                 );
             }

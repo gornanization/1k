@@ -63,6 +63,7 @@ export function calculatePointsByPlayer(state: Game, player: string): number {
     const cardPoints = calculateCardPointsForPlayer(state, player);
 
     const totalPoints = trumpPoints + cardPoints;
+    
 
     if (leadPlayer === player) {
         return (totalPoints >= leadBidValue) ? leadBidValue : -leadBidValue
