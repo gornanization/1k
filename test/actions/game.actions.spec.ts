@@ -1,5 +1,5 @@
 import * as should from 'should';
-import { Game, Phase, Battle } from '../../src/game.interfaces';
+import { Game, Phase, Battle, TrumpAnnouncement, Suit } from '../../src/game.interfaces';
 import { createCard, createCards } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
@@ -214,6 +214,43 @@ describe('actions', () => {
                     createCard('K♥'),
                     createCard('Q♦')
                 ]);
+            });
+            it('registers trump in battle, while K & Q trump announcement', () => {
+                // assign
+                const currentState = this.state;
+                currentState.cards['alan'] = [
+                    createCard('K♥'),
+                    createCard('Q♥'),
+                    createCard('10♦')
+                ];
+                // act
+                const nextState = gameReducer(currentState, throwCard(createCard('Q♥'), 'alan'));
+                //assert
+                should(nextState.battle.trickCards).be.deepEqual([
+                    createCard('Q♥')
+                ]);
+                should(nextState.battle.trumpAnnouncements).be.deepEqual([
+                    { player: 'alan', suit: Suit.Heart } as TrumpAnnouncement
+                ]);
+            });
+            
+            it('does not register trump in battle, while K & Q trump announcement and not fist card on table', () => {
+                // assign
+                const currentState = this.state;
+                currentState.battle.trickCards = [createCard('9♥')];
+                currentState.cards['alan'] = [
+                    createCard('K♥'),
+                    createCard('Q♥'),
+                    createCard('10♦')
+                ];
+                // act
+                const nextState = gameReducer(currentState, throwCard(createCard('Q♥'), 'alan'));
+                //assert
+                should(nextState.battle.trickCards).be.deepEqual([
+                    createCard('9♥'),
+                    createCard('Q♥')
+                ]);
+                should(nextState.battle.trumpAnnouncements).be.deepEqual([]);
             });
         });
         describe('finalizeTrick', () => {

@@ -1,8 +1,8 @@
-import { Game, Phase, Battle, Player, PlayersCards, PlayersBid } from './game.interfaces';
+import { Game, Phase, Battle, Player, PlayersCards, PlayersBid, TrumpAnnouncement } from './game.interfaces';
 import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK, INITIALIZE_BIDDING, bid, DECLARE_BOMB } from './game.actions';
 import * as _ from 'lodash';
 import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
-import { getCard } from './helpers/cards.helpers';
+import { getCard, isKingOrQueen, hasMarriageOfSuit } from './helpers/cards.helpers';
 import { calculatePointsByPlayer } from './helpers/battle.helpers';
 import { getNextBiddingTurn, getPlayerTotalPoints, isOnBarrel } from './helpers/players.helpers';
 
@@ -130,7 +130,21 @@ export function game(state: Game = defaultState, action) {
         }        
         case THROW_CARD: {
             const battle = state.battle;
-            const playerCard = getCard(state.cards[action.player], action.card)
+            const playerCards = state.cards[action.player];
+            const playerCard = getCard(playerCards, action.card);
+            const isFirstCardOnTable = battle.trickCards.length === 0;
+            const isKingOrQueenCard = isKingOrQueen(playerCard);
+            const hasPlayerMarriageOfSuit = hasMarriageOfSuit(playerCards, playerCard.suit);
+            let trumpAnnouncements: TrumpAnnouncement[];
+
+            if(isFirstCardOnTable && isKingOrQueenCard && hasPlayerMarriageOfSuit) {
+                trumpAnnouncements = [
+                    { player: action.player, suit: playerCard.suit } as TrumpAnnouncement,
+                    ...battle.trumpAnnouncements
+                ];
+            } else {
+                trumpAnnouncements = [...battle.trumpAnnouncements];
+            }
             return {
                 ...state,
                 cards: {
@@ -139,6 +153,7 @@ export function game(state: Game = defaultState, action) {
                 },
                 battle: {
                     ...battle,
+                    trumpAnnouncements,
                     trickCards: [...battle.trickCards, { ...playerCard }],
                 } as Battle
             }
