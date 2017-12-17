@@ -223,7 +223,6 @@ describe('actions', () => {
                     createCard('Q♥'),
                     createCard('10♦')
                 ];
-                console.log(currentState.battle);
                 // act
                 const nextState = gameReducer(currentState, throwCard(createCard('Q♥'), 'alan'));
                 //assert
