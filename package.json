@@ -1,13 +1,15 @@
 {
-  "name": "1k",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "muib2",
+  "version": "2.0.18",
+  "description": "Thousand Card Game Logic",
   "scripts": {
+    "prepublish": "./node_modules/.bin/tsc",
     "start": "./node_modules/.bin/tsc && node dist/main.js",
     "test": "karma start"
   },
-  "author": "",
+  "main": "./dist/src/index.js",
+  "types": "./index.d.ts",
+  "author": "gornanization",
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "2.2.44",
