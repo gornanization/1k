@@ -1,6 +1,6 @@
 {
-  "name": "muib",
-  "version": "2.0.21",
+  "name": "1k",
+  "version": "0.0.1",
   "description": "Thousand Card Game Logic",
   "scripts": {
     "prepublish": "rm -rf dist && tsc",
