@@ -9,5 +9,3 @@ export function getWinner(state: Game): string|null {
     const winner: Player = getWinnerInternal(state.players);
     return winner ? winner.id : null;
 }
-
-export const a = 2;

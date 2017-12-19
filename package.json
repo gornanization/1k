@@ -1,6 +1,6 @@
 {
-  "name": "muib2",
-  "version": "2.0.19",
+  "name": "muib",
+  "version": "2.0.21",
   "description": "Thousand Card Game Logic",
   "scripts": {
     "prepublish": "rm -rf dist && tsc",
@@ -8,8 +8,8 @@
     "test": "karma start"
   },
   "main": "./dist/src/index.js",
-  "types": "./index.d.ts",
-  "author": "gornanization",
+  "types": "./dist/src/index.d.ts",
+  "author": "adasq",
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "2.2.44",
