@@ -21,7 +21,7 @@ const defaultState: Game = {
     battle: null
 };
 
-export function game(state: Game = defaultState, action) {
+export function game(state: Game = defaultState, action): any {
     switch (action.type) {
         case BID:
             {

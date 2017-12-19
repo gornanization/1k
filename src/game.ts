@@ -1,16 +1,16 @@
 import { createStore } from 'redux';
 import * as _ from 'lodash';
 
-import { Game, Card, Suit, Rank, Player, Phase, Thousand } from './../src/game.interfaces';
-import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult } from './../src/game.actions';
-import { game as gameReducer } from './../src/game.reducer';
-import { createDeck, createCard, getMarriages, createShuffledDeck } from './../src/helpers/cards.helpers';
-import { isRegisteringPlayersPhaseFinished } from './../src/validators/player.validator';
-import { isBattleFinished, isTrickFinished } from './../src/validators/battle.validator';
-import { getNextTurn, getWinner, getNextBiddingTurn } from './../src/helpers/players.helpers';
-import { isBiddingFinished } from './../src/validators/bid.validator';
-import { isSharingStockFinished } from './../src/validators/stock.validator';
-import { can, isGameFinished } from './../src/validators/game.validators';
+import { Game, Card, Suit, Rank, Player, Phase, Thousand } from './game.interfaces';
+import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult } from './game.actions';
+import { game as gameReducer } from './game.reducer';
+import { createDeck, createCard, getMarriages, createShuffledDeck } from './helpers/cards.helpers';
+import { isRegisteringPlayersPhaseFinished } from './validators/player.validator';
+import { isBattleFinished, isTrickFinished } from './validators/battle.validator';
+import { getNextTurn, getWinner, getNextBiddingTurn } from './helpers/players.helpers';
+import { isBiddingFinished } from './validators/bid.validator';
+import { isSharingStockFinished } from './validators/stock.validator';
+import { can, isGameFinished } from './validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
 import { throwCard, initializeBidding, finalizeTrick, declareBomb } from './game.actions';
 import { getTrickWinner } from './helpers/battle.helpers';

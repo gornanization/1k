@@ -1,13 +1,15 @@
 {
   "name": "1k",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Thousand Card Game Logic",
   "scripts": {
-    "start": "./node_modules/.bin/tsc && node dist/main.js",
+    "prepublish2": "rm -rf dist && tsc",
+    "start": "rm -rf dist && tsc && node dist/main.js",
     "test": "karma start"
   },
-  "author": "",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "author": "adasq",
   "license": "MIT",
   "dependencies": {
     "@types/mocha": "2.2.44",
