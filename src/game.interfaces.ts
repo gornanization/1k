@@ -94,8 +94,9 @@ export interface Thousand {
     events: any,
     init: () => void,
     getState: () => Game,
-    registerPlayer: (player: string) => boolean
-    bid: (player: string, value: number) => boolean
+    registerPlayer: (player: string) => boolean,
+    bid: (player: string, value: number) => boolean,
+    increaseBid: (player: string, value: number) => boolean,
     pass: (player: string) => boolean,
     shareStock: (player: string, card: Card, targetPlayer: string,) => boolean,
     throwCard: (card: Card, player: string) => boolean,

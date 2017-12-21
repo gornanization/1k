@@ -41,6 +41,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         shareStock: (player: string, card: Card, targetPlayer: string) => manageAction(shareStock(player, card, targetPlayer)),
         throwCard: (card: Card, player: string) =>                        manageAction(throwCard(card, player)),
         declareBomb: (player: string) =>                                  manageAction(declareBomb(player)),
+        increaseBid: (player: string, value: number) =>                   manageAction(bid(player, value)),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))

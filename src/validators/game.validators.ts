@@ -1,6 +1,6 @@
 import { Game, Player, Phase } from '../game.interfaces';
-import { Bid, Action, BID, REGISTER_PLAYER, SHARE_STOCK, ShareStock, RegisterPlayer, THROW_CARD, throwCard, ThrowCard, DECLARE_BOMB, DeclareBomb } from '../game.actions';
-import { canBid } from './bid.validator';
+import { Bid, Action, BID, REGISTER_PLAYER, SHARE_STOCK, ShareStock, RegisterPlayer, THROW_CARD, throwCard, ThrowCard, DECLARE_BOMB, DeclareBomb, INCREASE_BID } from '../game.actions';
+import { canBid, canIncreaseBid } from './bid.validator';
 import { canShareStock } from './stock.validator';
 import { canRegisterPlayer } from './player.validator';
 import { getWinner, getTotalBombsByPlayer, getPlayerTotalPoints, getPlayerById, isOnBarrel } from '../helpers/players.helpers';
@@ -13,6 +13,7 @@ export function can(state: Game, action: Action): boolean {
     return {
         [REGISTER_PLAYER]: (s, a) => canRegisterPlayer(s, a as RegisterPlayer),
         [BID]:             (s, a) => canBid(s, a as Bid),
+        [INCREASE_BID]:    (s, a) => canIncreaseBid(s, a as Bid),
         [SHARE_STOCK]:     (s, a) => canShareStock(state, action as ShareStock),
         [THROW_CARD]:      (s, a) => canThrowCard(state, action as ThrowCard),
         [DECLARE_BOMB]:    (s, a) => canDeclareBomb(state, action as DeclareBomb),
@@ -20,8 +21,7 @@ export function can(state: Game, action: Action): boolean {
 }
 
 export function isGameFinished(state: Game): boolean {
-    const winner: Player = getWinner(state.players);
-    return !!winner;
+    return !!getWinner(state.players);
 }
 
 export function canDeclareBomb(state: Game, { player }: DeclareBomb): boolean {
