@@ -53,8 +53,6 @@ export function canBid(state: Game, action: Bid): boolean {
 };
 
 export function canIncreaseBid(state: Game, action: IncreaseBid): boolean {
-    
-
     if (!_.includes([
         Phase.BIDDING_FINISHED,
         Phase.SHARE_STOCK,
@@ -65,7 +63,6 @@ export function canIncreaseBid(state: Game, action: IncreaseBid): boolean {
     ], state.phase)) {
         return false;
     }
-    
 
     if (!isAchievableBid(action)) {
         return false;
