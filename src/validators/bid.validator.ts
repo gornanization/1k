@@ -1,9 +1,10 @@
 import { Game, PlayersBid, Phase } from '../game.interfaces';
-import { Bid } from '../game.actions';
+import { Bid, SHARE_STOCK, IncreaseBid } from '../game.actions';
 import { getNextTurn } from '../helpers/players.helpers';
 import { hasMarriage } from '../helpers/cards.helpers';
 import * as _ from 'lodash';
-import { hasPlayerAlreadyPassed, isMaxBid, hasTwoPasses, getHighestBid, isAchievableBid, isValidBidValue } from '../helpers/bid.helpers';
+import { hasPlayerAlreadyPassed, isMaxBid, hasTwoPasses, getHighestBid, isAchievableBid, isValidBidValue, getBidWinner } from '../helpers/bid.helpers';
+import { isTableEmpty, getTotalWonCards } from '../helpers/battle.helpers';
 
 export function canBid(state: Game, action: Bid): boolean {
     if (state.phase !== Phase.BIDDING_IN_PROGRESS) {
@@ -48,6 +49,51 @@ export function canBid(state: Game, action: Bid): boolean {
     if (action.bid >= 130 && !hasPlayerMarriage) {
         return false;
     }
+    return true;
+};
+
+export function canIncreaseBid(state: Game, action: IncreaseBid): boolean {
+    if (!_.includes([
+        Phase.BIDDING_FINISHED,
+        Phase.SHARE_STOCK,
+        Phase.ASSIGN_STOCK,
+        Phase.BATTLE_START,
+        Phase.TRICK_START,
+        Phase.TRICK_IN_PROGRESS
+    ], state.phase)) {
+        return false;
+    }
+
+    if (!isAchievableBid(action)) {
+        return false;
+    }
+
+    if (!isValidBidValue(action)) {
+        return false;
+    }
+
+    if (action.pass) {
+        return false;
+    }
+
+    if (getBidWinner(state.bid).player !== action.player) {
+        return false;
+    }
+
+    const lastBidValue = getHighestBid(state.bid);
+    if (action.bid <= lastBidValue.bid) {
+        return false;
+    }
+
+    if (action.bid >= 130 && !hasMarriage(state.cards[action.player])) {
+        return false;
+    }
+
+    if(state.phase === Phase.TRICK_IN_PROGRESS) {
+        if (!isTableEmpty(state.battle)) { return false; } //some cards throw on the table
+        if (getTotalWonCards(state) > 0) { return false; } //some tricks already finished
+    }
+
     return true;
 };
 

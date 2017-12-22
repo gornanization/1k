@@ -1,8 +1,9 @@
 import * as should from 'should';
 import { Game, Phase } from '../../src/game.interfaces';
-import { createCard } from '../../src/helpers/cards.helpers';
-import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid } from '../../src/game.actions';
+import { createCard, createCards } from '../../src/helpers/cards.helpers';
+import { isBiddingFinished, canBid, canIncreaseBid } from '../../src/validators/bid.validator';
+import { bid, increaseBid, SHARE_STOCK } from '../../src/game.actions';
+import { Battle } from '../../src/index';
 
 describe('bid validator', () => {
     beforeEach(() => {
@@ -72,8 +73,8 @@ describe('bid validator', () => {
                     { player: 'adam', bid: 100, pass: false }
                 ],
 
-                should(canBid(this.state, bid('alan', 0))).be.equal(false);
-            });            
+                    should(canBid(this.state, bid('alan', 0))).be.equal(false);
+            });
         });
 
         describe('is allowed', () => {
@@ -82,7 +83,7 @@ describe('bid validator', () => {
             });
             it('to bid more than latest', () => {
                 should(canBid(this.state, bid('alan', 120))).be.equal(true);
-            });            
+            });
         });
     });
 
@@ -130,5 +131,108 @@ describe('bid validator', () => {
                 should(isBiddingFinished(this.state)).be.equal(false);
             });
         });
+    });
+});
+
+describe('canIncreaseBid', () => {
+
+    beforeEach(() => {
+        this.state = {
+            settings: {
+                permitBombOnBarrel: true,
+                maxBombs: 2,
+                barrelPointsLimit: 880
+            },
+            phase: Phase.SHARE_STOCK,
+            players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
+            deck: [],
+            stock: [],
+            bid: [
+                { player: 'adam', bid: 0, pass: true },
+                { player: 'alan', bid: 0, pass: true },
+                { player: 'pic', bid: 110, pass: false }, // winner
+                { player: 'adam', bid: 100, pass: false }
+            ],
+            cards: {
+                pic: [
+                    createCard('9♥'),
+                    createCard('K♥'),
+                    createCard('Q♥')
+                ]
+            },
+            battle: null
+        } as Game;
+    });
+
+    it('is not allowed for not winner', () => {
+        should(canIncreaseBid(this.state, increaseBid('adam', 120))).be.equal(false);
+    });
+
+    it('is allowed for winner', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(true);
+    });
+
+    it('is allowed for winner to skip value', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 180))).be.equal(true);
+    });
+
+    it('is not allowed for winner to skip value w/o trump', () => {
+        this.state.cards.pic = [];
+        should(canIncreaseBid(this.state, increaseBid('pic', 180))).not.be.equal(true);
+    });
+
+    it('is not allowed for > 300', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 310))).be.equal(false);
+    });
+
+    it('is not allowed for invalid bid', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 120.4))).be.equal(false);
+    });
+
+    it('is not allowed for pass', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 0))).be.equal(false);
+    });
+
+    it('is not allowed for lower than stated', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 100))).be.equal(false);
+    });
+
+    it('is not allowed for the same as stated', () => {
+        should(canIncreaseBid(this.state, increaseBid('pic', 110))).be.equal(false);
+    });
+
+    describe('while in progress', () => {
+        beforeEach(() => {
+            this.state.phase = Phase.TRICK_IN_PROGRESS;
+            this.state.battle = {
+                trumpAnnouncements: [],
+                wonCards: {
+                    pic: []
+                },
+                leadPlayer: 'pic',
+                trickCards: []
+            } as Battle;
+        });
+
+        it('is allowed, when no cards on the table and no cards in won section', () => {
+            should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(true);
+        });
+
+        it('is not allowed, when first card on the table', () => {
+            this.state.battle.trickCards = createCards(1);
+            should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(false);
+        });
+
+        it('is not allowed, when some cards in won seciton', () => {
+            this.state.battle.wonCards.pic = createCards(1);
+            should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(false);
+        });
+    });
+
+    it('is not allowed, when bidding in progress', () => {
+        this.state.phase = Phase.BIDDING_IN_PROGRESS;
+        should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(false);
+        this.state.phase = Phase.TRICK_FINISHED;
+        should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(false);
     });
 });

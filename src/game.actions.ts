@@ -63,6 +63,17 @@ export function bid(player: string, bid: number): Bid {
     };
 }
 //------------------------------------------------
+export const INCREASE_BID = 'INCREASE_BID';
+export interface IncreaseBid extends Bid {}
+export function increaseBid(player: string, bid: number): IncreaseBid {
+    const pass = bid === 0;
+    return {
+        type: INCREASE_BID,
+        bid, player, pass
+    };
+}
+
+//------------------------------------------------
 export const SET_PHASE = 'SET_PHASE';
 export interface SetPhase extends Action {
     phase: Phase
