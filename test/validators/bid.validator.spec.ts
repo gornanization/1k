@@ -134,7 +134,7 @@ describe('bid validator', () => {
     });
 });
 
-describe.only('canIncreaseBid', () => {
+describe('canIncreaseBid', () => {
 
     beforeEach(() => {
         this.state = {
