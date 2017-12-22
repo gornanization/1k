@@ -1,5 +1,5 @@
 import { Game, PlayersBid, Phase } from '../game.interfaces';
-import { Bid, SHARE_STOCK } from '../game.actions';
+import { Bid, SHARE_STOCK, IncreaseBid } from '../game.actions';
 import { getNextTurn } from '../helpers/players.helpers';
 import { hasMarriage } from '../helpers/cards.helpers';
 import * as _ from 'lodash';
@@ -52,8 +52,10 @@ export function canBid(state: Game, action: Bid): boolean {
     return true;
 };
 
-export function canIncreaseBid(state: Game, action: Bid): boolean {
-    if (_.includes([
+export function canIncreaseBid(state: Game, action: IncreaseBid): boolean {
+    
+
+    if (!_.includes([
         Phase.BIDDING_FINISHED,
         Phase.SHARE_STOCK,
         Phase.ASSIGN_STOCK,
@@ -63,6 +65,7 @@ export function canIncreaseBid(state: Game, action: Bid): boolean {
     ], state.phase)) {
         return false;
     }
+    
 
     if (!isAchievableBid(action)) {
         return false;

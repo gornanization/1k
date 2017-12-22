@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 import * as _ from 'lodash';
 
 import { Game, Card, Suit, Rank, Player, Phase, Thousand } from './game.interfaces';
-import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult } from './game.actions';
+import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult, increaseBid } from './game.actions';
 import { game as gameReducer } from './game.reducer';
 import { createDeck, createCard, getMarriages, createShuffledDeck } from './helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './validators/player.validator';
@@ -41,13 +41,11 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         shareStock: (player: string, card: Card, targetPlayer: string) => manageAction(shareStock(player, card, targetPlayer)),
         throwCard: (card: Card, player: string) =>                        manageAction(throwCard(card, player)),
         declareBomb: (player: string) =>                                  manageAction(declareBomb(player)),
-        increaseBid: (player: string, value: number) =>                   manageAction(bid(player, value)),
+        increaseBid: (player: string, value: number) =>                   manageAction(increaseBid(player, value)),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
     };
-
-    
     
     let previousPhase: Phase = null;
     store.subscribe(() => {

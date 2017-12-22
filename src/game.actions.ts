@@ -68,7 +68,7 @@ export interface IncreaseBid extends Bid {}
 export function increaseBid(player: string, bid: number): IncreaseBid {
     const pass = bid === 0;
     return {
-        type: BID,
+        type: INCREASE_BID,
         bid, player, pass
     };
 }
