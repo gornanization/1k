@@ -12,10 +12,6 @@ export function createCard(pattern: string): Card {
     };
 }
 
-export function toString(card: Card): string {
-    return card.rank + card.suit;
-}
-
 export function createCards(input: number|string[] = null): Card[] {
     if (typeof input === 'number') {
         return _.chain(createDeck())
@@ -108,13 +104,6 @@ export function getTrumpPointsBySuit(suit: Suit): number {
         [Suit.Club]: 60,
         [Suit.Spade]: 40
     }[suit];
-}
-
-export function haveCardsEqualColor(...cards: Card[]): boolean {
-    return !!_.chain(cards)
-        .map('suit')
-        .reduce((suit1: Suit, suit2: Suit) => (suit1 === suit2) ? suit1 : NaN)
-        .value();
 }
 
 export function getCardsByColor(cards: Card[], color: Suit): Card[] {
