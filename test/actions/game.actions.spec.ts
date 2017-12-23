@@ -2,8 +2,9 @@ import * as should from 'should';
 import { Game, Phase, Battle, TrumpAnnouncement, Suit } from '../../src/game.interfaces';
 import { createCard, createCards } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
-import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
+import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb, increaseBid } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
+
 
 describe('actions', () => {
     beforeEach(() => {
@@ -25,6 +26,8 @@ describe('actions', () => {
             ],
             stock: [],
             bid: [
+                { player: 'adam', bid: 0, pass: true },
+                { player: 'alan', bid: 0, pass: true },
                 { player: 'pic', bid: 110, pass: false },
                 { player: 'adam', bid: 100, pass: false }
             ],
@@ -106,6 +109,20 @@ describe('actions', () => {
         });
     });
 
+
+    describe('increaseBid', () => {
+        it('add bid', () => {
+            const currentState = this.state;
+            const nextState = gameReducer(currentState, increaseBid('alan', 150));
+
+            should(nextState.bid[0]).be.deepEqual({
+                player: 'alan',
+                bid: 150,
+                pass: false
+            });
+        });
+    });
+
     describe('registerPlayer', () => {
         it('add new player to board', () => {
             // assign
@@ -166,24 +183,49 @@ describe('actions', () => {
             should(nextState.stock.length).be.equal(0);
         });
     });
-    xdescribe('calculateBattleResult', () => {
-        it('TODO', () => {
+
+    describe('calculateBattleResult', () => {
+        it('updates battlePoints for each player', () => {
             // assign
             const currentState = this.state;
+            currentState.battle = {
+                trumpAnnouncements: [],
+                trickCards: [],
+                leadPlayer: 'alan',
+                wonCards: {
+                    adam: createCards(['A♠']),
+                    alan: [],
+                    pic: []
+                }
+            } as Battle;
             // act
             const nextState = gameReducer(currentState, calculateBattleResult());
             //assert
-            should(nextState).be.deepEqual(nextState)
+            should(nextState.players).be.deepEqual([
+                { id: 'adam', battlePoints: [10] },
+                { id: 'pic', battlePoints: [-110] },
+                { id: 'alan', battlePoints: [0] }
+            ]);
         });
     });
-    xdescribe('declareBomb', () => {
-        it('TODO', () => {
+
+    describe('declareBomb', () => {
+        it('sets proper battlePoints', () => {
             // assign
             const currentState = this.state;
+            currentState.players = [
+                { id: 'adam', battlePoints: [ 880 ] },
+                { id: 'pic',  battlePoints: [ 100 ] },
+                { id: 'alan', battlePoints: [ 0   ] }
+            ];
             // act
             const nextState = gameReducer(currentState, declareBomb('alan'));
             //assert
-            should(nextState).be.deepEqual(nextState)
+            should(nextState.players).be.deepEqual([
+                { id: 'adam', battlePoints: [ 880, 0  ] },
+                { id: 'pic',  battlePoints: [ 100, 60 ] },
+                { id: 'alan', battlePoints: [ 0, null ] }
+            ]);
         });
     });
 

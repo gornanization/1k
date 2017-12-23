@@ -171,7 +171,7 @@ export function game(state: Game = defaultState, action): any {
                 ...state,
                 phase: Phase.BATTLE_RESULTS_ANNOUNCEMENT,
                 players: _.chain(state.players)
-                    .map(({id, battlePoints}: Player) => {
+                    .map(({id, battlePoints}: Player) => {                    
                         return {
                             id, 
                             battlePoints: [...battlePoints, calculatePointsByPlayer(state, id)]
