@@ -28,14 +28,13 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     function manageAction(action: any) {
         let result = false;
         if (can(store.getState(), action)) {
-            emitActionEvent = (next) => {
-                if(someActionListenersRegistered()) {
-                    events.emit('action', action, next);
-                } else {
-                    next();
-                }
+            if(someActionListenersRegistered()) {
+                events.emit('action', action, () => {
+                    store.dispatch(action);
+                });
+            } else {
+                store.dispatch(action);
             }
-            store.dispatch(action);
             result = true;
         } else {
             result = false;
@@ -60,13 +59,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     
     let previousPhase: Phase = null;
     store.subscribe(() => {
-        if(emitActionEvent) {
-            const temporaryEmitActionEvent = emitActionEvent;
-            emitActionEvent = null;
-            temporaryEmitActionEvent(onStoreChanged);
-        } else {
-            onStoreChanged();
-        }
+        onStoreChanged();
     });
 
     function onStoreChanged() {
