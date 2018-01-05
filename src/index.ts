@@ -4,6 +4,7 @@ import { Game, Player } from './game.interfaces';
 export * from './game.interfaces';
 export { initializeGame } from './game';
 export { createCards, createCard } from './helpers/cards.helpers';
+export { getNextTurn } from './helpers/players.helpers';
 
 export function getWinner(state: Game): string|null {
     const winner: Player = getWinnerInternal(state.players);
