@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/gornanization/1k.svg?branch=master)](https://travis-ci.org/gornanization/1k)
 [![Coverage Status](https://coveralls.io/repos/github/gornanization/1k/badge.svg)](https://coveralls.io/github/gornanization/1k)
-[![utopian.io payment2](https://utopian-io.herokuapp.com/gornanization/1k-table)](https://utopian-io.herokuapp.com/visit/gornanization/1k-table)
+[![utopian.io payment2](https://utopian-io.herokuapp.com/MirakelX/mirakel-android)](https://utopian-io.herokuapp.com/visit/MirakelX/mirakel-android)
 # 1k
 
 ♥ ♦ ♣ ♠
