@@ -44,7 +44,6 @@ describe('share stock cards', () => {
             history.push(state.phase);
 
             if (state.phase === Phase.BATTLE_START) {
-                console.log(history);
                 should(history).be.deepEqual([                  
                     Phase.SHARE_STOCK,
                     Phase.SHARE_STOCK,
@@ -113,7 +112,6 @@ describe('share stock cards', () => {
             history.push(state.phase);
 
             if (state.phase === Phase.BOMB_DECLARED) {
-                console.log(history);
                 should(history).be.deepEqual([                  
                     Phase.SHARE_STOCK,
                     Phase.BOMB_DECLARED

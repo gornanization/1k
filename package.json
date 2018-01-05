@@ -12,16 +12,16 @@
   "author": "adasq",
   "license": "MIT",
   "dependencies": {
-    "@types/mocha": "2.2.44",
-    "@types/node": "8.0.20",
     "lodash": "4.17.4",
-    "mocha": "2.3.4",
     "redux": "3.7.2",
-    "should": "8.0.2",
-    "typescript": "2.4.2",
     "wolfy87-eventemitter": "5.2.4"
   },
   "devDependencies": {
+    "mocha": "2.3.4",
+    "@types/mocha": "2.2.44",
+    "@types/node": "8.0.20",
+    "should": "8.0.2",
+    "typescript": "2.4.2",
     "coveralls": "3.0.0",
     "karma": "1.4.1",
     "karma-chrome-launcher": "2.2.0",

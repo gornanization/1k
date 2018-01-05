@@ -66,10 +66,6 @@ describe('bidding', () => {
             next();
         });
 
-        thousand.events.addListener('action', action => {
-            console.log(action);
-        });
-
         thousand.init();
 
         const actionsResult = [

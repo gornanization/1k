@@ -20,18 +20,29 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     const store = createStore(gameReducer, defaultState);
     const events: any = new EventEmitter();
     let emitActionEvent = null;
+
+    function someActionListenersRegistered() {
+        return events.getListeners('action').length > 0;
+    }
+
     function manageAction(action: any) {
         let result = false;
         if (can(store.getState(), action)) {
-            emitActionEvent = () => events.emit('action', action);
+            emitActionEvent = (next) => {
+                if(someActionListenersRegistered()) {
+                    events.emit('action', action, next);
+                } else {
+                    next();
+                }
+            }
             store.dispatch(action);
             result = true;
         } else {
-            console.log('can\'t do action:', action);
             result = false;
         }
         return result;
     }   
+
     const thousand: Thousand = {
         events,
         //actions:
@@ -50,9 +61,15 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     let previousPhase: Phase = null;
     store.subscribe(() => {
         if(emitActionEvent) {
-            emitActionEvent();
+            const temporaryEmitActionEvent = emitActionEvent;
             emitActionEvent = null;
+            temporaryEmitActionEvent(onStoreChanged);
+        } else {
+            onStoreChanged();
         }
+    });
+
+    function onStoreChanged() {
         const state: Game = store.getState();
         const isNew = (previousPhase !== state.phase);
 
@@ -234,7 +251,7 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         const isFirst = previousPhase !== state.phase;
         updatePreviousState();
         phaseHandler[state.phase] && phaseHandler[state.phase](isFirst);
-    });
+    }
 
     return thousand;
 }

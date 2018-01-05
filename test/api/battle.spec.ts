@@ -294,6 +294,11 @@ describe('battle API', () => {
             next();
         });
 
+        thousand.events.addListener('action', (action, next) => {
+            //perform an action animation
+            next();
+        });
+
         thousand.init();
 
         const actionsResult = [
