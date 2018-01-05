@@ -1,6 +1,6 @@
 {
   "name": "1k",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Thousand Card Game Logic",
   "scripts": {
     "prepublish2": "rm -rf dist && tsc",
