@@ -52,7 +52,7 @@ export interface Card {
 }
 
 export interface PlayersCards {
-    [key: string]: Card[]
+    [key: string]: CardPattern[]
 }
 
 export interface PlayersBid {
@@ -69,9 +69,11 @@ export interface TrumpAnnouncement {
 export interface Battle {
     trumpAnnouncements: TrumpAnnouncement[],
     leadPlayer: string,
-    trickCards: Card[],
+    trickCards: CardPattern[],
     wonCards: PlayersCards
 }
+
+export type CardPattern = string;
 
 export interface Settings {
     barrelPointsLimit: number,
@@ -83,8 +85,8 @@ export interface Game {
     settings: Settings,
     phase: Phase,
     players: Player[],
-    deck: Card[],
-    stock: Card[],
+    deck: CardPattern[],
+    stock: CardPattern[],
     bid: PlayersBid[],
     battle: Battle | null,
     cards: PlayersCards
@@ -98,7 +100,7 @@ export interface Thousand {
     bid: (player: string, value: number) => boolean,
     increaseBid: (player: string, value: number) => boolean,
     pass: (player: string) => boolean,
-    shareStock: (player: string, card: Card, targetPlayer: string,) => boolean,
-    throwCard: (card: Card, player: string) => boolean,
+    shareStock: (player: string, card: CardPattern, targetPlayer: string,) => boolean,
+    throwCard: (card: CardPattern, player: string) => boolean,
     declareBomb: (player: string) => boolean
 }

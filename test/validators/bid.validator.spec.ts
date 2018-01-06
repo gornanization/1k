@@ -1,6 +1,6 @@
 import * as should from 'should';
 import { Game, Phase } from '../../src/game.interfaces';
-import { createCard, createCards } from '../../src/helpers/cards.helpers';
+import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid, canIncreaseBid } from '../../src/validators/bid.validator';
 import { bid, increaseBid, SHARE_STOCK } from '../../src/game.actions';
 import { Battle } from '../../src/index';
@@ -22,11 +22,7 @@ describe('bid validator', () => {
                 { player: 'adam', bid: 100, pass: false }
             ],
             cards: {
-                alan: [
-                    createCard('9♥'),
-                    createCard('K♥'),
-                    createCard('Q♦')
-                ]
+                alan: ['9♥','K♥','Q♦']
             },
             battle: null
         } as Game;
@@ -154,11 +150,7 @@ describe('canIncreaseBid', () => {
                 { player: 'adam', bid: 100, pass: false }
             ],
             cards: {
-                pic: [
-                    createCard('9♥'),
-                    createCard('K♥'),
-                    createCard('Q♥')
-                ]
+                pic: ['9♥','K♥','Q♥']
             },
             battle: null
         } as Game;
@@ -219,12 +211,12 @@ describe('canIncreaseBid', () => {
         });
 
         it('is not allowed, when first card on the table', () => {
-            this.state.battle.trickCards = createCards(1);
+            this.state.battle.trickCards = createCardPatterns(1);
             should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(false);
         });
 
         it('is not allowed, when some cards in won seciton', () => {
-            this.state.battle.wonCards.pic = createCards(1);
+            this.state.battle.wonCards.pic = createCardPatterns(1);
             should(canIncreaseBid(this.state, increaseBid('pic', 120))).be.equal(false);
         });
     });

@@ -1,7 +1,7 @@
 import { Thousand, Game, Phase, Player, PlayersBid } from '../../src/game.interfaces';
 import { initializeGame } from '../../src/game';
 import * as should from 'should';
-import { createCards, createCard } from '../../src/helpers/cards.helpers';
+import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { SHARE_STOCK } from '../../src/game.actions';
 
 describe('bidding', () => {
@@ -21,13 +21,13 @@ describe('bidding', () => {
             ],
             deck: [],
             stock: [
-                ...createCards(3)
+                ...createCardPatterns(3)
             ],
             bid: [],
             cards: {
-                'adam': createCards(7),
-                'alan': [...createCards(['K♥', 'Q♥']), ...createCards(5)],
-                'pic': createCards(7),
+                'adam': createCardPatterns(7),
+                'alan': ['K♥', 'Q♥', ...createCardPatterns(5)],
+                'pic': createCardPatterns(7),
             },
             battle: null
         }
@@ -74,8 +74,8 @@ describe('bidding', () => {
             thousand.bid('adam', 130),
             thousand.pass('pic'),
             thousand.increaseBid('alan', 150),
-            thousand.shareStock('alan', createCard('K♥'), 'pic'),
-            thousand.shareStock('alan', createCard('Q♥'), 'adam'),
+            thousand.shareStock('alan', 'K♥', 'pic'),
+            thousand.shareStock('alan', 'Q♥', 'adam'),
         ];
 
         should(actionsResult).be.deepEqual([
@@ -106,7 +106,7 @@ describe('bidding', () => {
             ],
             deck: [],
             stock: [
-                ...createCards(3)
+                ...createCardPatterns(3)
             ],
             bid: [
                 { player: 'alan', bid: 0, pass: true },
@@ -114,9 +114,9 @@ describe('bidding', () => {
                 { player: 'pic', bid: 100, pass: false }
             ] as PlayersBid[],
             cards: {
-                'adam': createCards(7),
-                'alan': createCards(7),
-                'pic': createCards(7)
+                'adam': createCardPatterns(7),
+                'alan': createCardPatterns(7),
+                'pic': createCardPatterns(7)
             },
             battle: null
         }

@@ -3,8 +3,9 @@ import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_P
 import * as _ from 'lodash';
 import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
 import { getCard, isKingOrQueen, hasMarriageOfSuit } from './helpers/cards.helpers';
-import { calculatePointsByPlayer } from './helpers/battle.helpers';
+import { calculatePointsByPlayer, getCardSuit } from './helpers/battle.helpers';
 import { getNextBiddingTurn, getPlayerTotalPoints, isOnBarrel } from './helpers/players.helpers';
+import { CardPattern } from './index';
 
 const defaultState: Game = {
     settings: {
@@ -108,7 +109,7 @@ export function game(state: Game = defaultState, action): any {
                 cards: {
                     ...state.cards,
                     [winnerPlayerId]: _.without(winnerPlayerCards, cardToShare),
-                    [targetPlayerId]: [{...cardToShare}, ...targetPlayerCards]
+                    [targetPlayerId]: [cardToShare, ...targetPlayerCards]
                 }
             }
         }
@@ -139,15 +140,15 @@ export function game(state: Game = defaultState, action): any {
         case THROW_CARD: {
             const battle = state.battle;
             const playerCards = state.cards[action.player];
-            const playerCard = getCard(playerCards, action.card);
+            const playerCard: CardPattern = getCard(playerCards, action.card);
             const isFirstCardOnTable = battle.trickCards.length === 0;
             const isKingOrQueenCard = isKingOrQueen(playerCard);
-            const hasPlayerMarriageOfSuit = hasMarriageOfSuit(playerCards, playerCard.suit);
+            const hasPlayerMarriageOfSuit = hasMarriageOfSuit(playerCards, getCardSuit(playerCard));
             let trumpAnnouncements: TrumpAnnouncement[];
 
             if(isFirstCardOnTable && isKingOrQueenCard && hasPlayerMarriageOfSuit) {
                 trumpAnnouncements = [
-                    { player: action.player, suit: playerCard.suit } as TrumpAnnouncement,
+                    { player: action.player, suit: getCardSuit(playerCard) } as TrumpAnnouncement,
                     ...battle.trumpAnnouncements
                 ];
             } else {
@@ -162,7 +163,7 @@ export function game(state: Game = defaultState, action): any {
                 battle: {
                     ...battle,
                     trumpAnnouncements,
-                    trickCards: [...battle.trickCards, { ...playerCard }],
+                    trickCards: [...battle.trickCards, playerCard],
                 } as Battle
             }
         }

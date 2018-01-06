@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import { Suit, Rank, Card } from '../game.interfaces';
+import { Suit, Rank, Card, CardPattern } from '../game.interfaces';
 
-export function createCard(pattern: string): Card {
+export function toCard(pattern: CardPattern): Card {
     const CARD_PATTERN_REGEX = /([A|K|Q|J|9]|10)([♥|♦|♣|♠])/;
 
     const result = CARD_PATTERN_REGEX.exec(pattern);
@@ -12,29 +12,30 @@ export function createCard(pattern: string): Card {
     };
 }
 
-export function createCards(input: number|string[] = null): Card[] {
-    if (typeof input === 'number') {
-        return _.chain(createDeck())
+export function toCardPattern({ rank, suit }: Card) : CardPattern {
+    return [rank, suit].join('');
+}
+
+export function createCardPatterns(total: number): CardPattern[] {
+    return _.chain(createDeck())
         .shuffle()
-        .sampleSize(input)
+        .sampleSize(total)
+        .map(toCardPattern)
         .value();
-    } else {
-        return _.chain(input)
-        .map(createCard)
-        .value();
-    }
 }
 
 export function hasKingAndQueen(cards: Card[]): boolean {
     return _.some(cards, {rank: Rank.King}) && _.some(cards, {rank: Rank.Queen});
 }
 
-export function isKingOrQueen(card: Card): boolean {
-    return card.rank === Rank.King || card.rank === Rank.Queen;
+export function isKingOrQueen(card: CardPattern): boolean {
+    const parsedCard = toCard(card);
+    return parsedCard.rank === Rank.King || parsedCard.rank === Rank.Queen;
 }
 
-export function getMarriages(cards: Card[]): Suit[] {
+export function getMarriages(cards: CardPattern[]): Suit[] {
     return _.chain(cards)
+        .map(toCard)
         .groupBy(card => card.suit)
         .reduce((marriages, suitCards, suit) => {
             return hasKingAndQueen(suitCards) ? [suit, ...marriages] : marriages  
@@ -42,13 +43,13 @@ export function getMarriages(cards: Card[]): Suit[] {
         .value();
 }
 
-export function hasMarriageOfSuit(cards: Card[], suit: Suit): boolean {
+export function hasMarriageOfSuit(cards: CardPattern[], suit: Suit): boolean {
     return _.chain(getMarriages(cards))
         .includes(suit)
         .value();
 }
 
-export function hasMarriage(cards: Card[]): boolean {
+export function hasMarriage(cards: CardPattern[]): boolean {
     return getMarriages(cards).length > 0;
 }
 
@@ -68,21 +69,21 @@ export function createDeck(): Card[] {
     ];
 }
 
-export function createShuffledDeck(): Card[] {
+export function createShuffledDeck(): CardPattern[] {
     return _.chain(createDeck())
         .shuffle()
         .value();
 }
 
-export function getCard(cards: Card[], card: Card): Card {
-    return _.find(cards, ({suit, rank}) => card.suit === suit && card.rank === rank);
+export function getCard(cards: CardPattern[], card: CardPattern): CardPattern {
+    return _.find(cards, _card => _card === card);
 }
 
-export function cardExistsIn(cards: Card[], card: Card): boolean {
+export function cardExistsIn(cards: CardPattern[], card: CardPattern): boolean {
     return !!getCard(cards, card);
 }
 
-export function hasEightCards(cards: Card[]): boolean {
+export function hasEightCards(cards: CardPattern[]): boolean {
     return cards.length === 8;
 }
 
@@ -106,22 +107,27 @@ export function getTrumpPointsBySuit(suit: Suit): number {
     }[suit];
 }
 
-export function getCardsByColor(cards: Card[], color: Suit): Card[] {
+export function getCardsByColor(cards: CardPattern[], color: Suit): CardPattern[] {
     return _.chain(cards)
+        .map(toCard)
         .filter((card: Card) => card.suit === color)
+        .map(toCardPattern)
         .value();
 }
 
-export function cardsWithSpecificColorExists(cards: Card[], color: Suit): boolean {
+export function cardsWithSpecificColorExists(cards: CardPattern[], color: Suit): boolean {
     return getCardsByColor(cards, color).length > 0;
 }
 
-export function getCardWithHighestRank(cards: Card[]): Card {
-    return _.chain(cards)
+export function getCardWithHighestRank(cards: CardPattern[]): CardPattern {
+    const card: Card = _.chain(cards)
+        .map(toCard)
         .maxBy(getPointsByCard)
         .value();
+    
+        return toCardPattern(card);
 }
 
-export function areCardsEqual(card1: Card, card2: Card): boolean {
-    return _.eq(card1, card2);
+export function areCardsEqual(card1: CardPattern, card2: CardPattern): boolean {
+    return card1 === card2;
 }

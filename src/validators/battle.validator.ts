@@ -1,6 +1,6 @@
 import { Action, ThrowCard } from '../game.actions';
-import { Game, Battle, Suit, Card, Phase, PlayersCards } from '../game.interfaces';
-import { getNextTrickTurn, isTrumpAnnounced, getTrumpSuit, isTableEmpty, getLeadCard, getPlayerByTrickCard } from '../helpers/battle.helpers';
+import { Game, Battle, Suit, Card, Phase, PlayersCards, CardPattern } from '../game.interfaces';
+import { getNextTrickTurn, isTrumpAnnounced, getTrumpSuit, isTableEmpty, getLeadCard, getPlayerByTrickCard, getCardSuit } from '../helpers/battle.helpers';
 import * as _ from 'lodash';
 import { getCardsByColor, getCardWithHighestRank, cardExistsIn } from '../helpers/cards.helpers';
 
@@ -15,27 +15,26 @@ export function canThrowCard(state: Game, { player, card }: ThrowCard) {
     if(!cardExistsIn(state.cards[player], card)) { return false; }
 
     const battle: Battle = state.battle;
-    const playerCards: Card[] = state.cards[player];
-    let cardsAllowedToThrow: Card[] = [];
-
+    const playerCards: CardPattern[] = state.cards[player];
+    let cardsAllowedToThrow: CardPattern[] = [];
     if (isTableEmpty(battle)) {
         //it will be first card on table, allow, no matter what it is
         cardsAllowedToThrow = playerCards;
     } else {
         //upcomming cards should be related to lead card
-        cardsAllowedToThrow = getCardsByColor(playerCards, getLeadCard(battle).suit);
+        cardsAllowedToThrow = getCardsByColor(playerCards, getCardSuit(getLeadCard(battle)));
         if(cardsAllowedToThrow.length === 0) {
             cardsAllowedToThrow = playerCards;
         } else {
-            if (isTrumpAnnounced(battle)) {
+            if (isTrumpAnnounced(battle)) {                
                 cardsAllowedToThrow = [
                     ...cardsAllowedToThrow, 
                     ...getCardsByColor(playerCards, getTrumpSuit(battle))
                 ];
             }
         }
-
     }
+    
     return cardExistsIn(cardsAllowedToThrow, card);
 }
 

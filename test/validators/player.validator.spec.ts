@@ -1,6 +1,5 @@
 import * as should from 'should';
 import { Game, Phase } from '../../src/game.interfaces';
-import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished } from '../../src/validators/bid.validator';
 import { canRegisterPlayer, isRegisteringPlayersPhaseFinished } from '../../src/validators/player.validator';
 import { RegisterPlayer, REGISTER_PLAYER } from '../../src/game.actions';

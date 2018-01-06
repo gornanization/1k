@@ -1,8 +1,8 @@
-import { Battle, Game, Suit, Card, PlayersBid, Player, TrumpAnnouncement } from '../game.interfaces';
+import { Battle, Game, Suit, Card, PlayersBid, Player, TrumpAnnouncement, CardPattern } from '../game.interfaces';
 import { getNextTurn, getPlayerById, getPlayerTotalPoints } from './players.helpers';
 import * as _ from 'lodash';
 import { getHighestBid } from './bid.helpers';
-import { getPointsByCard, getTrumpPointsBySuit, areCardsEqual, getCardsByColor, getCardWithHighestRank, cardsWithSpecificColorExists } from './cards.helpers';
+import { getPointsByCard, getTrumpPointsBySuit, areCardsEqual, getCardsByColor, getCardWithHighestRank, cardsWithSpecificColorExists, toCard } from './cards.helpers';
 
 export function getNextTrickTurn(state: Game, player: string = state.battle.leadPlayer): string {
     const gamePlayers = state.players;
@@ -22,8 +22,12 @@ export function isTableEmpty(battle: Battle): boolean {
     return battle.trickCards.length === 0;
 }
 
-export function getLeadCard(battle: Battle): Card {
+export function getLeadCard(battle: Battle): CardPattern {
     return battle.trickCards[0];
+}
+
+export function getCardSuit(card: CardPattern): Suit {
+    return toCard(card).suit;
 }
 
 export function roundPoints(points: number): number {
@@ -44,6 +48,7 @@ export function calculateTrumpPointsForPlayer(state: Game, player: string): numb
 
 export function calculateCardPointsForPlayer(state: Game, player: string): number {
     return _.chain(state.battle.wonCards[player])
+        .map(toCard)
         .map(getPointsByCard)
         .sum()
         .value();
@@ -64,7 +69,6 @@ export function calculatePointsByPlayer(state: Game, player: string): number {
 
     const totalPoints = trumpPoints + cardPoints;
     
-
     if (leadPlayer === player) {
         return (totalPoints >= leadBidValue) ? leadBidValue : -leadBidValue
     } else {
@@ -72,7 +76,7 @@ export function calculatePointsByPlayer(state: Game, player: string): number {
     }
 }
 
-export function getPlayerByTrickCard(trickCard: Card, state: Game): string {
+export function getPlayerByTrickCard(trickCard: CardPattern, state: Game): string {
     const { battle: { leadPlayer, trickCards }, players } = state;
 
     return _.chain(trickCards)
@@ -84,7 +88,7 @@ export function getPlayerByTrickCard(trickCard: Card, state: Game): string {
 export function getTrickWinner(state: Game): string {
     const { battle } = state;
     const { trickCards } = battle;
-    const leadCard = getLeadCard(battle);
+    const leadCard: CardPattern = getLeadCard(battle);
     let winnerPlayerId = null;
     
     if(isTrumpAnnounced(battle)) {
@@ -93,16 +97,16 @@ export function getTrickWinner(state: Game): string {
             matchBySuit(trumpSuit);
         } else {
             //no trump cards taking part in the trick, so ordinary color matching flow:
-            matchBySuit(leadCard.suit);
+            matchBySuit(getCardSuit(leadCard));
         }
     } else {
-        matchBySuit(leadCard.suit);
+        matchBySuit(getCardSuit(leadCard));
     }
 
     return winnerPlayerId;
 
     function matchBySuit(suit: Suit) {
-        const cardsMatchedByColor = getCardsByColor(trickCards, leadCard.suit);
+        const cardsMatchedByColor = getCardsByColor(trickCards, getCardSuit(leadCard));
         const highestRankedCard = getCardWithHighestRank(cardsMatchedByColor);
         winnerPlayerId = getPlayerByTrickCard(highestRankedCard, state);
     }

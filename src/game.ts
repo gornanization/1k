@@ -1,10 +1,10 @@
 import { createStore } from 'redux';
 import * as _ from 'lodash';
 
-import { Game, Card, Suit, Rank, Player, Phase, Thousand } from './game.interfaces';
+import { Game, Card, Suit, Rank, Player, Phase, Thousand, CardPattern } from './game.interfaces';
 import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult, increaseBid } from './game.actions';
 import { game as gameReducer } from './game.reducer';
-import { createDeck, createCard, getMarriages, createShuffledDeck } from './helpers/cards.helpers';
+import { createDeck, getMarriages, createShuffledDeck } from './helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './validators/player.validator';
 import { isBattleFinished, isTrickFinished } from './validators/battle.validator';
 import { getNextTurn, getWinner, getNextBiddingTurn } from './helpers/players.helpers';
@@ -45,13 +45,13 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
     const thousand: Thousand = {
         events,
         //actions:
-        registerPlayer: player =>                                         manageAction(registerPlayer(player)),
-        bid: (player: string, value: number) =>                           manageAction(bid(player, value)),
-        pass: (player: string) =>                                         manageAction(bid(player, 0)),
-        shareStock: (player: string, card: Card, targetPlayer: string) => manageAction(shareStock(player, card, targetPlayer)),
-        throwCard: (card: Card, player: string) =>                        manageAction(throwCard(card, player)),
-        declareBomb: (player: string) =>                                  manageAction(declareBomb(player)),
-        increaseBid: (player: string, value: number) =>                   manageAction(increaseBid(player, value)),
+        registerPlayer: player =>                                                manageAction(registerPlayer(player)),
+        bid: (player: string, value: number) =>                                  manageAction(bid(player, value)),
+        pass: (player: string) =>                                                manageAction(bid(player, 0)),
+        shareStock: (player: string, card: CardPattern, targetPlayer: string) => manageAction(shareStock(player, card, targetPlayer)),
+        throwCard: (card: CardPattern, player: string) =>                        manageAction(throwCard(card, player)),
+        declareBomb: (player: string) =>                                         manageAction(declareBomb(player)),
+        increaseBid: (player: string, value: number) =>                          manageAction(increaseBid(player, value)),
         //utils:
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
