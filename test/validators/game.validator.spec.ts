@@ -1,6 +1,6 @@
 import * as should from 'should';
 import { Game, Phase, Card, Player, PlayersBid, Battle } from '../../src/game.interfaces';
-import { createCard, createCards } from '../../src/helpers/cards.helpers';
+import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { canShareStock, isSharingStockFinished } from '../../src/validators/stock.validator';
 import { ShareStock, declareBomb, bid } from '../../src/game.actions';
 import { isGameFinished, canDeclareBomb } from '../../src/validators/game.validators';
@@ -193,9 +193,7 @@ describe('game validator', () => {
             currentState.battle = {
                 trumpAnnouncements: [],
                 leadPlayer: 'adam',
-                trickCards: [
-                    createCard('J♠')
-                ],
+                trickCards: ['J♠'],
                 wonCards: {
                     'adam': [],
                     'alan': [],
@@ -218,7 +216,7 @@ describe('game validator', () => {
                 ],
                 wonCards: {
                     'adam': [
-                        ...createCards(3)
+                        ...createCardPatterns(3)
                     ],
                     'alan': [],
                     'pic': []

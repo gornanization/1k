@@ -1,6 +1,5 @@
 import * as should from 'should';
 import { Game, Phase, Battle, Card, TrumpAnnouncement, Suit } from '../../src/game.interfaces';
-import { createCard } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, Bid } from '../../src/game.actions';
 import { getNextTrickTurn, calculatePointsByPlayer, getTrickWinner } from '../../src/helpers/battle.helpers';
@@ -31,7 +30,7 @@ describe('battle helpers', () => {
     describe('getNextTrickTurn', () => {
         it('returns lead player, when no cards on table', () => {
             // assign
-            const currentState = this.state;
+            const currentState: Game = this.state;
             // act
             const nextTtrickTurnPlayerId = getNextTrickTurn(currentState);
             //assert
@@ -39,9 +38,9 @@ describe('battle helpers', () => {
         });
 
         it('returns player next to lead player, when one card on table', () => {
-            this.state.battle.trickCards = [createCard('A♥')];
+            this.state.battle.trickCards = ['A♥'];
             // assign
-            const currentState = this.state;
+            const currentState: Game = this.state;
             // act
             const nextTtrickTurnPlayerId = getNextTrickTurn(currentState);
             //assert
@@ -49,9 +48,9 @@ describe('battle helpers', () => {
         });
 
         it('returns third player, when two cards on table', () => {
-            this.state.battle.trickCards = [createCard('A♥'), createCard('10♥')];
+            this.state.battle.trickCards = ['A♥', '10♥'];
             // assign
-            const currentState = this.state;
+            const currentState: Game = this.state;
             // act
             const nextTtrickTurnPlayerId = getNextTrickTurn(currentState);
             //assert
@@ -73,23 +72,15 @@ describe('battle helpers', () => {
                 trickCards: [],
                 leadPlayer: 'alan',
                 wonCards: {
-                    adam: [
-                        createCard('A♥'),
-                        createCard('K♥')
-                    ],
-                    alan: [
-                        createCard('A♥')
-                    ],
-                    pic: [
-                        createCard('A♥'),
-                        createCard('9♥')
-                    ]
+                    adam: ['A♥','K♥'],
+                    alan: ['A♥'],
+                    pic:  ['A♥','9♥']
                 }
             } as Battle;
         })
         it('only card points', () => {
             // assign
-            const currentState = this.state;
+            const currentState: Game = this.state;
             // act
             const totalPoints = calculatePointsByPlayer(currentState, 'adam');
             //assert
@@ -97,7 +88,7 @@ describe('battle helpers', () => {
         });
         it('battle lead win with trump', () => {
             // assign
-            const currentState = this.state;
+            const currentState: Game = this.state;
             // act
             const totalPoints = calculatePointsByPlayer(currentState, 'alan');
             //assert
@@ -138,12 +129,7 @@ describe('battle helpers', () => {
                 const currentState: Game = this.state;
                 currentState.battle = {
                     trumpAnnouncements: [],
-                    trickCards: [
-                        createCard('9♥'),
-                        createCard('9♦'),
-                        createCard('J♦'),
-                        
-                    ],
+                    trickCards: ['9♥','9♦','J♦'],
                     leadPlayer: 'alan',
                     wonCards: {}
                 } as Battle;
@@ -156,11 +142,7 @@ describe('battle helpers', () => {
                 const currentState: Game = this.state;
                 currentState.battle = {
                     trumpAnnouncements: [],
-                    trickCards: [
-                        createCard('9♥'),
-                        createCard('A♦'),
-                        createCard('J♥'),
-                    ],
+                    trickCards: ['9♥','A♦','J♥'],
                     leadPlayer: 'alan',
                     wonCards: {}
                 } as Battle;
@@ -173,11 +155,7 @@ describe('battle helpers', () => {
                 const currentState: Game = this.state;
                 currentState.battle = {
                     trumpAnnouncements: [],
-                    trickCards: [
-                        createCard('9♥'),                
-                        createCard('A♥'),
-                        createCard('K♥')
-                    ],
+                    trickCards: ['9♥', 'A♥', 'K♥'],
                     leadPlayer: 'adam',
                     wonCards: {}
                 } as Battle;
@@ -194,11 +172,7 @@ describe('battle helpers', () => {
                     trumpAnnouncements: [
                         { player: 'adam', suit: Suit.Diamond }
                     ],
-                    trickCards: [
-                        createCard('9♥'),                
-                        createCard('K♥'),
-                        createCard('A♥'),
-                    ],
+                    trickCards: [ '9♥', 'K♥', 'A♥' ],
                     leadPlayer: 'adam',
                     wonCards: {}
                 } as Battle;
@@ -213,11 +187,7 @@ describe('battle helpers', () => {
                     trumpAnnouncements: [
                         { player: 'adam', suit: Suit.Diamond }
                     ],
-                    trickCards: [
-                        createCard('9♥'),                
-                        createCard('K♥'),
-                        createCard('9♦'),
-                    ],
+                    trickCards: ['9♥', 'K♥', '9♦'],
                     leadPlayer: 'adam',
                     wonCards: {}
                 } as Battle;
@@ -232,11 +202,7 @@ describe('battle helpers', () => {
                     trumpAnnouncements: [
                         { player: 'adam', suit: Suit.Diamond }
                     ],
-                    trickCards: [
-                        createCard('9♦'),
-                        createCard('A♥'),
-                        createCard('10♦'),
-                    ],
+                    trickCards: ['9♦','A♥','10♦'],
                     leadPlayer: 'adam',
                     wonCards: {}
                 } as Battle;

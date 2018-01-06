@@ -1,5 +1,5 @@
 import * as should from 'should';
-import { createCard, createCards } from '../../src/helpers/cards.helpers';
+import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { isBiddingFinished, canBid } from '../../src/validators/bid.validator';
 import { bid, setPhase, dealCardToStock, dealCardToPlayer, registerPlayer, setDeck, shareStock, assignStock, initializeBattle, throwCard, FinalizeTrick, FINALIZE_TRICK, finalizeTrick, initializeBidding, calculateBattleResult, declareBomb } from '../../src/game.actions';
 import { game as gameReducer } from '../../src/game.reducer';
@@ -19,12 +19,12 @@ describe('initializeBidding', () => {
                 { id: 'pic', battlePoints: [] },
                 { id: 'alan', battlePoints: [] }],
             deck: [],
-            stock: createCards(3),
+            stock: createCardPatterns(3),
             bid: [],
             cards: {
-                adam: createCards(7),
-                alan: createCards(7),
-                pic: createCards(7)
+                adam: createCardPatterns(7),
+                alan: createCardPatterns(7),
+                pic: createCardPatterns(7)
             },
             battle: null
         } as Game;

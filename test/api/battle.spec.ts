@@ -1,7 +1,7 @@
 import { Thousand, Game, Phase, Player, PlayersBid, Battle } from '../../src/game.interfaces';
 import { initializeGame } from '../../src/game';
 import * as should from 'should';
-import { createCards, createCard } from '../../src/helpers/cards.helpers';
+import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { SHARE_STOCK } from '../../src/game.actions';
 import { getWinner } from '../../src/helpers/players.helpers';
 
@@ -28,9 +28,9 @@ describe('battle API', () => {
                 { player: 'pic', bid: 100, pass: false }
             ] as PlayersBid[],
             cards: {
-                'adam': createCards(['9♥', '10♥', 'J♥', 'Q♥', 'K♥', 'A♥', '9♠', '10♠']),
-                'alan': createCards(['9♦', '10♦', 'J♦', 'Q♦', 'K♦', 'A♦', 'J♠', 'Q♠']),
-                'pic':  createCards(['9♣', '10♣', 'J♣', 'Q♣', 'K♣', 'A♣', 'K♠', 'A♠'])
+                'adam': ['9♥', '10♥', 'J♥', 'Q♥', 'K♥', 'A♥', '9♠', '10♠'],
+                'alan': ['9♦', '10♦', 'J♦', 'Q♦', 'K♦', 'A♦', 'J♠', 'Q♠'],
+                'pic':  ['9♣', '10♣', 'J♣', 'Q♣', 'K♣', 'A♣', 'K♠', 'A♠']
             },
             battle: {
                 trumpAnnouncements: [],
@@ -55,10 +55,10 @@ describe('battle API', () => {
         thousand.init();
 
         const actionsResult = [
-            thousand.throwCard(createCard('9♣'), 'pic'),
-            thousand.throwCard(createCard('9♣'), 'alan'), // invalid action
-            thousand.throwCard(createCard('9♥'), 'adam'),
-            thousand.throwCard(createCard('9♦'), 'alan'),
+            thousand.throwCard('9♣', 'pic'),
+            thousand.throwCard('9♣', 'alan'), // invalid action
+            thousand.throwCard('9♥', 'adam'),
+            thousand.throwCard('9♦', 'alan'),
         ];
         const state = thousand.getState();
         
@@ -88,7 +88,7 @@ describe('battle API', () => {
             trickCards: [],
             wonCards: {
                 adam: [],
-                pic: createCards(['9♣', '9♥', '9♦']),
+                pic: ['9♣', '9♥', '9♦'],
                 alan: []
             }
         } as Battle);
@@ -116,20 +116,18 @@ describe('battle API', () => {
                 { player: 'pic', bid: 100, pass: false }
             ] as PlayersBid[],
             cards: {
-                'adam': createCards(['9♥', '10♥', 'J♥', 'Q♥', 'K♥', 'A♥', '9♠']), // 7 cards
-                'alan': createCards(['10♦', 'J♦', 'Q♦', 'K♦', 'A♦', 'J♠']), // 6 cards
-                'pic':  createCards(['9♣', '10♣', 'J♣', 'Q♣', 'K♣', 'A♣', 'A♠']), // 7 cards
+                'adam': ['9♥', '10♥', 'J♥', 'Q♥', 'K♥', 'A♥', '9♠'], // 7 cards
+                'alan': ['10♦', 'J♦', 'Q♦', 'K♦', 'A♦', 'J♠'], // 6 cards
+                'pic':  ['9♣', '10♣', 'J♣', 'Q♣', 'K♣', 'A♣', 'A♠'], // 7 cards
             },
             battle: {
                 trumpAnnouncements: [],
                 leadPlayer: 'alan',
-                trickCards: [
-                    createCard('9♦')
-                ],
+                trickCards: [ '9♦' ],
                 wonCards: {
                     adam: [],
                     pic: [], 
-                    alan: createCards(['K♠','Q♠', '10♠']) // 3 cards
+                    alan: ['K♠','Q♠', '10♠'] // 3 cards
                 }
             } as Battle
         };
@@ -145,7 +143,7 @@ describe('battle API', () => {
         thousand.init();
 
         const actionsResult = [
-            thousand.throwCard(createCard('A♠'), 'pic'),
+            thousand.throwCard('A♠', 'pic'),
         ];
         const state = thousand.getState();
         
@@ -181,25 +179,22 @@ describe('battle API', () => {
                 { player: 'pic', bid: 100, pass: false }
             ] as PlayersBid[],
             cards: {
-                'adam': createCards([]),
-                'alan': createCards(['10♦']),
-                'pic':  createCards([]),
+                'adam': [],
+                'alan': ['10♦'],
+                'pic':  [],
             },
             battle: {
                 trumpAnnouncements: [],
                 leadPlayer: 'pic',
-                trickCards: [
-                    createCard('A♦'),
-                    createCard('9♦'),
-                ],
+                trickCards: [ 'A♦', '9♦' ],
                 wonCards: {
                     adam: [],
-                    pic: createCards([
+                    pic: [
                         '9♥', '10♥', 'J♥', 'Q♥', 'K♥', 'A♥', 
                         '9♠', '10♠', 'J♠', 'Q♠', 'K♠', 'A♠',
                                      'J♦', 'Q♦', 'K♦',  
                         '9♣', '10♣', 'J♣', 'Q♣', 'K♣', 'A♣'
-                    ])
+                    ]
                 }
             } as Battle
         };
@@ -215,7 +210,7 @@ describe('battle API', () => {
         thousand.init();
 
         const actionsResult = [
-            thousand.throwCard(createCard('10♦'), 'alan'),
+            thousand.throwCard('10♦', 'alan'),
         ];
         const state = thousand.getState();
         
@@ -263,25 +258,22 @@ describe('battle API', () => {
                 { player: 'pic', bid: 100, pass: false }
             ] as PlayersBid[],
             cards: {
-                'adam': createCards([]),
-                'alan': createCards(['10♦']),
-                'pic':  createCards([]),
+                'adam': [],
+                'alan': ['10♦'],
+                'pic':  []
             },
             battle: {
                 trumpAnnouncements: [],
                 leadPlayer: 'pic',
-                trickCards: [
-                    createCard('A♦'),
-                    createCard('9♦'),
-                ],
+                trickCards: [ 'A♦', '9♦' ],
                 wonCards: {
                     adam: [],
-                    pic: createCards([
+                    pic: [
                         '9♥', '10♥', 'J♥', 'Q♥', 'K♥', 'A♥', 
                         '9♠', '10♠', 'J♠', 'Q♠', 'K♠', 'A♠',
                                      'J♦', 'Q♦', 'K♦',
                         '9♣', '10♣', 'J♣', 'Q♣', 'K♣', 'A♣'
-                    ])
+                    ]
                 }
             } as Battle
         };
@@ -302,7 +294,7 @@ describe('battle API', () => {
         thousand.init();
 
         const actionsResult = [
-            thousand.throwCard(createCard('10♦'), 'alan'),
+            thousand.throwCard('10♦', 'alan'),
         ];
         const state = thousand.getState();
         

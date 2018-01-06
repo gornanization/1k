@@ -1,4 +1,4 @@
-import { Card, Phase } from './game.interfaces';
+import { Card, Phase, CardPattern } from './game.interfaces';
 
 
 export interface Action {
@@ -18,9 +18,9 @@ export function registerPlayer(id: string): RegisterPlayer {
 //------------------------------------------------
 export const SET_DECK = 'SET_DECK';
 export interface SetDeck extends Action {
-    deck: Card[]
+    deck: CardPattern[]
 }
-export function setDeck(deck: Card[]): SetDeck {
+export function setDeck(deck: CardPattern[]): SetDeck {
     return {
         type: SET_DECK,
         deck
@@ -87,11 +87,11 @@ export function setPhase(phase: Phase): SetPhase {
 //------------------------------------------------
 export const SHARE_STOCK = 'SHARE_STOCK';
 export interface ShareStock extends Action {
-    card: Card,
+    card: CardPattern,
     player: string,
     targetPlayer: string
 }
-export function shareStock(player: string, card: Card, targetPlayer: string): ShareStock {
+export function shareStock(player: string, card: CardPattern, targetPlayer: string): ShareStock {
     return {
         type: SHARE_STOCK,
         card, player, targetPlayer
@@ -121,10 +121,10 @@ export function initializeBidding(): Action {
 //------------------------------------------------
 export const THROW_CARD = 'THROW_CARD';
 export interface ThrowCard extends Action {
-    card: Card,
+    card: CardPattern,
     player: string
 }
-export function throwCard(card: Card, player: string): ThrowCard {
+export function throwCard(card: CardPattern, player: string): ThrowCard {
     return {
         type: THROW_CARD,
         card, player

@@ -1,7 +1,7 @@
-import { Thousand, Game, Phase, Player, PlayersBid, Card } from '../../src/game.interfaces';
+import { Thousand, Game, Phase, Player, PlayersBid, Card, CardPattern } from '../../src/game.interfaces';
 import { initializeGame } from '../../src/game';
 import * as should from 'should';
-import { createCards } from '../../src/helpers/cards.helpers';
+import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { SHARE_STOCK, declareBomb, DECLARE_BOMB } from '../../src/game.actions';
 
 describe('share stock cards', () => {
@@ -29,9 +29,9 @@ describe('share stock cards', () => {
                 { player: 'pic', bid: 100, pass: false } as PlayersBid
             ],
             cards: {
-                'adam': createCards(7),
-                'alan': createCards(10),
-                'pic': createCards(7),
+                'adam': createCardPatterns(7),
+                'alan': createCardPatterns(10),
+                'pic': createCardPatterns(7),
             },
             battle: null
         };
@@ -68,7 +68,7 @@ describe('share stock cards', () => {
             true
         ]);
 
-        function getFirstPlayerCard(player): Card {
+        function getFirstPlayerCard(player): CardPattern {
             return thousand.getState().cards[player][0];
         }
     });
@@ -97,9 +97,9 @@ describe('share stock cards', () => {
                 { player: 'pic', bid: 100, pass: false } as PlayersBid
             ],
             cards: {
-                'adam': createCards(7),
-                'alan': createCards(10),
-                'pic': createCards(7),
+                'adam': createCardPatterns(7),
+                'alan': createCardPatterns(10),
+                'pic': createCardPatterns(7),
             },
             battle: null
         };
