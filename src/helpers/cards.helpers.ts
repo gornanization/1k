@@ -20,7 +20,6 @@ export function createCardPatterns(total: number): CardPattern[] {
     return _.chain(createDeck())
         .shuffle()
         .sampleSize(total)
-        .map(toCardPattern)
         .value();
 }
 
@@ -53,7 +52,7 @@ export function hasMarriage(cards: CardPattern[]): boolean {
     return getMarriages(cards).length > 0;
 }
 
-export function createDeck(): Card[] {
+export function createDeck(): CardPattern[] {
     function getDeckBySuit(suit: Suit): Card[] {
         return [
             { rank: Rank.Ace, suit }, { rank: Rank.King, suit },
@@ -62,10 +61,10 @@ export function createDeck(): Card[] {
         ];
     }
     return [
-        ...getDeckBySuit(Suit.Heart),
-        ...getDeckBySuit(Suit.Diamond),
-        ...getDeckBySuit(Suit.Club),
-        ...getDeckBySuit(Suit.Spade)
+        ...getDeckBySuit(Suit.Heart).map(toCardPattern),
+        ...getDeckBySuit(Suit.Diamond).map(toCardPattern),
+        ...getDeckBySuit(Suit.Club).map(toCardPattern),
+        ...getDeckBySuit(Suit.Spade).map(toCardPattern)
     ];
 }
 
