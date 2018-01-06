@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/gornanization/1k.svg?branch=master)](https://travis-ci.org/gornanization/1k)
 [![Coverage Status](https://coveralls.io/repos/github/gornanization/1k/badge.svg)](https://coveralls.io/github/gornanization/1k)
+[![NPM Downloads](https://badge.fury.io/js/1k.svg)](https://badge.fury.io/js/1k)
 [![utopian.io payment](https://utopian-io.herokuapp.com/gornanization/1k.svg)](https://utopian-io.herokuapp.com/visit/gornanization/1k)
 # 1k
 
@@ -113,9 +114,12 @@ thousand.events.addListener('phaseUpdated', next => {
 });
 
 // called, when any action made succesfully
-thousand.events.addListener('action', action => {
+thousand.events.addListener('action', (action, next) => {
     const state: Game = thousand.getState();
     console.log('action made succesfully: ', action);
+    
+    // after managing action, let the game proceed...
+    next();
 });
 
 ```
