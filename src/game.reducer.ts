@@ -57,7 +57,8 @@ export function game(state: Game = defaultState, action): any {
                     ...state.cards,
                     [action.id]: [firstDeckCard, ...state.cards[action.id]]
                 },
-                deck: restDeckCards
+                deck: restDeckCards,
+                battle: null
             };
         case SET_DECK:
             return {
