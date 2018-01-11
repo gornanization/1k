@@ -45,7 +45,7 @@ export function game(state: Game = defaultState, action): any {
                 const [firstDeckCard, ...restDeckCards] = state.deck;
                 return {
                     ...state,
-                    stock: [firstDeckCard, ...state.stock],
+                    stock: [...state.stock, firstDeckCard],
                     deck: restDeckCards
                 };
             }
@@ -55,7 +55,7 @@ export function game(state: Game = defaultState, action): any {
                 ...state,
                 cards: {
                     ...state.cards,
-                    [action.id]: [firstDeckCard, ...state.cards[action.id]]
+                    [action.id]: [...(state.cards[action.id] || []), firstDeckCard]
                 },
                 deck: restDeckCards,
                 battle: null

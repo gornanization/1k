@@ -68,12 +68,6 @@ export function createDeck(): CardPattern[] {
     ];
 }
 
-export function createShuffledDeck(): CardPattern[] {
-    return _.chain(createDeck())
-        .shuffle()
-        .value();
-}
-
 export function getCard(cards: CardPattern[], card: CardPattern): CardPattern {
     return _.find(cards, _card => _card === card);
 }

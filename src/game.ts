@@ -1,10 +1,10 @@
 import { createStore } from 'redux';
 import * as _ from 'lodash';
 
-import { Game, Card, Suit, Rank, Player, Phase, Thousand, CardPattern } from './game.interfaces';
+import { Game, Card, Suit, Rank, Player, Phase, Thousand, CardPattern, SchuffleCardsFunction } from './game.interfaces';
 import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult, increaseBid } from './game.actions';
 import { game as gameReducer } from './game.reducer';
-import { createDeck, getMarriages, createShuffledDeck } from './helpers/cards.helpers';
+import { createDeck, getMarriages } from './helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './validators/player.validator';
 import { isBattleFinished, isTrickFinished } from './validators/battle.validator';
 import { getNextTurn, getWinner, getNextBiddingTurn } from './helpers/players.helpers';
@@ -14,11 +14,14 @@ import { can, isGameFinished } from './validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
 import { throwCard, initializeBidding, finalizeTrick, declareBomb } from './game.actions';
 import { getTrickWinner } from './helpers/battle.helpers';
-var EventEmitter = require('wolfy87-eventemitter');
+const EventEmitter = require('wolfy87-eventemitter');
 
 export function initializeGame(defaultState: Game = undefined): Thousand {
     const store = createStore(gameReducer, defaultState);
     const events: any = new EventEmitter();
+    const defaultShufflingMethod: SchuffleCardsFunction = (notShuffledCards: CardPattern[], cb: Function) => cb(_.shuffle(notShuffledCards));
+
+    let customShufflingMethod: SchuffleCardsFunction = defaultShufflingMethod;
     let emitActionEvent = null;
 
     function someActionListenersRegistered() {
@@ -42,6 +45,8 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         return result;
     }   
 
+    
+
     const thousand: Thousand = {
         events,
         //actions:
@@ -53,6 +58,9 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         declareBomb: (player: string) =>                                         manageAction(declareBomb(player)),
         increaseBid: (player: string, value: number) =>                          manageAction(increaseBid(player, value)),
         //utils:
+        setCustomShufflingMethod: function(_customShufflingMethod: SchuffleCardsFunction): void {
+            customShufflingMethod = _customShufflingMethod;
+        },
         getState: () => store.getState(),
         init: () => store.dispatch(setPhase(store.getState().phase))
     };
@@ -96,15 +104,18 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                     'phaseUpdated', 
                     () => {
                         store.dispatch(setPhase(Phase.DEALING_CARDS_IN_PROGRESS));
-                        
-                        store.dispatch(setDeck(createShuffledDeck()));
-                        for (let i = 0; i < 7; i++) {
-                            _.each(state.players, (player: Player) => store.dispatch(dealCardToPlayer(player.id)))
-                        }
-                        for (let i = 0; i < 3; i++) {
-                            store.dispatch(dealCardToStock());
-                        }
-                        store.dispatch(setPhase(Phase.DEALING_CARDS_FINISHED));
+                        customShufflingMethod(createDeck(), (shuffledDeck: CardPattern[]) => {
+                            store.dispatch(setDeck(shuffledDeck));
+                            _.each(state.players, (player: Player) => {
+                                for (let i = 0; i < 7; i++) {
+                                    store.dispatch(dealCardToPlayer(player.id))       
+                                }
+                            });
+                            for (let i = 0; i < 3; i++) {
+                                store.dispatch(dealCardToStock());
+                            }
+                            store.dispatch(setPhase(Phase.DEALING_CARDS_FINISHED));
+                        });
                     },
                     isFirst
                 );

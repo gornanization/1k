@@ -124,6 +124,14 @@ thousand.events.addListener('action', (action, next) => {
 
 ```
 
+```ts
+thousand.setCustomShufflingMethod((notShuffledDeck: CardPattern[], cb) => {
+    //shuffle your cards here...
+    const shuffledCards: CardPattern[] = ...
+    cb(shuffledCards);
+});
+```
+
 
 ## Putting all together:
 
