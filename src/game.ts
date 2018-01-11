@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { Game, Card, Suit, Rank, Player, Phase, Thousand, CardPattern, SchuffleCardsFunction } from './game.interfaces';
 import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult, increaseBid } from './game.actions';
 import { game as gameReducer } from './game.reducer';
-import { createDeck, getMarriages, createShuffledDeck } from './helpers/cards.helpers';
+import { createDeck, getMarriages } from './helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './validators/player.validator';
 import { isBattleFinished, isTrickFinished } from './validators/battle.validator';
 import { getNextTurn, getWinner, getNextBiddingTurn } from './helpers/players.helpers';
