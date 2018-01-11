@@ -14,7 +14,7 @@ import { can, isGameFinished } from './validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
 import { throwCard, initializeBidding, finalizeTrick, declareBomb } from './game.actions';
 import { getTrickWinner } from './helpers/battle.helpers';
-var EventEmitter = require('wolfy87-eventemitter');
+const EventEmitter = require('wolfy87-eventemitter');
 
 export function initializeGame(defaultState: Game = undefined): Thousand {
     const store = createStore(gameReducer, defaultState);

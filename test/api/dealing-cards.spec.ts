@@ -1,8 +1,8 @@
-import { Thousand, Game, Phase, Player, PlayersBid } from '../../src/game.interfaces';
+import { Thousand, Game, Phase, Player, PlayersBid, CardPattern } from '../../src/game.interfaces';
 import { initializeGame } from '../../src/game';
 import * as should from 'should';
 
-describe('dealing cards', () => {
+describe.only('dealing cards', () => {
     it('sets cards and initializes bidding process', () => {
 
         const history = [];
@@ -26,6 +26,7 @@ describe('dealing cards', () => {
         }
 
         const thousand: Thousand = initializeGame(initState);
+        // thousand.setCustomShufflingMethod((cards: CardPattern[], cb) => cb(cards));
         
         thousand.events.addListener('phaseUpdated', next => {
             const state: Game = thousand.getState();
@@ -47,6 +48,8 @@ describe('dealing cards', () => {
                 should(state.cards['pic'].length).be.equal(8);
                 should(state.deck.length).be.equal(0);
                 should(state.stock.length).be.equal(3);
+
+                console.log(state.stock);
 
                 //sets default bid
                 should(state.bid).be.deepEqual([
