@@ -19,7 +19,7 @@ const EventEmitter = require('wolfy87-eventemitter');
 export function initializeGame(defaultState: Game = undefined): Thousand {
     const store = createStore(gameReducer, defaultState);
     const events: any = new EventEmitter();
-    const defaultShufflingMethod: SchuffleCardsFunction = (notShuffledCards: CardPattern[], cb: Function) => cb(notShuffledCards);
+    const defaultShufflingMethod: SchuffleCardsFunction = (notShuffledCards: CardPattern[], cb: Function) => cb(_.shuffle(notShuffledCards));
 
     let customShufflingMethod: SchuffleCardsFunction = defaultShufflingMethod;
     let emitActionEvent = null;
@@ -106,9 +106,11 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
                         store.dispatch(setPhase(Phase.DEALING_CARDS_IN_PROGRESS));
                         customShufflingMethod(createDeck(), (shuffledDeck: CardPattern[]) => {
                             store.dispatch(setDeck(shuffledDeck));
-                            for (let i = 0; i < 7; i++) {
-                                _.each(state.players, (player: Player) => store.dispatch(dealCardToPlayer(player.id)))
-                            }
+                            _.each(state.players, (player: Player) => {
+                                for (let i = 0; i < 7; i++) {
+                                    store.dispatch(dealCardToPlayer(player.id))       
+                                }
+                            });
                             for (let i = 0; i < 3; i++) {
                                 store.dispatch(dealCardToStock());
                             }

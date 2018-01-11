@@ -2,8 +2,8 @@ import { Thousand, Game, Phase, Player, PlayersBid, CardPattern } from '../../sr
 import { initializeGame } from '../../src/game';
 import * as should from 'should';
 
-describe.only('dealing cards', () => {
-    it('sets cards and initializes bidding process', () => {
+describe('dealing cards', () => {
+    it('sets cards and initializes bidding process', (done) => {
 
         const history = [];
         const initState: Game = {
@@ -26,7 +26,9 @@ describe.only('dealing cards', () => {
         }
 
         const thousand: Thousand = initializeGame(initState);
-        // thousand.setCustomShufflingMethod((cards: CardPattern[], cb) => cb(cards));
+        thousand.setCustomShufflingMethod((cards: CardPattern[], cb) => {
+            setTimeout(() => cb(cards));
+        });
         
         thousand.events.addListener('phaseUpdated', next => {
             const state: Game = thousand.getState();
@@ -43,18 +45,21 @@ describe.only('dealing cards', () => {
                 ]);
 
                 //sets cards
-                should(state.cards['adam'].length).be.equal(8);
-                should(state.cards['alan'].length).be.equal(8);
-                should(state.cards['pic'].length).be.equal(8);
+                should(state.cards['adam'].length).be.equal(7);
+                should(state.cards['alan'].length).be.equal(7);
+                should(state.cards['pic'].length).be.equal(7);
                 should(state.deck.length).be.equal(0);
                 should(state.stock.length).be.equal(3);
 
-                console.log(state.stock);
 
+                should(state.cards['adam']).deepEqual(['A♥', 'K♥', 'Q♥', 'J♥', '10♥', '9♥', 'A♦']);
+                
                 //sets default bid
                 should(state.bid).be.deepEqual([
                     { player: 'adam', bid: 100, pass: false} as PlayersBid
                 ]);
+
+                done();
             }
             next();
         });

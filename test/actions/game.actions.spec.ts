@@ -51,20 +51,20 @@ describe('actions', () => {
             currentState.stock = ['J♥'];
             const nextState: Game = gameReducer(currentState, dealCardToStock());
 
-            should(nextState.stock[0]).be.deepEqual('A♥', 'J♥');
+            should(nextState.stock).be.deepEqual(['J♥', 'A♥']);
             should(nextState.deck).be.deepEqual(['9♥', 'J♦']);
         });
     });
 
     describe('dealCardToPlayer', () => {
-        it('moves first card from deck to stock', () => {
+        it('moves first card from deck to plater', () => {
             const currentState: Game = this.state;
             currentState.deck = ['A♥','9♥','J♦'];
             currentState.cards['adam'] = ['J♥'];
 
             const nextState: Game = gameReducer(currentState, dealCardToPlayer('adam'));
 
-            should(nextState.cards['adam']).be.deepEqual(['A♥', 'J♥']);
+            should(nextState.cards['adam']).be.deepEqual(['J♥', 'A♥']);
             should(nextState.deck).be.deepEqual(['9♥', 'J♦']);
         });
     });
