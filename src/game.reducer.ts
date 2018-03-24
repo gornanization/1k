@@ -217,7 +217,7 @@ export function game(state: Game = defaultState, action): any {
                         ...state.battle.wonCards,
                         [action.trickWinner]: [
                             ...state.battle.trickCards,
-                            ...state.battle.wonCards[action.trickWinner]
+                            ...(state.battle.wonCards[action.trickWinner] || [])
                         ]
                     }
                 }

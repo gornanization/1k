@@ -276,6 +276,25 @@ describe('actions', () => {
                 should(nextState.battle.leadPlayer).be.equal('alan');
                 should(nextState.battle.wonCards['alan']).be.deepEqual(['K♥','Q♥','9♥','Q♦']);
             });
+
+            it('sets wonCards even when wonCards player section not specified as an array', () => {
+                // assign
+                const currentState: Game = this.state;
+                currentState.battle = {
+                    trumpAnnouncements: [],
+                    leadPlayer: 'pic',
+                    trickCards: [ 'K♥', 'Q♥', '9♥' ],
+                    wonCards: {
+                        adam: [],
+                        alan: undefined,
+                        pic: [],
+                    }
+                } as Battle;
+                // act
+                const nextState: Game = gameReducer(currentState, finalizeTrick('alan'));
+                //assert
+                should(nextState.battle.wonCards['alan']).be.deepEqual(['K♥','Q♥','9♥']);
+            });
         });
     })
 });

@@ -7,6 +7,7 @@ export { createCardPatterns, createDeck } from './helpers/cards.helpers';
 export { getNextTurn } from './helpers/players.helpers';
 export { getTrickWinner } from './helpers/battle.helpers';
 export { saveStateToText, loadStateFromText } from './helpers/game.helpers';
+export { getNextBiddingTurn } from './helpers/players.helpers';
 
 export function getWinner(state: Game): string|null {
     const winner: Player = getWinnerInternal(state.players);
