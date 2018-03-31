@@ -3,7 +3,7 @@ import { Game, Player } from './game.interfaces';
 
 export * from './game.interfaces';
 export { initializeGame } from './game';
-export { createCardPatterns, createDeck } from './helpers/cards.helpers';
+export { createCardPatterns, createDeck, toCard, toCardPattern, getPointsByCard } from './helpers/cards.helpers';
 export { getNextTurn } from './helpers/players.helpers';
 export { getTrickWinner } from './helpers/battle.helpers';
 export { saveStateToText, loadStateFromText } from './helpers/game.helpers';
