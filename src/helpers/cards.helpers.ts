@@ -80,6 +80,14 @@ export function hasEightCards(cards: CardPattern[]): boolean {
     return cards.length === 8;
 }
 
+export function getPointsByCardPatterns(cardPatterns: CardPattern[]) {
+    return getPointsByCards(cardPatterns.map(toCard))
+}
+
+export function getPointsByCards(cards: Card[]): number {
+    return _.chain(cards).map(getPointsByCard).sum().value()
+}
+
 export function getPointsByCard(card: Card): number {
     return {
         [Rank.Ace]: 11,

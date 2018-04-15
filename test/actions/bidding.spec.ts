@@ -11,7 +11,8 @@ describe('initializeBidding', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.BIDDING_START,
             players: [

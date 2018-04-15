@@ -85,6 +85,15 @@ export function setPhase(phase: Phase): SetPhase {
     };
 }
 //------------------------------------------------
+export const MOVE_CARDS_BACK_TO_DECK = 'MOVE_CARDS_BACK_TO_DECK';
+export interface MoveCardsBackToDeck extends Action {
+}
+export function moveCardsBackToDeck(): MoveCardsBackToDeck {
+    return {
+        type: MOVE_CARDS_BACK_TO_DECK
+    };
+}
+//------------------------------------------------
 export const SHARE_STOCK = 'SHARE_STOCK';
 export interface ShareStock extends Action {
     card: CardPattern,

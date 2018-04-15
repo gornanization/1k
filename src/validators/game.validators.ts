@@ -8,6 +8,7 @@ import { canThrowCard } from './battle.validator';
 import * as _ from 'lodash';
 import { isTableEmpty, getTotalWonCards } from '../helpers/battle.helpers';
 import { getBidWinner } from '../helpers/bid.helpers';
+import { getPointsByCardPatterns } from '../helpers/cards.helpers';
 
 export function can(state: Game, action: Action): boolean {
     return {
@@ -22,6 +23,13 @@ export function can(state: Game, action: Action): boolean {
 
 export function isGameFinished(state: Game): boolean {
     return !!getWinner(state.players);
+}
+
+export function playersHaveEnoughtCardPoints(state: Game): boolean {
+    return _.chain(state.cards)
+        .map(getPointsByCardPatterns)
+        .every(pointsCount => pointsCount >= state.settings.shuffleAgainIfPointsCountLessThan)
+        .value()
 }
 
 export function canDeclareBomb(state: Game, { player }: DeclareBomb): boolean {

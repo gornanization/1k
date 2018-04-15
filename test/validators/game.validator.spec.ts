@@ -3,7 +3,7 @@ import { Game, Phase, Card, Player, PlayersBid, Battle } from '../../src/game.in
 import { createCardPatterns } from '../../src/helpers/cards.helpers';
 import { canShareStock, isSharingStockFinished } from '../../src/validators/stock.validator';
 import { ShareStock, declareBomb, bid } from '../../src/game.actions';
-import { isGameFinished, canDeclareBomb } from '../../src/validators/game.validators';
+import { isGameFinished, canDeclareBomb, playersHaveEnoughtCardPoints } from '../../src/validators/game.validators';
 import * as _ from 'lodash';
 
 describe('game validator', () => {
@@ -12,7 +12,8 @@ describe('game validator', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.SHARE_STOCK,
             players: [
@@ -30,6 +31,39 @@ describe('game validator', () => {
             },
             battle: null
         } as Game;
+    });
+
+    describe('playersHaveEnoughtCardPoints', () => {
+        it('returns false, when players have no cards', () => {
+            should(playersHaveEnoughtCardPoints(this.state)).be.equal(false);
+        });
+    
+        it('returns false, when one player has not enought points (22 / 22 / 17)', () => {
+            this.state.cards = {
+                alan: ['A♥', 'A♥'],
+                adam: ['A♥', 'A♥'],
+                pic: ['A♥', 'K♥', 'J♥']
+            }
+            should(playersHaveEnoughtCardPoints(this.state)).be.equal(false);
+        });
+        
+        it('returns true, when players have enought card points (22 / 22 / 18)', () => {
+            this.state.cards = {
+                alan: ['A♥', 'A♥'],
+                adam: ['A♥', 'A♥'],
+                pic: ['A♥', 'K♥', 'Q♥']
+            }
+            should(playersHaveEnoughtCardPoints(this.state)).be.equal(true);
+        });
+
+        it('returns true, when players have more than enought card points (22 / 22 / 19)', () => {
+            this.state.cards = {
+                alan: ['A♥', 'A♥'],
+                adam: ['A♥', 'A♥'],
+                pic: ['A♥', 'K♥', 'K♥']
+            }
+            should(playersHaveEnoughtCardPoints(this.state)).be.equal(true);
+        });
     });
 
     describe('isGameFinished', () => {

@@ -1,5 +1,5 @@
 import { Game, Phase, Battle, Player, PlayersCards, PlayersBid, TrumpAnnouncement } from './game.interfaces';
-import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK, INITIALIZE_BIDDING, bid, DECLARE_BOMB, INCREASE_BID, IncreaseBid } from './game.actions';
+import { SET_DECK, DEAL_CARD_TO_PLAYER, DEAL_CARD_TO_STOCK, BID, Bid, REGISTER_PLAYER, SET_PHASE, ASSIGN_STOCK, SHARE_STOCK, INITIALIZE_BATTLE, THROW_CARD, CALCULATE_BATTLE_RESULT, FINALIZE_TRICK, INITIALIZE_BIDDING, bid, DECLARE_BOMB, INCREASE_BID, IncreaseBid, MOVE_CARDS_BACK_TO_DECK } from './game.actions';
 import * as _ from 'lodash';
 import { getBidWinner, getUniqueBidders, isBidder } from './helpers/bid.helpers';
 import { getCard, isKingOrQueen, hasMarriageOfSuit } from './helpers/cards.helpers';
@@ -7,11 +7,12 @@ import { calculatePointsByPlayer, getCardSuit } from './helpers/battle.helpers';
 import { getNextBiddingTurn, getPlayerTotalPoints, isOnBarrel } from './helpers/players.helpers';
 import { CardPattern } from './index';
 
-const defaultState: Game = {
+export const defaultState: Game = {
     settings: {
         permitBombOnBarrel: true,
         maxBombs: 2,
-        barrelPointsLimit: 880
+        barrelPointsLimit: 880,
+        shuffleAgainIfPointsCountLessThan: 18
     },
     phase: Phase.REGISTERING_PLAYERS_START,
     players: [],
@@ -78,6 +79,17 @@ export function game(state: Game = defaultState, action): any {
             return {
                 ...state,
                 phase: action.phase
+            }
+        }
+        case MOVE_CARDS_BACK_TO_DECK: {
+            return {
+                ...state,
+                cards: _.reduce(state.players, (cards: PlayersCards, player: Player) => {
+                    cards[player.id] = [];
+                    return cards;
+                }, {}),
+                stock: [],
+                phase: Phase.DEALING_CARDS_START
             }
         }
         case ASSIGN_STOCK: {
