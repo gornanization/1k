@@ -39,7 +39,7 @@ export function extendStateWithDefaults(game) {
         loadedState.cards[player.id] = loadedState.cards[player.id] || []
 
         player.battlePoints = player.battlePoints || [];
-        if(battle) {
+        if (battle) {
             battle.wonCards[player.id] = battle.wonCards[player.id] || [];
         }
     });
