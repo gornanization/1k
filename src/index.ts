@@ -6,7 +6,7 @@ export { initializeGame } from './game';
 export { createCardPatterns, createDeck, toCard, toCardPattern, getPointsByCard } from './helpers/cards.helpers';
 export { getNextTurn } from './helpers/players.helpers';
 export { getTrickWinner } from './helpers/battle.helpers';
-export { saveStateToText, loadStateFromText } from './helpers/game.helpers';
+export { saveStateToText, loadStateFromText, extendStateWithDefaults } from './helpers/game.helpers';
 export { getNextBiddingTurn } from './helpers/players.helpers';
 
 export function getWinner(state: Game): string|null {

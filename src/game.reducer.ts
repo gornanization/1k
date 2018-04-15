@@ -7,7 +7,7 @@ import { calculatePointsByPlayer, getCardSuit } from './helpers/battle.helpers';
 import { getNextBiddingTurn, getPlayerTotalPoints, isOnBarrel } from './helpers/players.helpers';
 import { CardPattern } from './index';
 
-const defaultState: Game = {
+export const defaultState: Game = {
     settings: {
         permitBombOnBarrel: true,
         maxBombs: 2,
