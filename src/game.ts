@@ -11,7 +11,7 @@ import { getNextTurn, getWinner, getNextBiddingTurn } from './helpers/players.he
 import { isBiddingFinished } from './validators/bid.validator';
 import { isSharingStockFinished } from './validators/stock.validator';
 import { can, isGameFinished, playersHaveEnoughtCardPoints } from './validators/game.validators';
-import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
+import { noOneParticipatedInBidding } from './helpers/bid.helpers';
 import { throwCard, initializeBidding, finalizeTrick, declareBomb } from './game.actions';
 import { getTrickWinner } from './helpers/battle.helpers';
 const EventEmitter = require('wolfy87-eventemitter');
