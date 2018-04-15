@@ -10,7 +10,8 @@ describe('battle helpers', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.BIDDING_IN_PROGRESS,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],

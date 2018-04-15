@@ -19,7 +19,8 @@ describe('stock validator', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.SHARE_STOCK,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],

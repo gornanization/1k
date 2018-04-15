@@ -12,7 +12,8 @@ describe('battle API', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.BATTLE_START,
             players: [
@@ -100,7 +101,8 @@ describe('battle API', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.TRICK_IN_PROGRESS,
             players: [
@@ -163,7 +165,8 @@ describe('battle API', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 0
             },
             phase: Phase.TRICK_IN_PROGRESS,
             players: [
@@ -242,7 +245,8 @@ describe('battle API', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.TRICK_IN_PROGRESS,
             players: [

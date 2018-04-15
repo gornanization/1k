@@ -23,6 +23,8 @@ export enum Phase {
     DEALING_CARDS_IN_PROGRESS = 'DEALING_CARDS_IN_PROGRESS',
     DEALING_CARDS_FINISHED = 'DEALING_CARDS_FINISHED',
 
+    NOT_ENOUGHT_CARD_POINTS = 'NOT_ENOUGHT_CARD_POINTS',
+
     BIDDING_START = 'BIDDING_START',
     BIDDING_IN_PROGRESS = 'BIDDING_IN_PROGRESS',
     BIDDING_FINISHED = 'BIDDING_FINISHED',
@@ -78,7 +80,8 @@ export type CardPattern = string;
 export interface Settings {
     barrelPointsLimit: number,
     permitBombOnBarrel: boolean,
-    maxBombs: number
+    maxBombs: number,
+    shuffleAgainIfPointsCountLessThan: number
 }
 
 export interface Game {

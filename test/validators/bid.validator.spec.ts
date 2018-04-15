@@ -11,7 +11,8 @@ describe('bid validator', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.BIDDING_IN_PROGRESS,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],
@@ -137,7 +138,8 @@ describe('canIncreaseBid', () => {
             settings: {
                 permitBombOnBarrel: true,
                 maxBombs: 2,
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.SHARE_STOCK,
             players: [{ id: 'adam', battlePoints: [] }, { id: 'pic', battlePoints: [] }, { id: 'alan', battlePoints: [] }],

@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 import * as _ from 'lodash';
 
 import { Game, Card, Suit, Rank, Player, Phase, Thousand, CardPattern, SchuffleCardsFunction } from './game.interfaces';
-import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult, increaseBid } from './game.actions';
+import { registerPlayer, setDeck, dealCardToPlayer, dealCardToStock, bid, setPhase, ASSIGN_STOCK, assignStock, shareStock, initializeBattle, calculateBattleResult, increaseBid, moveCardsBackToDeck } from './game.actions';
 import { game as gameReducer } from './game.reducer';
 import { createDeck, getMarriages } from './helpers/cards.helpers';
 import { isRegisteringPlayersPhaseFinished } from './validators/player.validator';
@@ -10,7 +10,7 @@ import { isBattleFinished, isTrickFinished } from './validators/battle.validator
 import { getNextTurn, getWinner, getNextBiddingTurn } from './helpers/players.helpers';
 import { isBiddingFinished } from './validators/bid.validator';
 import { isSharingStockFinished } from './validators/stock.validator';
-import { can, isGameFinished } from './validators/game.validators';
+import { can, isGameFinished, playersHaveEnoughtCardPoints } from './validators/game.validators';
 import { getBidWinner, noOneParticipatedInBidding } from './helpers/bid.helpers';
 import { throwCard, initializeBidding, finalizeTrick, declareBomb } from './game.actions';
 import { getTrickWinner } from './helpers/battle.helpers';
@@ -123,7 +123,22 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
             [Phase.DEALING_CARDS_FINISHED]: (isFirst) => {
                 events.emit(
                     'phaseUpdated', 
-                    () => store.dispatch(setPhase(Phase.BIDDING_START)),
+                    () => {
+                        if (playersHaveEnoughtCardPoints(state)) {
+                            store.dispatch(setPhase(Phase.BIDDING_START))
+                        } else {
+                            store.dispatch(setPhase(Phase.NOT_ENOUGHT_CARD_POINTS))
+                        }
+                    },
+                    isFirst
+                );
+            },
+            [Phase.NOT_ENOUGHT_CARD_POINTS]: (isFirst) => {
+                events.emit(
+                    'phaseUpdated', 
+                    () => {
+                        store.dispatch(moveCardsBackToDeck())
+                    },
                     isFirst
                 );
             },

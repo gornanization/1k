@@ -15,7 +15,8 @@ describe('player validator', () => {
     beforeEach(() => {
         this.state = {
             settings: {
-                barrelPointsLimit: 880
+                barrelPointsLimit: 880,
+                shuffleAgainIfPointsCountLessThan: 18
             },
             phase: Phase.REGISTERING_PLAYERS_IN_PROGRESS,
             players: [],
