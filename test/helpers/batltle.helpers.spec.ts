@@ -195,7 +195,7 @@ describe('battle helpers', () => {
                 // act
                 const winnerPlayer = getTrickWinner(currentState);
                 //assert
-                should(winnerPlayer).be.equal('pic');
+                should(winnerPlayer).be.equal('alan');
             });   
             it('match by trump suit, when two trump cards thrown', () => {
                 const currentState: Game = this.state;
