@@ -45,8 +45,6 @@ export function initializeGame(defaultState: Game = undefined): Thousand {
         return result;
     }   
 
-    
-
     const thousand: Thousand = {
         events,
         //actions:

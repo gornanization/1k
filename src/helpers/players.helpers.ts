@@ -56,3 +56,10 @@ export function getNextBiddingTurn(state: Game): string {
 
     return _.reduce(firstRegisteredPlayer.battlePoints, (nextPlayer) => getNextTurn(gamePlayers, nextPlayer), firstRegisteredPlayer.id);
 }
+
+export function getPlayerOpponents(state: Game, player: string): string[] {
+    return _.chain(state.players)
+        .map((player: Player) => player.id)
+        .filter((playerId: string) => playerId !== player)
+        .value()
+}

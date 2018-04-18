@@ -13,7 +13,7 @@ export function canThrowCard(state: Game, { player, card }: ThrowCard) {
     
     // should have the card
     if(!cardExistsIn(state.cards[player], card)) { return false; }
-
+    
     const battle: Battle = state.battle;
     const playerCards: CardPattern[] = state.cards[player];
     let cardsAllowedToThrow: CardPattern[] = [];

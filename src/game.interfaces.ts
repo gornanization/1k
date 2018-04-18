@@ -95,6 +95,11 @@ export interface Game {
     cards: PlayersCards
 }
 
+export interface PreferredAction {
+    type: string,
+    args: string[]
+}
+
 export type SchuffleCardsFunction = (notSchuffledCards: CardPattern[], cb: Function) => void;
 
 export interface Thousand {
@@ -105,7 +110,7 @@ export interface Thousand {
     bid: (player: string, value: number) => boolean,
     increaseBid: (player: string, value: number) => boolean,
     pass: (player: string) => boolean,
-    shareStock: (player: string, card: CardPattern, targetPlayer: string,) => boolean,
+    shareStock: (player: string, card: CardPattern, targetPlayer: string) => boolean,
     throwCard: (card: CardPattern, player: string) => boolean,
     declareBomb: (player: string) => boolean,
     setCustomShufflingMethod: (_customShufflingMethod: SchuffleCardsFunction) => void
