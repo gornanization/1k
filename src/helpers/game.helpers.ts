@@ -42,6 +42,8 @@ export function extendStateWithDefaults(game) {
         if (battle) {
             battle.wonCards[player.id] = battle.wonCards[player.id] || [];
         }
+        
+        player.battlePoints = player.battlePoints.map(a => a === 'null' ? null : a)
     });
 
     return loadedState;
