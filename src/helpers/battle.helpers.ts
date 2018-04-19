@@ -91,9 +91,12 @@ export function getTrickWinner(state: Game): string {
     const leadCard: CardPattern = getLeadCard(battle);
     let winnerPlayerId = null;
     
+    console.log('test!')
     if(isTrumpAnnounced(battle)) {
+        console.log('test2!')
         const trumpSuit: Suit = getTrumpSuit(battle);
         if (cardsWithSpecificColorExists(trickCards, trumpSuit)) {
+            console.log('test3!')
             matchBySuit(trumpSuit);
         } else {
             //no trump cards taking part in the trick, so ordinary color matching flow:
@@ -106,7 +109,7 @@ export function getTrickWinner(state: Game): string {
     return winnerPlayerId;
 
     function matchBySuit(suit: Suit) {
-        const cardsMatchedByColor = getCardsByColor(trickCards, getCardSuit(leadCard));
+        const cardsMatchedByColor = getCardsByColor(trickCards, suit);
         const highestRankedCard = getCardWithHighestRank(cardsMatchedByColor);
         winnerPlayerId = getPlayerByTrickCard(highestRankedCard, state);
     }

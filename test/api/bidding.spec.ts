@@ -37,7 +37,6 @@ describe('bidding', () => {
 
         thousand.events.addListener('phaseUpdated', next => {
             const state: Game = thousand.getState();
-
             history.push([state.phase, state.bid.length]);
 
             if(state.phase === Phase.TRICK_START) {

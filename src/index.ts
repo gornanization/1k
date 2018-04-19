@@ -9,6 +9,7 @@ export { getNextTurn } from './helpers/players.helpers';
 export { getTrickWinner, getNextTrickTurn } from './helpers/battle.helpers';
 export { saveStateToText, loadStateFromText, extendStateWithDefaults } from './helpers/game.helpers';
 export { getNextBiddingTurn } from './helpers/players.helpers';
+export { getPreferredAction } from './bot';
 
 export function getWinner(state: Game): string|null {
     const winner: Player = getWinnerInternal(state.players);
